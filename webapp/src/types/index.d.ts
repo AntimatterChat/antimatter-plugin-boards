@@ -3,9 +3,6 @@
 
 import {DesktopAPI} from "@mattermost/desktop-api"
 
-type TelemetryProps = {
-    trackingLocation: string
-}
 export interface IAppWindow extends Window {
     baseURL?: string
     frontendBaseURL?: string
@@ -14,7 +11,6 @@ export interface IAppWindow extends Window {
     msCrypto: Crypto
     openInNewBrowser?: ((href: string) => void) | null
     webkit?: {messageHandlers: {nativeApp?: {postMessage: <T>(message: T) => void}}}
-    openPricingModal?: () => (telemetry: TelemetryProps) => void
 }
 
 // SuiteWindow documents all custom properties
