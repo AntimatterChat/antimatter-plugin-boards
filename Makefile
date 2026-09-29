@@ -12,9 +12,10 @@ ifeq ($(BUILD_NUMBER),)
 	BUILD_DATE := n/a
 endif
 
-MM_SERVER_PATH ?= $(MM_SERVER_PATH:)
-ifeq ($(MM_SERVER_PATH),)
-	MM_SERVER_PATH := ../mattermost
+# AM_SERVER_PATH points to a local Antimatter server checkout (MM_SERVER_PATH is still accepted).
+AM_SERVER_PATH ?= $(MM_SERVER_PATH)
+ifeq ($(AM_SERVER_PATH),)
+	AM_SERVER_PATH := ../antimatter
 endif
 
 BUILD_TAGS += json1 sqlite3
@@ -27,15 +28,16 @@ LDFLAGS += -X "github.com/antimatterchat/antimatter-plugin-boards/server/model.E
 GO ?= $(shell command -v go 2> /dev/null)
 NPM ?= $(shell command -v npm 2> /dev/null)
 CURL ?= $(shell command -v curl 2> /dev/null)
-MM_DEBUG ?=
+# AM_DEBUG enables single-platform debug builds (MM_DEBUG is still accepted).
+AM_DEBUG ?= $(MM_DEBUG)
 MANIFEST_FILE ?= plugin.json
 GOPATH ?= $(shell go env GOPATH)
 GO_TEST_FLAGS ?= -race
 GO_BUILD_FLAGS ?= -ldflags '$(LDFLAGS)'
 MM_UTILITIES_DIR ?= ../mattermost-utilities
 DLV_DEBUG_PORT := 2346
-MATTERMOST_PLUGINS_PATH=$(MM_SERVER_PATH)/plugins
-BOARD_PLUGIN_PATH=$(MATTERMOST_PLUGINS_PATH)/boards
+ANTIMATTER_PLUGINS_PATH=$(AM_SERVER_PATH)/plugins
+BOARD_PLUGIN_PATH=$(ANTIMATTER_PLUGINS_PATH)/boards
 PLUGIN_NAME=boards
 
 export GO111MODULE=on
@@ -104,14 +106,14 @@ templates-archive: ## Build templates archive file
 server: apply templates-archive
 ifneq ($(HAS_SERVER),)
 	mkdir -p server/dist;
-ifeq ($(MM_DEBUG),)
+ifeq ($(AM_DEBUG),)
 	cd server && env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build $(GO_BUILD_FLAGS) -trimpath -o dist/plugin-linux-amd64;
 	cd server && env CGO_ENABLED=0 GOOS=linux GOARCH=arm64 $(GO) build $(GO_BUILD_FLAGS) -trimpath -o dist/plugin-linux-arm64;
 	cd server && env CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GO) build $(GO_BUILD_FLAGS) -trimpath -o dist/plugin-darwin-amd64;
 	cd server && env CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 $(GO) build $(GO_BUILD_FLAGS) -trimpath -o dist/plugin-darwin-arm64;
 	cd server && env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 $(GO) build $(GO_BUILD_FLAGS) -trimpath -o dist/plugin-windows-amd64.exe;
 else
-	$(info DEBUG mode is on; to disable, unset MM_DEBUG)
+	$(info DEBUG mode is on; to disable, unset AM_DEBUG)
 
 	cd server && env CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GO) build $(GO_BUILD_FLAGS) -gcflags "all=-N -l" -trimpath -o dist/plugin-darwin-amd64;
 	cd server && env CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 $(GO) build $(GO_BUILD_FLAGS) -gcflags "all=-N -l" -trimpath -o dist/plugin-darwin-arm64;
@@ -126,10 +128,10 @@ endif
 server-linux: apply templates-archive
 ifneq ($(HAS_SERVER),)
 	mkdir -p server/dist;
-ifeq ($(MM_DEBUG),)
+ifeq ($(AM_DEBUG),)
 	cd server && env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build $(GO_BUILD_FLAGS) -trimpath -o dist/plugin-linux-amd64;
 else
-	$(info DEBUG mode is on; to disable, unset MM_DEBUG)
+	$(info DEBUG mode is on; to disable, unset AM_DEBUG)
 
 	cd server && env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build $(GO_BUILD_FLAGS) -gcflags "all=-N -l" -trimpath -o dist/plugin-linux-amd64;
 endif
@@ -146,7 +148,7 @@ endif
 .PHONY: webapp
 webapp: apply webapp/node_modules
 ifneq ($(HAS_WEBAPP),)
-ifeq ($(MM_DEBUG),)
+ifeq ($(AM_DEBUG),)
 	cd webapp && $(NPM) run build;
 else
 	cd webapp && $(NPM) run debug;
@@ -209,7 +211,7 @@ deploy: dist
 ## Builds and installs the plugin to a server, updating the webapp automatically when changed.
 .PHONY: watch
 watch: apply server bundle
-ifeq ($(MM_DEBUG),)
+ifeq ($(AM_DEBUG),)
 	cd webapp && $(NPM) run build:watch
 else
 	cd webapp && $(NPM) run debug:watch
@@ -371,23 +373,23 @@ ifndef STARTERTEMPLATE_PATH
 endif
 	cd ${STARTERTEMPLATE_PATH} && go run ./build/sync/main.go ./build/sync/plan.yml $(PWD)
 
-## Watch webapp and server changes and redeploy locally using local filesystem (MM_SERVER_PATH)
+## Watch webapp and server changes and redeploy locally using local filesystem (AM_SERVER_PATH)
 .PHONY: live-watch
 live-watch:
 	make -j2 live-watch-server live-watch-webapp
 
-## Watch server changes and redeploy locally using local filesystem (MM_SERVER_PATH)
+## Watch server changes and redeploy locally using local filesystem (AM_SERVER_PATH)
 .PHONY: live-watch-server
 live-watch-server: apply
-	cd ../ && modd -f mattermost-plugin/modd.conf
+	cd ../ && modd -f antimatter-plugin/modd.conf
 
-## Watch webapp changes and redeploy locally using local filesystem (MM_SERVER_PATH)
+## Watch webapp changes and redeploy locally using local filesystem (AM_SERVER_PATH)
 .PHONY: live-watch-webapp
 live-watch-webapp: apply
 	cd webapp && $(NPM) run live-watch
 
-.PHONY: deploy-to-mattermost-directory
-deploy-to-mattermost-directory:
+.PHONY: deploy-to-antimatter-directory
+deploy-to-antimatter-directory:
 	./build/bin/pluginctl disable $(PLUGIN_ID)
 	mkdir -p $(FOCALBOARD_PLUGIN_PATH)
 	cp $(MANIFEST_FILE) $(FOCALBOARD_PLUGIN_PATH)/

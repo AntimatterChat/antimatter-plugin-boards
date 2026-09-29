@@ -5,6 +5,7 @@ package utils
 
 import (
 	"encoding/json"
+	"os"
 	"path"
 	"reflect"
 	"strings"
@@ -12,6 +13,19 @@ import (
 
 	amModel "github.com/mattermost/mattermost/server/public/model"
 )
+
+// GetEnv returns the value of the environment variable name, which is expected to use the
+// AM_ prefix. When it is unset or empty, the legacy MM_-prefixed variable of the same name is
+// used as a fallback so existing deployments keep working.
+func GetEnv(name string) string {
+	if value := os.Getenv(name); value != "" {
+		return value
+	}
+	if legacy, ok := strings.CutPrefix(name, "AM_"); ok {
+		return os.Getenv("MM_" + legacy)
+	}
+	return ""
+}
 
 type IDType byte
 

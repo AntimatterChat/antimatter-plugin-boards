@@ -5,13 +5,13 @@ package notifysubscriptions
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"time"
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/notify"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
@@ -76,10 +76,10 @@ func (b *Backend) Name() string {
 
 func (b *Backend) getBlockUpdateFreq(blockType model.BlockType) time.Duration {
 	// check for env variable override
-	sFreq := os.Getenv("MM_BOARDS_NOTIFY_FREQ_SECONDS")
+	sFreq := utils.GetEnv("AM_BOARDS_NOTIFY_FREQ_SECONDS")
 	if sFreq != "" && sFreq != "0" {
 		if freq, err := strconv.ParseInt(sFreq, 10, 64); err != nil {
-			b.logger.Error("Environment variable MM_BOARDS_NOTIFY_FREQ_SECONDS invalid (ignoring)", mlog.Err(err))
+			b.logger.Error("Environment variable AM_BOARDS_NOTIFY_FREQ_SECONDS (or MM_BOARDS_NOTIFY_FREQ_SECONDS) invalid (ignoring)", mlog.Err(err))
 		} else {
 			return time.Second * time.Duration(freq)
 		}

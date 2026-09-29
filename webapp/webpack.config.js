@@ -38,7 +38,7 @@ if (NPM_TARGET === 'build:watch' || NPM_TARGET === 'debug:watch' || NPM_TARGET =
             compiler.hooks.afterEmit.tap('AfterEmitPlugin', () => {
                 let command = 'cd .. && make deploy-from-watch';
                 if (NPM_TARGET === 'live-watch') {
-                    command = 'cd .. && make deploy-to-mattermost-directory';
+                    command = 'cd .. && make deploy-to-antimatter-directory';
                 }
                 exec(command, (err, stdout, stderr) => {
                     if (stdout) {
@@ -223,7 +223,7 @@ config.plugins.push(new webpack.DefinePlugin({
 }));
 
 if (NPM_TARGET === 'start:product') {
-    const url = new URL(process.env.MM_BOARDS_DEV_SERVER_URL ?? 'http://localhost:9006');
+    const url = new URL(process.env.AM_BOARDS_DEV_SERVER_URL || process.env.MM_BOARDS_DEV_SERVER_URL || 'http://localhost:9006');
 
     config.devServer = {
         server: {
