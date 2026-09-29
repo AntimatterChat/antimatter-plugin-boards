@@ -13,7 +13,7 @@ Concisely summarize improvement to documentation requested.
 
 ## Link to documentation page
 
-If applicable, link to the documentation page and/or section where you feel the improvement could be added. E.g. `https://docs.mattermost.com/boards/accessing-boards.html`
+If applicable, link to the documentation page and/or section where you feel the improvement could be added. E.g. `https://docs.antimatter.example/boards/accessing-boards.html`
 
 ## (Optional) Additional context and/or screenshot
 

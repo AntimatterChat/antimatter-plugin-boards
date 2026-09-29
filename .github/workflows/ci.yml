@@ -75,7 +75,7 @@ jobs:
     secrets: inherit
     with:
       dist-target: "dist-linux"
-      s3-prefix: "mattermost-plugin-boards"
+      s3-prefix: "antimatter-plugin-boards"
 
   dist-fips:
     # Skip FIPS testing for forks, which won't have the chainguard identity.

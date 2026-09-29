@@ -24,7 +24,7 @@ If applicable, add screenshots or a screen recording to elaborate on the problem
 
 ## Edition and Platform
 
- - Edition: Personal Desktop / Personal Server / Mattermost Boards (plugin)
+ - Edition: Personal Desktop / Personal Server / Antimatter Boards (plugin)
  - Version: [e.g. v0.15.0]
  - Browser and OS: [e.g. Chrome on Mac, Edge on Windows]
 
