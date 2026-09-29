@@ -12,7 +12,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/server"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/notify"
-	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mmpermissions"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/ampermissions"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store/sqlstore"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/ws"
@@ -59,15 +59,15 @@ type BoardsApp struct {
 }
 
 func NewBoardsApp(api model.ServicesAPI, manifest *am_model.Manifest) (*BoardsApp, error) {
-	mmconfig := api.GetConfig()
+	amconfig := api.GetConfig()
 	logger := api.GetLogger()
 
 	baseURL := ""
-	if mmconfig.ServiceSettings.SiteURL != nil {
-		baseURL = *mmconfig.ServiceSettings.SiteURL
+	if amconfig.ServiceSettings.SiteURL != nil {
+		baseURL = *amconfig.ServiceSettings.SiteURL
 	}
 	serverID := api.GetDiagnosticID()
-	cfg := createBoardsConfig(*mmconfig, baseURL, serverID)
+	cfg := createBoardsConfig(*amconfig, baseURL, serverID)
 	sqlDB, err := api.GetMasterDB()
 	if err != nil {
 		return nil, fmt.Errorf("cannot access database while initializing Boards: %w", err)
@@ -92,7 +92,7 @@ func NewBoardsApp(api model.ServicesAPI, manifest *am_model.Manifest) (*BoardsAp
 		return nil, fmt.Errorf("error initializing the DB: %w", err)
 	}
 
-	permissionsService := mmpermissions.New(db, api, logger)
+	permissionsService := ampermissions.New(db, api, logger)
 
 	wsPluginAdapter := ws.NewPluginAdapter(api, auth.New(cfg, db, permissionsService), db, logger)
 

@@ -51,8 +51,8 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	return setupTestHelper(t, false)
 }
 
-func setupTestHelper(t *testing.T, withMattermostMigrations bool) (*TestHelper, func()) {
-	f := foundation.New(t, NewBoardsMigrator(withMattermostMigrations))
+func setupTestHelper(t *testing.T, withAntimatterMigrations bool) (*TestHelper, func()) {
+	f := foundation.New(t, NewBoardsMigrator(withAntimatterMigrations))
 
 	th := &TestHelper{
 		t: t,

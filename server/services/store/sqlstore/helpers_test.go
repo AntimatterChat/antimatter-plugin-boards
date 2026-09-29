@@ -300,7 +300,7 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 	require.NoError(t, err)
 
 	// Create Mattermost tables needed for migrations (Playbooks approach)
-	setupMattermostTables(t, sqlDB)
+	setupAntimatterTables(t, sqlDB)
 
 	// Create a minimal testServicesAPI for unit tests
 	// Include common test user IDs used by storetests

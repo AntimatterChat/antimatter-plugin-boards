@@ -68,10 +68,10 @@ func TestSetConfiguration(t *testing.T) {
 			TestBoolFeature: boolTrue,
 		}
 
-		mmConfig := baseConfig
-		mmConfig.FeatureFlags = featureFlags
+		amConfig := baseConfig
+		amConfig.FeatureFlags = featureFlags
 
-		config := createBoardsConfig(*mmConfig, "", "")
+		config := createBoardsConfig(*amConfig, "", "")
 		assert.Equal(t, "true", config.FeatureFlags["TestBoolFeature"])
 		assert.Equal(t, "test", config.FeatureFlags["TestFeature"])
 	})
@@ -80,20 +80,20 @@ func TestSetConfiguration(t *testing.T) {
 		logSettings := &model.LogSettings{
 			EnableDiagnostics: &boolTrue,
 		}
-		mmConfig := baseConfig
-		mmConfig.LogSettings = *logSettings
+		amConfig := baseConfig
+		amConfig.LogSettings = *logSettings
 
-		config := createBoardsConfig(*mmConfig, "", "testId")
+		config := createBoardsConfig(*amConfig, "", "testId")
 		assert.Equal(t, true, config.Telemetry)
 		assert.Equal(t, "testId", config.TelemetryID)
 	})
 
 	t.Run("test enable shared boards", func(t *testing.T) {
-		mmConfig := baseConfig
-		mmConfig.PluginSettings.Plugins = make(map[string]map[string]interface{})
-		mmConfig.PluginSettings.Plugins[PluginName] = make(map[string]interface{})
-		mmConfig.PluginSettings.Plugins[PluginName][SharedBoardsName] = true
-		config := createBoardsConfig(*mmConfig, "", "")
+		amConfig := baseConfig
+		amConfig.PluginSettings.Plugins = make(map[string]map[string]interface{})
+		amConfig.PluginSettings.Plugins[PluginName] = make(map[string]interface{})
+		amConfig.PluginSettings.Plugins[PluginName][SharedBoardsName] = true
+		config := createBoardsConfig(*amConfig, "", "")
 		assert.Equal(t, true, config.EnablePublicSharedBoards)
 	})
 }

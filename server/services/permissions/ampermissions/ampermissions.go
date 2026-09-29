@@ -1,7 +1,7 @@
 // Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-package mmpermissions
+package ampermissions
 
 import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"

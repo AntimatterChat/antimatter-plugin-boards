@@ -17,8 +17,8 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/config"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/metrics"
-	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mmpermissions"
-	mmpermissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mmpermissions/mocks"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/ampermissions"
+	ampermissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/ampermissions/mocks"
 	permissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mocks"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store/mockstore"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/webhook"
@@ -45,10 +45,10 @@ func setupArchiveImportAPI(t *testing.T, maxFileSize int64) (*API, func()) {
 	metricsService := metrics.NewMetrics(metrics.InstanceInfo{})
 
 	permStore := permissionsMocks.NewMockStore(ctrl)
-	pluginAPI := mmpermissionsMocks.NewMockAPI(ctrl)
+	pluginAPI := ampermissionsMocks.NewMockAPI(ctrl)
 	pluginAPI.EXPECT().HasPermissionToTeam(gomock.Any(), gomock.Any(), model.PermissionViewTeam).Return(true)
 	store.EXPECT().GetUserByID(gomock.Any()).Return(&model.User{ID: "user", IsGuest: false}, nil)
-	permissions := mmpermissions.New(permStore, pluginAPI, mlog.CreateConsoleTestLogger(t))
+	permissions := ampermissions.New(permStore, pluginAPI, mlog.CreateConsoleTestLogger(t))
 
 	testApp := app.New(&cfg, wsserver, app.Services{
 		Auth:             authService,

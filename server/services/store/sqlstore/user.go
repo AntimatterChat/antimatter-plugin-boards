@@ -84,28 +84,28 @@ func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
 	return users, nil
 }
 
-func mmUserToFbUser(mmUser *amModel.User) model.User {
+func amUserToFbUser(amUser *amModel.User) model.User {
 	authData := ""
-	if mmUser.AuthData != nil {
-		authData = *mmUser.AuthData
+	if amUser.AuthData != nil {
+		authData = *amUser.AuthData
 	}
 	return model.User{
-		ID:          mmUser.Id,
-		Username:    mmUser.Username,
-		Email:       mmUser.Email,
-		Password:    mmUser.Password,
-		Nickname:    mmUser.Nickname,
-		FirstName:   mmUser.FirstName,
-		LastName:    mmUser.LastName,
-		MfaSecret:   mmUser.MfaSecret,
-		AuthService: mmUser.AuthService,
+		ID:          amUser.Id,
+		Username:    amUser.Username,
+		Email:       amUser.Email,
+		Password:    amUser.Password,
+		Nickname:    amUser.Nickname,
+		FirstName:   amUser.FirstName,
+		LastName:    amUser.LastName,
+		MfaSecret:   amUser.MfaSecret,
+		AuthService: amUser.AuthService,
 		AuthData:    authData,
-		CreateAt:    mmUser.CreateAt,
-		UpdateAt:    mmUser.UpdateAt,
-		DeleteAt:    mmUser.DeleteAt,
-		IsBot:       mmUser.IsBot,
-		IsGuest:     mmUser.IsGuest(),
-		Roles:       mmUser.Roles,
+		CreateAt:    amUser.CreateAt,
+		UpdateAt:    amUser.UpdateAt,
+		DeleteAt:    amUser.DeleteAt,
+		IsBot:       amUser.IsBot,
+		IsGuest:     amUser.IsGuest(),
+		Roles:       amUser.Roles,
 	}
 }
 
@@ -126,30 +126,30 @@ func (s *SQLStore) getRegisteredUserCount(db sq.BaseRunner) (int, error) {
 }
 
 func (s *SQLStore) getUserByID(_ sq.BaseRunner, userID string) (*model.User, error) {
-	mmuser, err := s.servicesAPI.GetUserByID(userID)
+	amuser, err := s.servicesAPI.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	user := mmUserToFbUser(mmuser)
+	user := amUserToFbUser(amuser)
 	return &user, nil
 }
 
 func (s *SQLStore) getUserByEmail(_ sq.BaseRunner, email string) (*model.User, error) {
-	mmuser, err := s.servicesAPI.GetUserByEmail(email)
+	amuser, err := s.servicesAPI.GetUserByEmail(email)
 	if err != nil {
 		return nil, err
 	}
-	user := mmUserToFbUser(mmuser)
+	user := amUserToFbUser(amuser)
 	return &user, nil
 }
 
 func (s *SQLStore) getUserByUsername(_ sq.BaseRunner, username string) (*model.User, error) {
-	mmuser, err := s.servicesAPI.GetUserByUsername(username)
+	amuser, err := s.servicesAPI.GetUserByUsername(username)
 	if err != nil {
 		return nil, err
 	}
-	user := mmUserToFbUser(mmuser)
+	user := amUserToFbUser(amuser)
 	return &user, nil
 }
 
@@ -390,11 +390,11 @@ func (s *SQLStore) getUserTimezone(_ sq.BaseRunner, userID string) (string, erro
 }
 
 func (s *SQLStore) canSeeUser(db sq.BaseRunner, seerID string, seenID string) (bool, error) {
-	mmuser, appErr := s.servicesAPI.GetUserByID(seerID)
+	amuser, appErr := s.servicesAPI.GetUserByID(seerID)
 	if appErr != nil {
 		return false, appErr
 	}
-	if !mmuser.IsGuest() {
+	if !amuser.IsGuest() {
 		return true, nil
 	}
 

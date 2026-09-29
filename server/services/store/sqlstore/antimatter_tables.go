@@ -7,7 +7,7 @@ import (
 	"database/sql"
 )
 
-// SetupMattermostTablesForIntegration creates Mattermost tables for integration tests
+// SetupAntimatterTablesForIntegration creates Mattermost tables for integration tests
 // without requiring testing.T (for use in non-test contexts like NewTestServerPluginMode).
 //
 // IMPORTANT: Schema Versioning and Maintenance
@@ -23,7 +23,7 @@ import (
 //  1. When Mattermost adds new columns that our code uses, update the relevant table
 //     definition in this file and support_for_test.go
 //  2. When tests fail due to missing columns, add the required columns to the table definitions
-func SetupMattermostTablesForIntegration(db *sql.DB) error {
+func SetupAntimatterTablesForIntegration(db *sql.DB) error {
 	if err := setupChannelsTableForIntegration(db); err != nil {
 		return err
 	}

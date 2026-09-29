@@ -15,75 +15,75 @@ import (
 
 const defaultS3Timeout = 60 * 1000 // 60 seconds
 
-func createBoardsConfig(mmconfig am_model.Config, baseURL string, serverID string) *config.Configuration {
+func createBoardsConfig(amconfig am_model.Config, baseURL string, serverID string) *config.Configuration {
 	filesS3Config := config.AmazonS3Config{}
-	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
-		filesS3Config.AccessKeyID = *mmconfig.FileSettings.AmazonS3AccessKeyId
+	if amconfig.FileSettings.AmazonS3AccessKeyId != nil {
+		filesS3Config.AccessKeyID = *amconfig.FileSettings.AmazonS3AccessKeyId
 	}
-	if mmconfig.FileSettings.AmazonS3SecretAccessKey != nil {
-		filesS3Config.SecretAccessKey = *mmconfig.FileSettings.AmazonS3SecretAccessKey
+	if amconfig.FileSettings.AmazonS3SecretAccessKey != nil {
+		filesS3Config.SecretAccessKey = *amconfig.FileSettings.AmazonS3SecretAccessKey
 	}
-	if mmconfig.FileSettings.AmazonS3Bucket != nil {
-		filesS3Config.Bucket = *mmconfig.FileSettings.AmazonS3Bucket
+	if amconfig.FileSettings.AmazonS3Bucket != nil {
+		filesS3Config.Bucket = *amconfig.FileSettings.AmazonS3Bucket
 	}
-	if mmconfig.FileSettings.AmazonS3PathPrefix != nil {
-		filesS3Config.PathPrefix = *mmconfig.FileSettings.AmazonS3PathPrefix
+	if amconfig.FileSettings.AmazonS3PathPrefix != nil {
+		filesS3Config.PathPrefix = *amconfig.FileSettings.AmazonS3PathPrefix
 	}
-	if mmconfig.FileSettings.AmazonS3Region != nil {
-		filesS3Config.Region = *mmconfig.FileSettings.AmazonS3Region
+	if amconfig.FileSettings.AmazonS3Region != nil {
+		filesS3Config.Region = *amconfig.FileSettings.AmazonS3Region
 	}
-	if mmconfig.FileSettings.AmazonS3Endpoint != nil {
-		filesS3Config.Endpoint = *mmconfig.FileSettings.AmazonS3Endpoint
+	if amconfig.FileSettings.AmazonS3Endpoint != nil {
+		filesS3Config.Endpoint = *amconfig.FileSettings.AmazonS3Endpoint
 	}
-	if mmconfig.FileSettings.AmazonS3SSL != nil {
-		filesS3Config.SSL = *mmconfig.FileSettings.AmazonS3SSL
+	if amconfig.FileSettings.AmazonS3SSL != nil {
+		filesS3Config.SSL = *amconfig.FileSettings.AmazonS3SSL
 	}
-	if mmconfig.FileSettings.AmazonS3SignV2 != nil {
-		filesS3Config.SignV2 = *mmconfig.FileSettings.AmazonS3SignV2
+	if amconfig.FileSettings.AmazonS3SignV2 != nil {
+		filesS3Config.SignV2 = *amconfig.FileSettings.AmazonS3SignV2
 	}
-	if mmconfig.FileSettings.AmazonS3SSE != nil {
-		filesS3Config.SSE = *mmconfig.FileSettings.AmazonS3SSE
+	if amconfig.FileSettings.AmazonS3SSE != nil {
+		filesS3Config.SSE = *amconfig.FileSettings.AmazonS3SSE
 	}
-	if mmconfig.FileSettings.AmazonS3Trace != nil {
-		filesS3Config.Trace = *mmconfig.FileSettings.AmazonS3Trace
+	if amconfig.FileSettings.AmazonS3Trace != nil {
+		filesS3Config.Trace = *amconfig.FileSettings.AmazonS3Trace
 	}
-	if mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds != nil && *mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds > 0 {
-		filesS3Config.Timeout = *mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds
+	if amconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds != nil && *amconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds > 0 {
+		filesS3Config.Timeout = *amconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds
 	} else {
 		filesS3Config.Timeout = defaultS3Timeout
 	}
 
 	enableTelemetry := false
-	if mmconfig.LogSettings.EnableDiagnostics != nil {
-		enableTelemetry = *mmconfig.LogSettings.EnableDiagnostics
+	if amconfig.LogSettings.EnableDiagnostics != nil {
+		enableTelemetry = *amconfig.LogSettings.EnableDiagnostics
 	}
 
 	enablePublicSharedBoards := false
-	if mmconfig.PluginSettings.Plugins[PluginName][SharedBoardsName] == true {
+	if amconfig.PluginSettings.Plugins[PluginName][SharedBoardsName] == true {
 		enablePublicSharedBoards = true
 	}
 
 	enableBoardsDeletion := false
-	if mmconfig.DataRetentionSettings.EnableBoardsDeletion != nil {
+	if amconfig.DataRetentionSettings.EnableBoardsDeletion != nil {
 		enableBoardsDeletion = true
 	}
 
 	// Removed from the server config in v12, so the pointer is nil there.
 	boardsRetentionDays := am_model.DataRetentionSettingsDefaultBoardsRetentionDays
-	if mmconfig.DataRetentionSettings.BoardsRetentionDays != nil {
-		boardsRetentionDays = *mmconfig.DataRetentionSettings.BoardsRetentionDays
+	if amconfig.DataRetentionSettings.BoardsRetentionDays != nil {
+		boardsRetentionDays = *amconfig.DataRetentionSettings.BoardsRetentionDays
 	}
 
-	featureFlags := parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
+	featureFlags := parseFeatureFlags(amconfig.FeatureFlags.ToMap())
 
 	showEmailAddress := false
-	if mmconfig.PrivacySettings.ShowEmailAddress != nil {
-		showEmailAddress = *mmconfig.PrivacySettings.ShowEmailAddress
+	if amconfig.PrivacySettings.ShowEmailAddress != nil {
+		showEmailAddress = *amconfig.PrivacySettings.ShowEmailAddress
 	}
 
 	showFullName := false
-	if mmconfig.PrivacySettings.ShowFullName != nil {
-		showFullName = *mmconfig.PrivacySettings.ShowFullName
+	if amconfig.PrivacySettings.ShowFullName != nil {
+		showFullName = *amconfig.PrivacySettings.ShowFullName
 	}
 
 	serverRoot := baseURL + "/plugins/focalboard"
@@ -91,16 +91,16 @@ func createBoardsConfig(mmconfig am_model.Config, baseURL string, serverID strin
 	return &config.Configuration{
 		ServerRoot:               serverRoot,
 		Port:                     -1,
-		DBType:                   *mmconfig.SqlSettings.DriverName,
-		DBConfigString:           *mmconfig.SqlSettings.DataSource,
+		DBType:                   *amconfig.SqlSettings.DriverName,
+		DBConfigString:           *amconfig.SqlSettings.DataSource,
 		DBTablePrefix:            "focalboard_",
 		UseSSL:                   false,
 		SecureCookie:             true,
-		WebPath:                  path.Join(*mmconfig.PluginSettings.Directory, "focalboard", "pack"),
-		FilesDriver:              *mmconfig.FileSettings.DriverName,
-		FilesPath:                *mmconfig.FileSettings.Directory,
+		WebPath:                  path.Join(*amconfig.PluginSettings.Directory, "focalboard", "pack"),
+		FilesDriver:              *amconfig.FileSettings.DriverName,
+		FilesPath:                *amconfig.FileSettings.Directory,
 		FilesS3Config:            filesS3Config,
-		MaxFileSize:              *mmconfig.FileSettings.MaxFileSize,
+		MaxFileSize:              *amconfig.FileSettings.MaxFileSize,
 		Telemetry:                enableTelemetry,
 		TelemetryID:              serverID,
 		WebhookUpdate:            []string{},
@@ -112,11 +112,11 @@ func createBoardsConfig(mmconfig am_model.Config, baseURL string, serverID strin
 		AuthMode:                 "mattermost",
 		EnablePublicSharedBoards: enablePublicSharedBoards,
 		FeatureFlags:             featureFlags,
-		NotifyFreqCardSeconds:    getPluginSettingInt(mmconfig, notifyFreqCardSecondsKey, 120),
-		NotifyFreqBoardSeconds:   getPluginSettingInt(mmconfig, notifyFreqBoardSecondsKey, 86400),
+		NotifyFreqCardSeconds:    getPluginSettingInt(amconfig, notifyFreqCardSecondsKey, 120),
+		NotifyFreqBoardSeconds:   getPluginSettingInt(amconfig, notifyFreqBoardSecondsKey, 86400),
 		EnableDataRetention:      enableBoardsDeletion,
 		DataRetentionDays:        boardsRetentionDays,
-		TeammateNameDisplay:      *mmconfig.TeamSettings.TeammateNameDisplay,
+		TeammateNameDisplay:      *amconfig.TeamSettings.TeammateNameDisplay,
 		ShowEmailAddress:         showEmailAddress,
 		ShowFullName:             showFullName,
 	}
@@ -137,8 +137,8 @@ func parseFeatureFlags(configFeatureFlags map[string]string) map[string]string {
 	return featureFlags
 }
 
-func getPluginSetting(mmConfig am_model.Config, key string) (interface{}, bool) {
-	plugin, ok := mmConfig.PluginSettings.Plugins[PluginName]
+func getPluginSetting(amConfig am_model.Config, key string) (interface{}, bool) {
+	plugin, ok := amConfig.PluginSettings.Plugins[PluginName]
 	if !ok {
 		return nil, false
 	}
@@ -150,8 +150,8 @@ func getPluginSetting(mmConfig am_model.Config, key string) (interface{}, bool) 
 	return val, true
 }
 
-func getPluginSettingInt(mmConfig am_model.Config, key string, def int) int {
-	val, ok := getPluginSetting(mmConfig, key)
+func getPluginSettingInt(amConfig am_model.Config, key string, def int) int {
+	val, ok := getPluginSetting(amConfig, key)
 	if !ok {
 		return def
 	}

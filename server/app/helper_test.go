@@ -11,8 +11,8 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/config"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/metrics"
-	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mmpermissions"
-	mmpermissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mmpermissions/mocks"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/ampermissions"
+	ampermissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/ampermissions/mocks"
 	permissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mocks"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store/mockstore"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/webhook"
@@ -27,7 +27,7 @@ type TestHelper struct {
 	Store        *mockstore.MockStore
 	FilesBackend *mocks.FileBackend
 	logger       mlog.LoggerIFace
-	API          *mmpermissionsMocks.MockAPI
+	API          *ampermissionsMocks.MockAPI
 	PermStore    *permissionsMocks.MockStore
 }
 
@@ -43,8 +43,8 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	metricsService := metrics.NewMetrics(metrics.InstanceInfo{})
 
 	mockStore := permissionsMocks.NewMockStore(ctrl)
-	mockAPI := mmpermissionsMocks.NewMockAPI(ctrl)
-	permissions := mmpermissions.New(mockStore, mockAPI, mlog.CreateConsoleTestLogger(t))
+	mockAPI := ampermissionsMocks.NewMockAPI(ctrl)
+	permissions := ampermissions.New(mockStore, mockAPI, mlog.CreateConsoleTestLogger(t))
 
 	appServices := Services{
 		Auth:             auth,
@@ -86,7 +86,7 @@ func (th *TestHelper) expectBoardAdmin(userID, boardID, teamID string) { //nolin
 		UserID:      userID,
 		SchemeAdmin: true,
 	}, nil)
-	// SchemeAdmin path triggers isGuest() in mmpermissions which loads the user
+	// SchemeAdmin path triggers isGuest() in ampermissions which loads the user
 	th.PermStore.EXPECT().GetUserByID(userID).Return(&model.User{ID: userID}, nil)
 }
 

@@ -78,10 +78,10 @@ func (b *BoardsApp) OnConfigurationChange() error {
 	if b.server == nil {
 		return nil
 	}
-	mmconfig := b.servicesAPI.GetConfig()
+	amconfig := b.servicesAPI.GetConfig()
 
 	enableShareBoards := false
-	if mmconfig.PluginSettings.Plugins[PluginName][SharedBoardsName] == true {
+	if amconfig.PluginSettings.Plugins[PluginName][SharedBoardsName] == true {
 		enableShareBoards = true
 	}
 
@@ -93,32 +93,32 @@ func (b *BoardsApp) OnConfigurationChange() error {
 
 	// handle Data Retention settings
 	enableBoardsDeletion := false
-	if mmconfig.DataRetentionSettings.EnableBoardsDeletion != nil {
+	if amconfig.DataRetentionSettings.EnableBoardsDeletion != nil {
 		enableBoardsDeletion = true
 	}
 	b.server.Config().EnableDataRetention = enableBoardsDeletion
 
 	// Removed from the server config in v12, so the pointer is nil there.
 	boardsRetentionDays := am_model.DataRetentionSettingsDefaultBoardsRetentionDays
-	if mmconfig.DataRetentionSettings.BoardsRetentionDays != nil {
-		boardsRetentionDays = *mmconfig.DataRetentionSettings.BoardsRetentionDays
+	if amconfig.DataRetentionSettings.BoardsRetentionDays != nil {
+		boardsRetentionDays = *amconfig.DataRetentionSettings.BoardsRetentionDays
 	}
 	b.server.Config().DataRetentionDays = boardsRetentionDays
 
-	b.server.Config().TeammateNameDisplay = *mmconfig.TeamSettings.TeammateNameDisplay
+	b.server.Config().TeammateNameDisplay = *amconfig.TeamSettings.TeammateNameDisplay
 	showEmailAddress := false
-	if mmconfig.PrivacySettings.ShowEmailAddress != nil {
-		showEmailAddress = *mmconfig.PrivacySettings.ShowEmailAddress
+	if amconfig.PrivacySettings.ShowEmailAddress != nil {
+		showEmailAddress = *amconfig.PrivacySettings.ShowEmailAddress
 	}
 	b.server.Config().ShowEmailAddress = showEmailAddress
 	showFullName := false
-	if mmconfig.PrivacySettings.ShowFullName != nil {
-		showFullName = *mmconfig.PrivacySettings.ShowFullName
+	if amconfig.PrivacySettings.ShowFullName != nil {
+		showFullName = *amconfig.PrivacySettings.ShowFullName
 	}
 	b.server.Config().ShowFullName = showFullName
 	maxFileSize := int64(0)
-	if mmconfig.FileSettings.MaxFileSize != nil {
-		maxFileSize = *mmconfig.FileSettings.MaxFileSize
+	if amconfig.FileSettings.MaxFileSize != nil {
+		maxFileSize = *amconfig.FileSettings.MaxFileSize
 	}
 	b.server.Config().MaxFileSize = maxFileSize
 

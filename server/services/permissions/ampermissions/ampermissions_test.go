@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 //go:generate mockgen -destination=mocks/mockpluginapi.go -package mocks github.com/mattermost/mattermost-server/v6/plugin API
-package mmpermissions
+package ampermissions
 
 import (
 	"database/sql"

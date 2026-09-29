@@ -10,14 +10,14 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// setupMattermostTables creates all Mattermost tables needed for migrations and tests.
+// setupAntimatterTables creates all Mattermost tables needed for migrations and tests.
 //
 // Schema Maintenance Note:
 // The table schemas here are minimal snapshots of Mattermost's tables, containing only
 // columns needed for plugin operations. When Mattermost's schema evolves and our code
 // requires new columns, update the relevant setup*Table functions accordingly.
 // See mattermost_tables.go for more details on the maintenance strategy.
-func setupMattermostTables(t *testing.T, db *sql.DB) {
+func setupAntimatterTables(t *testing.T, db *sql.DB) {
 	t.Helper()
 
 	setupChannelsTable(t, db)

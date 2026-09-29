@@ -18,7 +18,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/server"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/config"
-	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mmpermissions"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/ampermissions"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store/sqlstore"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
@@ -442,7 +442,7 @@ func newTestServerPluginMode(sqlSettings *amModel.SqlSettings) (*server.Server, 
 	}
 
 	// Create Mattermost tables needed for migrations (Playbooks approach)
-	if err2 := sqlstore.SetupMattermostTablesForIntegration(sqlDB); err2 != nil {
+	if err2 := sqlstore.SetupAntimatterTablesForIntegration(sqlDB); err2 != nil {
 		panic(fmt.Errorf("failed to setup Mattermost tables: %w", err2))
 	}
 
@@ -525,7 +525,7 @@ func newTestServerPluginMode(sqlSettings *amModel.SqlSettings) (*server.Server, 
 	// Get the empty team ID from the store to pass to FakePermissionPluginAPI
 	emptyTeamID := db.GetEmptyTeamID()
 	fakePermissionAPI := &FakePermissionPluginAPI{emptyTeamID: emptyTeamID}
-	permissionsService := mmpermissions.New(db, fakePermissionAPI, logger)
+	permissionsService := ampermissions.New(db, fakePermissionAPI, logger)
 
 	params := server.Params{
 		Cfg:                cfg,

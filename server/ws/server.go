@@ -52,7 +52,7 @@ type Server struct {
 	listenersByBlock map[string][]*websocketSession
 	mu               sync.RWMutex
 	auth             *auth.Auth
-	isMattermostAuth bool
+	isAntimatterAuth bool
 	logger           mlog.LoggerIFace
 	store            Store
 }
@@ -81,7 +81,7 @@ func NewServer(auth *auth.Auth, logger mlog.LoggerIFace, store Store) *Server {
 			},
 		},
 		auth:             auth,
-		isMattermostAuth: true,
+		isAntimatterAuth: true,
 		logger:           logger,
 		store:            store,
 	}
@@ -109,7 +109,7 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		blocks: []string{},
 	}
 
-	if ws.isMattermostAuth {
+	if ws.isAntimatterAuth {
 		wsSession.userID = r.Header.Get("Mattermost-User-Id")
 	}
 

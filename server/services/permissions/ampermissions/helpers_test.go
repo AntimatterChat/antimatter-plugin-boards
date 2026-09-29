@@ -1,13 +1,13 @@
 // Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-package mmpermissions
+package ampermissions
 
 import (
 	"testing"
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
-	mmpermissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mmpermissions/mocks"
+	ampermissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/ampermissions/mocks"
 	permissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mocks"
 
 	amModel "github.com/mattermost/mattermost/server/public/model"
@@ -21,14 +21,14 @@ type TestHelper struct {
 	t           *testing.T
 	ctrl        *gomock.Controller
 	store       *permissionsMocks.MockStore
-	api         *mmpermissionsMocks.MockAPI
+	api         *ampermissionsMocks.MockAPI
 	permissions *Service
 }
 
 func SetupTestHelper(t *testing.T) *TestHelper {
 	ctrl := gomock.NewController(t)
 	mockStore := permissionsMocks.NewMockStore(ctrl)
-	mockAPI := mmpermissionsMocks.NewMockAPI(ctrl)
+	mockAPI := ampermissionsMocks.NewMockAPI(ctrl)
 
 	return &TestHelper{
 		t:           t,

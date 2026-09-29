@@ -688,9 +688,9 @@ func TestCopyCardFiles(t *testing.T) {
 	t.Run("ValidFileID", func(t *testing.T) {
 		sourceBoardID := utils.NewID(utils.IDTypeBoard)
 		destBoardID := utils.NewID(utils.IDTypeBoard)
-		validMattermostID := am_model.NewId()           // 26-char valid Mattermost ID
-		validFileID := "7" + validMattermostID + ".jpg" // Valid file ID: '7' + 26-char ID + extension
-		fileInfoID := validMattermostID                 // GetFileInfo extracts ID by removing '7' prefix and extension
+		validAntimatterID := am_model.NewId()           // 26-char valid Mattermost ID
+		validFileID := "7" + validAntimatterID + ".jpg" // Valid file ID: '7' + 26-char ID + extension
+		fileInfoID := validAntimatterID                 // GetFileInfo extracts ID by removing '7' prefix and extension
 		copiedBlocks := []*model.Block{
 			{
 				Type:    model.TypeImage,

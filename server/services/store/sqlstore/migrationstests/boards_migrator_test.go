@@ -29,7 +29,7 @@ import (
 var tablePrefix = "focalboard_"
 
 type BoardsMigrator struct {
-	withMattermostMigrations bool
+	withAntimatterMigrations bool
 	connString               string
 	driverName               string
 	db                       *sql.DB
@@ -38,13 +38,13 @@ type BoardsMigrator struct {
 	morphDriver              drivers.Driver
 }
 
-func NewBoardsMigrator(withMattermostMigrations bool) *BoardsMigrator {
+func NewBoardsMigrator(withAntimatterMigrations bool) *BoardsMigrator {
 	return &BoardsMigrator{
-		withMattermostMigrations: withMattermostMigrations,
+		withAntimatterMigrations: withAntimatterMigrations,
 	}
 }
 
-func (bm *BoardsMigrator) runMattermostMigrations() error {
+func (bm *BoardsMigrator) runAntimatterMigrations() error {
 	assets := db.Assets()
 	assetsList, err := assets.ReadDir(filepath.Join("migrations", bm.driverName))
 	if err != nil {
@@ -128,7 +128,7 @@ func (bm *BoardsMigrator) getMorphConnection() (*morph.Morph, drivers.Driver, er
 		"postgres":   bm.driverName == model.PostgresDBType,
 		"sqlite":     bm.driverName == model.SqliteDBType,
 		"mysql":      bm.driverName == model.MysqlDBType,
-		"plugin":     bm.withMattermostMigrations,
+		"plugin":     bm.withAntimatterMigrations,
 		"singleUser": false,
 	}
 
@@ -197,8 +197,8 @@ func (bm *BoardsMigrator) Setup() error {
 		return newErr
 	}
 
-	if bm.withMattermostMigrations {
-		if newErr := bm.runMattermostMigrations(); newErr != nil {
+	if bm.withAntimatterMigrations {
+		if newErr := bm.runAntimatterMigrations(); newErr != nil {
 			return newErr
 		}
 	}
@@ -254,7 +254,7 @@ func (bm *BoardsMigrator) Interceptors() map[int]func() error {
 	}
 	// Step 18 interceptor queries Mattermost core tables (e.g. TeamMembers)
 	// that only exist when Mattermost migrations have been applied (plugin mode).
-	if bm.withMattermostMigrations {
+	if bm.withAntimatterMigrations {
 		interceptors[18] = bm.store.RunDeletedMembershipBoardsMigration
 	}
 	return interceptors
