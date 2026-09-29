@@ -10,6 +10,7 @@ import Menu from '../../widgets/menu'
 
 import CheckIcon from '../../widgets/icons/check'
 import CompassIcon from '../../widgets/icons/compassIcon'
+import AntimatterIcon from '../../svg/antimatter-icon'
 
 import {Board, createBoard, BoardTypeOpen, BoardTypePrivate, MemberRole} from '../../blocks/board'
 import {useAppSelector} from '../../store/hooks'
@@ -95,10 +96,7 @@ const TeamPermissionsRow = (): React.JSX.Element => {
             {changeRoleConfirmation && confirmationDialog}
             <div className='user-item__content'>
                 {Utils.isFocalboardPlugin() &&
-                    <CompassIcon
-                        icon='mattermost'
-                        className='user-item__img'
-                    />
+                    <AntimatterIcon className='user-item__img'/>
                 }
                 <div className='ml-3'><strong>{intl.formatMessage({id: 'ShareBoard.teamPermissionsText', defaultMessage: 'Everyone at {teamName} Team'}, {teamName: team?.title})}</strong></div>
             </div>
