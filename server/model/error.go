@@ -16,11 +16,6 @@ import (
 )
 
 var (
-	ErrViewsLimitReached        = errors.New("views limit reached for board")
-	ErrPatchUpdatesLimitedCards = errors.New("patch updates cards that are limited")
-
-	ErrInsufficientLicense = errors.New("appropriate license required")
-
 	ErrCategoryPermissionDenied = errors.New("category doesn't belong to user")
 	ErrCategoryDeleted          = errors.New("category is deleted")
 
@@ -165,7 +160,6 @@ func (ni *ErrNotImplemented) Error() string {
 
 // IsErrBadRequest returns true if `err` is or wraps one of:
 // - model.ErrBadRequest
-// - model.ErrViewsLimitReached
 // - model.ErrAuthParam
 // - model.ErrInvalidCategory
 // - model.ErrBoardMemberIsLastAdmin
@@ -180,11 +174,6 @@ func IsErrBadRequest(err error) bool {
 	// check if this is a model.ErrBadRequest
 	var br *ErrBadRequest
 	if errors.As(err, &br) {
-		return true
-	}
-
-	// check if this is a model.ErrViewsLimitReached
-	if errors.Is(err, ErrViewsLimitReached) {
 		return true
 	}
 
@@ -228,7 +217,6 @@ func IsErrUnauthorized(err error) bool {
 // IsErrForbidden returns true if `err` is or wraps one of:
 // - model.ErrForbidden
 // - model.ErrPermission
-// - model.ErrPatchUpdatesLimitedCards
 // - model.ErrorCategoryPermissionDenied.
 func IsErrForbidden(err error) bool {
 	if err == nil {
@@ -244,11 +232,6 @@ func IsErrForbidden(err error) bool {
 	// check if this is a model.ErrPermission
 	var p *ErrPermission
 	if errors.As(err, &p) {
-		return true
-	}
-
-	// check if this is a model.ErrPatchUpdatesLimitedCards
-	if errors.Is(err, ErrPatchUpdatesLimitedCards) {
 		return true
 	}
 
@@ -308,20 +291,12 @@ func IsErrRequestEntityTooLarge(err error) bool {
 	return errors.Is(err, ErrRequestEntityTooLarge)
 }
 
-// IsErrNotImplemented returns true if `err` is or wraps one of:
-// - model.ErrNotImplemented
-// - model.ErrInsufficientLicense.
+// IsErrNotImplemented returns true if `err` is or wraps a model.ErrNotImplemented.
 func IsErrNotImplemented(err error) bool {
 	if err == nil {
 		return false
 	}
 
-	// check if this is a model.ErrNotImplemented
 	var eni *ErrNotImplemented
-	if errors.As(err, &eni) {
-		return true
-	}
-
-	// check if this is a model.ErrInsufficientLicense
-	return errors.Is(err, ErrInsufficientLicense)
+	return errors.As(err, &eni)
 }

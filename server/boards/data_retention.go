@@ -3,19 +3,11 @@
 package boards
 
 import (
-	"errors"
 	"time"
 )
 
-var ErrInsufficientLicense = errors.New("appropriate license required")
-
 func (b *BoardsApp) RunDataRetention(nowTime, batchSize int64) (int64, error) {
 	b.logger.Debug("Boards RunDataRetention")
-	license := b.server.Store().GetLicense()
-	if license == nil || !(*license.Features.DataRetention) {
-		return 0, ErrInsufficientLicense
-	}
-
 	if b.server.Config().EnableDataRetention {
 		boardsRetentionDays := b.server.Config().DataRetentionDays
 		endTimeBoards := convertDaysToCutoff(boardsRetentionDays, time.Unix(nowTime/1000, 0))

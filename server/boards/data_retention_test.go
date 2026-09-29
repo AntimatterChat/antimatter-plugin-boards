@@ -15,7 +15,6 @@ import (
 	"github.com/mattermost/mattermost-plugin-boards/server/services/store/mockstore"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
@@ -87,51 +86,13 @@ func TestRunDataRetention(t *testing.T) {
 
 	now := time.Now().UnixNano()
 
-	t.Run("test null license", func(t *testing.T) {
-		th.Store.EXPECT().GetLicense().Return(nil)
-		_, err := b.RunDataRetention(now, 10)
-		assert.NotNil(t, err)
-		assert.Equal(t, ErrInsufficientLicense, err)
-	})
-
-	t.Run("test invalid license", func(t *testing.T) {
-		falseValue := false
-
-		th.Store.EXPECT().GetLicense().Return(
-			&model.License{
-				Features: &model.Features{
-					DataRetention: &falseValue,
-				},
-			},
-		)
-		_, err := b.RunDataRetention(now, 10)
-		assert.NotNil(t, err)
-		assert.Equal(t, ErrInsufficientLicense, err)
-	})
-
-	t.Run("test valid license, invalid config", func(t *testing.T) {
-		trueValue := true
-		th.Store.EXPECT().GetLicense().Return(
-			&model.License{
-				Features: &model.Features{
-					DataRetention: &trueValue,
-				},
-			})
-
+	t.Run("test data retention disabled", func(t *testing.T) {
 		count, err := b.RunDataRetention(now, 10)
 		assert.Nil(t, err)
 		assert.Equal(t, int64(0), count)
 	})
 
-	t.Run("test valid license, valid config", func(t *testing.T) {
-		trueValue := true
-		th.Store.EXPECT().GetLicense().Return(
-			&model.License{
-				Features: &model.Features{
-					DataRetention: &trueValue,
-				},
-			})
-
+	t.Run("test data retention enabled", func(t *testing.T) {
 		th.Store.EXPECT().RunDataRetention(gomock.Any(), int64(10)).Return(int64(100), nil)
 		b.server.Config().EnableDataRetention = true
 

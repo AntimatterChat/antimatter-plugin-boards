@@ -88,11 +88,6 @@ func (a *App) GetBoardCount(includeDeleted bool) (int64, error) {
 }
 
 func (a *App) GetBoardMetadata(boardID string) (*model.Board, *model.BoardMetadata, error) {
-	license := a.store.GetLicense()
-	if license == nil || license.Features == nil || license.Features.Compliance == nil || !(*license.Features.Compliance) {
-		return nil, nil, model.ErrInsufficientLicense
-	}
-
 	board, err := a.GetBoard(boardID)
 	if model.IsErrNotFound(err) {
 		// Board may have been deleted, retrieve most recent history instead

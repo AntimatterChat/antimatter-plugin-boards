@@ -29,7 +29,6 @@ func TestErrorResponse(t *testing.T) {
 	}{
 		// bad request
 		{"ErrBadRequest", model.NewErrBadRequest("bad field"), http.StatusBadRequest, "bad field"},
-		{"ErrViewsLimitReached", model.ErrViewsLimitReached, http.StatusBadRequest, "limit reached"},
 		{"ErrInvalidCategory", model.NewErrInvalidCategory("open"), http.StatusBadRequest, "open"},
 		{"ErrBoardMemberIsLastAdmin", model.ErrBoardMemberIsLastAdmin, http.StatusBadRequest, "no admins"},
 		{"ErrBoardIDMismatch", model.ErrBoardIDMismatch, http.StatusBadRequest, "Board IDs do not match"},
@@ -42,7 +41,6 @@ func TestErrorResponse(t *testing.T) {
 		// forbidden
 		{"ErrForbidden", model.NewErrForbidden("not enough permissions"), http.StatusForbidden, "not enough permissions"},
 		{"ErrPermission", model.NewErrPermission("not enough permissions"), http.StatusForbidden, "not enough permissions"},
-		{"ErrPatchUpdatesLimitedCards", model.ErrPatchUpdatesLimitedCards, http.StatusForbidden, "cards that are limited"},
 		{"ErrCategoryPermissionDenied", model.ErrCategoryPermissionDenied, http.StatusForbidden, "doesn't belong to user"},
 
 		// not found
@@ -56,7 +54,6 @@ func TestErrorResponse(t *testing.T) {
 		{"ErrRequestEntityTooLarge", model.ErrRequestEntityTooLarge, http.StatusRequestEntityTooLarge, "entity too large"},
 
 		// not implemented
-		{"ErrNotFound", model.ErrInsufficientLicense, http.StatusNotImplemented, "appropriate license required"},
 		{"ErrNotImplemented", model.NewErrNotImplemented("not implemented in plugin mode"), http.StatusNotImplemented, "plugin mode"},
 
 		// internal server error

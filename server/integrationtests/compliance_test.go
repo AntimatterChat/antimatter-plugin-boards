@@ -5,8 +5,6 @@ package integrationtests
 
 import (
 	"math"
-	"os"
-	"strconv"
 	"testing"
 
 	"github.com/mattermost/mattermost-plugin-boards/server/model"
@@ -21,9 +19,7 @@ var (
 	OneYear int64 = OneDay * 365
 )
 
-func setupTestHelperForCompliance(t *testing.T, complianceLicense bool) (*TestHelper, Clients) {
-	os.Setenv("FOCALBOARD_UNIT_TESTING_COMPLIANCE", strconv.FormatBool(complianceLicense))
-
+func setupTestHelperForCompliance(t *testing.T) (*TestHelper, Clients) {
 	th := SetupTestHelperPluginMode(t)
 	clients := setupClients(th)
 
@@ -34,21 +30,8 @@ func setupTestHelperForCompliance(t *testing.T, complianceLicense bool) (*TestHe
 }
 
 func TestGetBoardsForCompliance(t *testing.T) {
-	t.Run("missing Features.Compliance license should fail", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, false)
-		defer th.TearDown()
-
-		teamID := mmModel.NewId()
-		_ = th.CreateBoards(teamID, model.BoardTypeOpen, 2)
-
-		bcr, resp := clients.Admin.GetBoardsForCompliance(teamID, 0, 0)
-
-		th.CheckNotImplemented(resp)
-		require.Nil(t, bcr)
-	})
-
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -61,7 +44,7 @@ func TestGetBoardsForCompliance(t *testing.T) {
 	})
 
 	t.Run("a user without manage_system permission should be rejected", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -74,7 +57,7 @@ func TestGetBoardsForCompliance(t *testing.T) {
 	})
 
 	t.Run("good call", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -88,7 +71,7 @@ func TestGetBoardsForCompliance(t *testing.T) {
 	})
 
 	t.Run("pagination", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -112,7 +95,7 @@ func TestGetBoardsForCompliance(t *testing.T) {
 	})
 
 	t.Run("invalid teamID", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		// Create boards with a valid team ID
@@ -129,21 +112,8 @@ func TestGetBoardsForCompliance(t *testing.T) {
 }
 
 func TestGetBoardsComplianceHistory(t *testing.T) {
-	t.Run("missing Features.Compliance license should fail", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, false)
-		defer th.TearDown()
-
-		teamID := mmModel.NewId()
-		_ = th.CreateBoards(teamID, model.BoardTypeOpen, 2)
-
-		bchr, resp := clients.Admin.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, teamID, 0, 0)
-
-		th.CheckNotImplemented(resp)
-		require.Nil(t, bchr)
-	})
-
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -156,7 +126,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 	})
 
 	t.Run("a user without manage_system permission should be rejected", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -169,7 +139,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 	})
 
 	t.Run("good call, exclude deleted", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -191,7 +161,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 	})
 
 	t.Run("good call, include deleted", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -213,7 +183,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 	})
 
 	t.Run("pagination", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -237,7 +207,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 	})
 
 	t.Run("invalid teamID", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		// Create boards with a valid team ID
@@ -254,21 +224,8 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 }
 
 func TestGetBlocksComplianceHistory(t *testing.T) {
-	t.Run("missing Features.Compliance license should fail", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, false)
-		defer th.TearDown()
-
-		teamID := mmModel.NewId()
-		board, _ := th.CreateBoardAndCards(teamID, model.BoardTypeOpen, 2)
-
-		bchr, resp := clients.Admin.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, teamID, board.ID, 0, 0)
-
-		th.CheckNotImplemented(resp)
-		require.Nil(t, bchr)
-	})
-
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -281,7 +238,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 	})
 
 	t.Run("a user without manage_system permission should be rejected", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -294,7 +251,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 	})
 
 	t.Run("good call, exclude deleted", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -316,7 +273,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 	})
 
 	t.Run("good call, include deleted", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -338,7 +295,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 	})
 
 	t.Run("pagination", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()
@@ -362,7 +319,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 	})
 
 	t.Run("invalid teamID", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		// Create board with a valid team ID
@@ -378,7 +335,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 	})
 
 	t.Run("invalid boardID", func(t *testing.T) {
-		th, clients := setupTestHelperForCompliance(t, true)
+		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
 		teamID := mmModel.NewId()

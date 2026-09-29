@@ -33,7 +33,7 @@ func (a *API) handleGetBoardsForCompliance(w http.ResponseWriter, r *http.Reques
 	//
 	// Returns boards for a specific team, or all teams.
 	//
-	// Requires a license that includes Compliance feature. Caller must have `manage_system` permissions.
+	// Caller must have `manage_system` permissions.
 	//
 	// ---
 	// produces:
@@ -77,13 +77,6 @@ func (a *API) handleGetBoardsForCompliance(w http.ResponseWriter, r *http.Reques
 	userID := getUserID(r)
 	if !a.permissions.HasPermissionTo(userID, mm_model.PermissionManageSystem) {
 		a.errorResponse(w, r, model.NewErrUnauthorized("access denied Compliance Export getAllBoards"))
-		return
-	}
-
-	// check for valid license feature: compliance
-	license := a.app.GetLicense()
-	if license == nil || license.Features == nil || license.Features.Compliance == nil || !(*license.Features.Compliance) {
-		a.errorResponse(w, r, model.NewErrNotImplemented("insufficient license Compliance Export getAllBoards"))
 		return
 	}
 
@@ -151,7 +144,7 @@ func (a *API) handleGetBoardsComplianceHistory(w http.ResponseWriter, r *http.Re
 	//
 	// Returns boards histories for a specific team, or all teams.
 	//
-	// Requires a license that includes Compliance feature. Caller must have `manage_system` permissions.
+	// Caller must have `manage_system` permissions.
 	//
 	// ---
 	// produces:
@@ -212,13 +205,6 @@ func (a *API) handleGetBoardsComplianceHistory(w http.ResponseWriter, r *http.Re
 	userID := getUserID(r)
 	if !a.permissions.HasPermissionTo(userID, mm_model.PermissionManageSystem) {
 		a.errorResponse(w, r, model.NewErrUnauthorized("access denied Compliance Export getBoardsHistory"))
-		return
-	}
-
-	// check for valid license feature: compliance
-	license := a.app.GetLicense()
-	if license == nil || license.Features == nil || license.Features.Compliance == nil || !(*license.Features.Compliance) {
-		a.errorResponse(w, r, model.NewErrNotImplemented("insufficient license Compliance Export getBoardsHistory"))
 		return
 	}
 
@@ -294,7 +280,7 @@ func (a *API) handleGetBlocksComplianceHistory(w http.ResponseWriter, r *http.Re
 	//
 	// Returns block histories for a specific team, specific board, or all teams and boards.
 	//
-	// Requires a license that includes Compliance feature. Caller must have `manage_system` permissions.
+	// Caller must have `manage_system` permissions.
 	//
 	// ---
 	// produces:
@@ -361,13 +347,6 @@ func (a *API) handleGetBlocksComplianceHistory(w http.ResponseWriter, r *http.Re
 	userID := getUserID(r)
 	if !a.permissions.HasPermissionTo(userID, mm_model.PermissionManageSystem) {
 		a.errorResponse(w, r, model.NewErrUnauthorized("access denied Compliance Export getBlocksHistory"))
-		return
-	}
-
-	// check for valid license feature: compliance
-	license := a.app.GetLicense()
-	if license == nil || license.Features == nil || license.Features.Compliance == nil || !(*license.Features.Compliance) {
-		a.errorResponse(w, r, model.NewErrNotImplemented("insufficient license Compliance Export getBlocksHistory"))
 		return
 	}
 
