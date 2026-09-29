@@ -104,7 +104,6 @@ exports[`components/viewHeader/dateFilter handles calendar click event 1`] = `
           "visiblePropertyIds": [],
         },
         "id": "testViewID",
-        "limited": false,
         "modifiedBy": "",
         "parentId": "",
         "schema": 1,

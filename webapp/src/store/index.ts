@@ -18,7 +18,6 @@ import {reducer as searchTextReducer} from './searchText'
 import {reducer as globalErrorReducer} from './globalError'
 import {reducer as clientConfigReducer} from './clientConfig'
 import {reducer as sidebarReducer} from './sidebar'
-import {reducer as limitsReducer} from './limits'
 import {reducer as attachmentsReducer} from './attachments'
 
 const store = configureStore({
@@ -37,7 +36,6 @@ const store = configureStore({
         globalError: globalErrorReducer,
         clientConfig: clientConfigReducer,
         sidebar: sidebarReducer,
-        limits: limitsReducer,
         attachments: attachmentsReducer,
     },
 })
