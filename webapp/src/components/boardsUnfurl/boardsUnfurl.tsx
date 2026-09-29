@@ -11,7 +11,7 @@ import {getLanguage} from '../../store/language'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentTeamId} from '../../store/teams'
 
-import {WSClient, MMWebSocketClient} from '../../wsclient'
+import {WSClient, AMWebSocketClient} from '../../wsclient'
 import manifest from '../../manifest'
 
 import {getMessages} from './../../i18n'
@@ -34,7 +34,7 @@ type Props = {
     embed: {
         data: string,
     },
-    webSocketClient?: MMWebSocketClient,
+    webSocketClient?: AMWebSocketClient,
 }
 
 class FocalboardEmbeddedData {

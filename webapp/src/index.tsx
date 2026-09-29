@@ -11,7 +11,7 @@ import {selectTeam} from 'mattermost-redux/actions/teams'
 
 import appBarIcon from '../static/app-bar-icon.png'
 
-import {setMattermostTheme} from './theme'
+import {setAntimatterTheme} from './theme'
 import FocalboardIcon from './widgets/icons/logo'
 import GlobalHeader from './components/globalHeader/globalHeader'
 import App from './app'
@@ -35,7 +35,7 @@ import RHSChannelBoards from './components/rhsChannelBoards'
 import RHSChannelBoardsHeader from './components/rhsChannelBoardsHeader'
 import BoardSelector from './components/boardSelector'
 import wsClient, {
-    MMWebSocketClient,
+    AMWebSocketClient,
     ACTION_UPDATE_BLOCK,
     ACTION_UPDATE_CLIENT_CONFIG,
     ACTION_UPDATE_SUBSCRIPTION,
@@ -64,7 +64,7 @@ function getSubpath(siteURL: string): string {
 }
 
 type Props = {
-    webSocketClient: MMWebSocketClient
+    webSocketClient: AMWebSocketClient
 }
 
 let browserHistory: History<unknown>
@@ -115,8 +115,8 @@ export default class Plugin {
     registry?: PluginRegistry
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
-    async initialize(registry: PluginRegistry, mmStore: Store<GlobalState, Action>): Promise<void> {
-        const siteURL = mmStore.getState().entities.general.config.SiteURL
+    async initialize(registry: PluginRegistry, amStore: Store<GlobalState, Action>): Promise<void> {
+        const siteURL = amStore.getState().entities.general.config.SiteURL
         const subpath = siteURL ? getSubpath(siteURL) : ''
         windowAny.frontendBaseURL = subpath + windowAny.frontendBaseURL
         windowAny.baseURL = subpath + windowAny.baseURL
@@ -131,9 +131,9 @@ export default class Plugin {
 
         this.registry = registry
 
-        UserSettings.nameFormat = mmStore.getState().entities.preferences?.myPreferences['display_settings--name_format']?.value || null
-        let theme = mmStore.getState().entities.preferences.myPreferences.theme
-        setMattermostTheme(theme)
+        UserSettings.nameFormat = amStore.getState().entities.preferences?.myPreferences['display_settings--name_format']?.value || null
+        let theme = amStore.getState().entities.preferences.myPreferences.theme
+        setAntimatterTheme(theme)
 
         const productID = process.env.TARGET_IS_PRODUCT ? 'boards' : manifest.id
 
@@ -156,7 +156,7 @@ export default class Plugin {
             if (preferences) {
                 for (const preference of preferences) {
                     if (preference.category === 'theme' && theme !== preference.value) {
-                        setMattermostTheme(JSON.parse(preference.value))
+                        setAntimatterTheme(JSON.parse(preference.value))
                         theme = preference.value
                     }
                     if (preference.category === 'display_settings' && preference.name === 'name_format') {
@@ -174,27 +174,27 @@ export default class Plugin {
             })
         }
 
-        let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
+        let lastViewedChannel = amStore.getState().entities.channels.currentChannelId
         let prevTeamID: string
 
-        const currentChannel = mmStore.getState().entities.channels.currentChannelId
-        const currentChannelObj = mmStore.getState().entities.channels.channels[currentChannel]
+        const currentChannel = amStore.getState().entities.channels.currentChannelId
+        const currentChannelObj = amStore.getState().entities.channels.channels[currentChannel]
         store.dispatch(setChannel(currentChannelObj))
 
-        mmStore.subscribe(() => {
-            const currentUserId = mmStore.getState().entities.users.currentUserId
-            const currentChannel = mmStore.getState().entities.channels.currentChannelId
+        amStore.subscribe(() => {
+            const currentUserId = amStore.getState().entities.users.currentUserId
+            const currentChannel = amStore.getState().entities.channels.currentChannelId
             if (lastViewedChannel !== currentChannel && currentChannel) {
                 localStorage.setItem('focalboardLastViewedChannel:' + currentUserId, currentChannel)
                 lastViewedChannel = currentChannel
                 octoClient.channelId = currentChannel
-                const currentChannelObj = mmStore.getState().entities.channels.channels[lastViewedChannel]
+                const currentChannelObj = amStore.getState().entities.channels.channels[lastViewedChannel]
                 store.dispatch(setChannel(currentChannelObj))
             }
 
             // Watch for change in active team.
             // This handles the user selecting a team from the team sidebar.
-            const currentTeamID = mmStore.getState().entities.teams.currentTeamId
+            const currentTeamID = amStore.getState().entities.teams.currentTeamId
             if (currentTeamID && currentTeamID !== prevTeamID) {
                 if (prevTeamID && window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
                     // Don't re-push the URL if we're already on a URL for the current team
@@ -208,23 +208,23 @@ export default class Plugin {
             }
 
             if (currentTeamID && currentTeamID !== prevTeamID) {
-                let theme = mmStore.getState().entities.preferences.myPreferences[`theme--${currentTeamID}`]
+                let theme = amStore.getState().entities.preferences.myPreferences[`theme--${currentTeamID}`]
                 if (!theme) {
-                    theme = mmStore.getState().entities.preferences.myPreferences['theme--'] || mmStore.getState().entities.preferences.myPreferences.theme
+                    theme = amStore.getState().entities.preferences.myPreferences['theme--'] || amStore.getState().entities.preferences.myPreferences.theme
                 }
-                setMattermostTheme(theme)
+                setAntimatterTheme(theme)
             }
         })
 
         let fbPrevTeamID = store.getState().teams.currentId
         store.subscribe(() => {
             const currentTeamID: string = store.getState().teams.currentId
-            const currentUserId = mmStore.getState().entities.users.currentUserId
+            const currentUserId = amStore.getState().entities.users.currentUserId
             if (currentTeamID !== fbPrevTeamID) {
                 fbPrevTeamID = currentTeamID
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
-                mmStore.dispatch(selectTeam(currentTeamID))
+                amStore.dispatch(selectTeam(currentTeamID))
                 localStorage.setItem(`user_prev_team:${currentUserId}`, currentTeamID)
             }
         })
@@ -233,7 +233,7 @@ export default class Plugin {
             windowAny.frontendBaseURL = subpath + '/boards'
 
             const {rhsId, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
-                (props: {webSocketClient: MMWebSocketClient}) => (
+                (props: {webSocketClient: AMWebSocketClient}) => (
                     <ReduxProvider store={store}>
                         <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
                             <RHSChannelBoards />
@@ -249,7 +249,7 @@ export default class Plugin {
             )
             this.rhsId = rhsId
 
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon />, () => mmStore.dispatch(toggleRHSPlugin), 'Boards', 'Boards')
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon />, () => amStore.dispatch(toggleRHSPlugin), 'Boards', 'Boards')
 
             this.registry.registerProduct(
                 '/boards',
@@ -263,7 +263,7 @@ export default class Plugin {
             )
 
             if (this.registry.registerAppBarComponent) {
-                this.registry.registerAppBarComponent(Utils.buildURL(appBarIcon, true), () => mmStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
+                this.registry.registerAppBarComponent(Utils.buildURL(appBarIcon, true), () => amStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
             }
 
             if (this.registry.registerActionAfterChannelCreation) {
@@ -284,7 +284,7 @@ export default class Plugin {
 
             this.registry.registerPostWillRenderEmbedComponent(
                 (embed) => embed.type === 'boards',
-                (props: {embed: {data: string}, webSocketClient: MMWebSocketClient}) => (
+                (props: {embed: {data: string}, webSocketClient: AMWebSocketClient}) => (
                     <ReduxProvider store={store}>
                         <BoardsUnfurl
                             embed={props.embed}
@@ -320,7 +320,7 @@ export default class Plugin {
             }
         }
 
-        this.boardSelectorId = this.registry.registerRootComponent((props: {webSocketClient: MMWebSocketClient}) => (
+        this.boardSelectorId = this.registry.registerRootComponent((props: {webSocketClient: AMWebSocketClient}) => (
             <ReduxProvider store={store}>
                 <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
                     <BoardSelector />
@@ -331,7 +331,7 @@ export default class Plugin {
         windowAny.getCurrentTeamId = (): string => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            return mmStore.getState().entities.teams.currentTeamId
+            return amStore.getState().entities.teams.currentTeamId
         }
     }
 

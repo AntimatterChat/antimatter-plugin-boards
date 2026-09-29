@@ -21,11 +21,11 @@ export type PostUtils = {
     messageHtmlToComponent: (html: string, options: Props) => React.ReactNode;
 }
 
-export type MattermostWindow = {
+export type AntimatterWindow = {
     PostUtils: PostUtils;
 }
 
-const postUtils = (global as unknown as MattermostWindow).PostUtils
+const postUtils = (global as unknown as AntimatterWindow).PostUtils
 
 export const formatText = postUtils ? postUtils.formatText : () => ''
 export const messageHtmlToComponent = postUtils ? postUtils.messageHtmlToComponent : () => null

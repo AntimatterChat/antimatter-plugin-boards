@@ -185,7 +185,7 @@ export function setTheme(theme: Theme | null): Theme {
     return consolidatedTheme
 }
 
-export function setMattermostTheme(theme: any): Theme {
+export function setAntimatterTheme(theme: any): Theme {
     if (!theme) {
         return setTheme(defaultTheme)
     }

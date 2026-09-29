@@ -64,7 +64,7 @@ export interface Subscription {
 }
 
 // The Mattermost websocket client interface
-export interface MMWebSocketClient {
+export interface AMWebSocketClient {
     conn: WebSocket | null
     sendMessage(action: string, data: any, responseCallback?: () => void): void /* eslint-disable-line @typescript-eslint/no-explicit-any */
     addFirstConnectListener(callback: () => void): void
@@ -106,7 +106,7 @@ type Subscriptions = {
 
 class WSClient {
     ws: WebSocket|null = null
-    client: MMWebSocketClient|null = null
+    client: AMWebSocketClient|null = null
     onPluginReconnect: null|(() => void) = null
     token = ''
     pluginId = ''
@@ -155,7 +155,7 @@ class WSClient {
         this.serverUrl = serverUrl
     }
 
-    initPlugin(pluginId: string, pluginVersion: string, client: MMWebSocketClient): void {
+    initPlugin(pluginId: string, pluginVersion: string, client: AMWebSocketClient): void {
         this.pluginId = pluginId
         this.pluginVersion = pluginVersion
         this.clientPrefix = `custom_${pluginId}_`

@@ -3,7 +3,7 @@
 
 import React, {useEffect} from 'react'
 
-import wsClient, {MMWebSocketClient} from '../wsclient'
+import wsClient, {AMWebSocketClient} from '../wsclient'
 import {Utils} from '../utils'
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
         id: string
         version: string
     }
-    webSocketClient?: MMWebSocketClient
+    webSocketClient?: AMWebSocketClient
     children: React.ReactNode
 }
 
