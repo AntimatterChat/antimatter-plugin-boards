@@ -4,7 +4,7 @@
 package notifylogger
 
 import (
-	"github.com/mattermost/mattermost-plugin-boards/server/services/notify"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/notify"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )

@@ -7,13 +7,13 @@ import (
 	"os"
 	"testing"
 
+	"github.com/antimatterchat/antimatter-plugin-boards/server/integrationtests"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/server"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/ws"
 	"github.com/golang/mock/gomock"
-	"github.com/mattermost/mattermost-plugin-boards/server/integrationtests"
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	"github.com/mattermost/mattermost-plugin-boards/server/server"
-	"github.com/mattermost/mattermost-plugin-boards/server/ws"
 
-	mockservicesapi "github.com/mattermost/mattermost-plugin-boards/server/model/mocks"
+	mockservicesapi "github.com/antimatterchat/antimatter-plugin-boards/server/model/mocks"
 
 	serverModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"

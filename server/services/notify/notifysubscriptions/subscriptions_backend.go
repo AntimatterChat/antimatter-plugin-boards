@@ -9,9 +9,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/notify"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/permissions"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/notify"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"

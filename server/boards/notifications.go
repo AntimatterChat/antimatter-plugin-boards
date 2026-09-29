@@ -7,13 +7,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/config"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/notify/notifymentions"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/notify/notifysubscriptions"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/notify/plugindelivery"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/permissions"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/store"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/config"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/notify/notifymentions"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/notify/notifysubscriptions"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/notify/plugindelivery"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )

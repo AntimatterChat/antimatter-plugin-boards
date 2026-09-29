@@ -6,9 +6,9 @@ package api
 import (
 	"net/http"
 
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/audit"
 	"github.com/gorilla/mux"
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/audit"
 )
 
 func (a *API) registerContentBlocksRoutes(r *mux.Router) {

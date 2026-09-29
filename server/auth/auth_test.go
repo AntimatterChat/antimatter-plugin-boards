@@ -6,8 +6,8 @@ package auth
 import (
 	"testing"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/store/mockstore"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store/mockstore"
 )
 
 type TestHelper struct {

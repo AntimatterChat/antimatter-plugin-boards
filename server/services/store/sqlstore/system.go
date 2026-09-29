@@ -5,7 +5,7 @@ package sqlstore
 
 import (
 	sq "github.com/Masterminds/squirrel"
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 )
 
 func (s *SQLStore) getSystemSetting(db sq.BaseRunner, key string) (string, error) {

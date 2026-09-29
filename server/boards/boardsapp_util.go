@@ -8,7 +8,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/services/config"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/config"
 
 	mm_model "github.com/mattermost/mattermost/server/public/model"
 )

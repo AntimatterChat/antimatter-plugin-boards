@@ -11,7 +11,7 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/mattermost/mattermost/server/public/pluginapi/cluster"
 
 	mmModel "github.com/mattermost/mattermost/server/public/model"

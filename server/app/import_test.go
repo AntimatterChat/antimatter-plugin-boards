@@ -12,9 +12,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 	"github.com/golang/mock/gomock"
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	"github.com/mattermost/mattermost-plugin-boards/server/utils"
 	"github.com/mattermost/mattermost/server/public/plugin/plugintest/mock"
 	"github.com/mattermost/mattermost/server/v8/platform/shared/filestore/mocks"
 	"github.com/stretchr/testify/require"

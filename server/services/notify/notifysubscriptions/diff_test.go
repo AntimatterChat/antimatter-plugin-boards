@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 )
 
 func TestSafeBlockID(t *testing.T) {

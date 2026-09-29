@@ -19,10 +19,10 @@ endif
 
 BUILD_TAGS += json1 sqlite3
 
-LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD_NUMBER)"
-LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
-LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"
-LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=plugin"
+LDFLAGS += -X "github.com/antimatterchat/antimatter-plugin-boards/server/model.BuildNumber=$(BUILD_NUMBER)"
+LDFLAGS += -X "github.com/antimatterchat/antimatter-plugin-boards/server/model.BuildDate=$(BUILD_DATE)"
+LDFLAGS += -X "github.com/antimatterchat/antimatter-plugin-boards/server/model.BuildHash=$(BUILD_HASH)"
+LDFLAGS += -X "github.com/antimatterchat/antimatter-plugin-boards/server/model.Edition=plugin"
 
 GO ?= $(shell command -v go 2> /dev/null)
 NPM ?= $(shell command -v npm 2> /dev/null)

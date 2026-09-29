@@ -8,8 +8,8 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/golang/mock/gomock"
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

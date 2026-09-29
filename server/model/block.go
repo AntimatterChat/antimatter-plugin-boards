@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"unicode/utf8"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/services/audit"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/audit"
 	mmModel "github.com/mattermost/mattermost/server/public/model"
 )
 

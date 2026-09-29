@@ -6,14 +6,14 @@ package storetests
 import (
 	"fmt"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	"github.com/mattermost/mattermost-plugin-boards/server/utils"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/services/store"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store"
 )
 
 func StoreTestTeamStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {

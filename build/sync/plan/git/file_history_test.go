@@ -13,7 +13,7 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/stretchr/testify/assert"
 
-	gitutil "github.com/mattermost/mattermost-plugin-starter-template/build/sync/plan/git"
+	gitutil "github.com/antimatterchat/antimatter-plugin-boards/build/sync/plan/git"
 )
 
 var fileContents = []byte("abcdefg")

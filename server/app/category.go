@@ -7,8 +7,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	"github.com/mattermost/mattermost-plugin-boards/server/utils"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 )
 
 var errCategoryNotFound = errors.New("category ID specified in input does not exist for user")

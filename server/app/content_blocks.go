@@ -6,7 +6,7 @@ package app
 import (
 	"fmt"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 )
 
 func (a *App) MoveContentBlock(block *model.Block, dstBlock *model.Block, where string, userID string) error {

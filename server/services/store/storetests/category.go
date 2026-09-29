@@ -6,9 +6,9 @@ package storetests
 import (
 	"testing"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/store"
-	"github.com/mattermost/mattermost-plugin-boards/server/utils"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 	"github.com/stretchr/testify/assert"
 )
 

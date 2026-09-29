@@ -5,10 +5,10 @@
 package auth
 
 import (
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/config"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/permissions"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/store"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/config"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store"
 	"github.com/pkg/errors"
 )
 

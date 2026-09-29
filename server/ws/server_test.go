@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/auth"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/auth"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 

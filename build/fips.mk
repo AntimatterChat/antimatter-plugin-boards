@@ -33,7 +33,7 @@ server-fips: templates-archive
 	  $(FIPS_IMAGE) \
 	  /bin/sh -c 'CGO_ENABLED=1 GOOS=linux GOARCH=amd64 \
 	    go build -trimpath -buildvcs=false \
-	    -ldflags "-X github.com/mattermost/focalboard/server/model.BuildNumber=$${BUILD_NUMBER} -X github.com/mattermost/focalboard/server/model.BuildDate=$${BUILD_DATE} -X github.com/mattermost/focalboard/server/model.BuildHash=$${BUILD_HASH} -X github.com/mattermost/focalboard/server/model.Edition=plugin" \
+	    -ldflags "-X github.com/antimatterchat/antimatter-plugin-boards/server/model.BuildNumber=$${BUILD_NUMBER} -X github.com/antimatterchat/antimatter-plugin-boards/server/model.BuildDate=$${BUILD_DATE} -X github.com/antimatterchat/antimatter-plugin-boards/server/model.BuildHash=$${BUILD_HASH} -X github.com/antimatterchat/antimatter-plugin-boards/server/model.Edition=plugin" \
 	    $(GO_BUILD_GCFLAGS) $(FIPS_GO_BUILD_LDFLAGS) \
 	    -tags requirefips \
 	    -o dist-fips/plugin-linux-amd64-fips'

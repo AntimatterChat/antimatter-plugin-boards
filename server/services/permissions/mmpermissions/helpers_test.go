@@ -6,9 +6,9 @@ package mmpermissions
 import (
 	"testing"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	mmpermissionsMocks "github.com/mattermost/mattermost-plugin-boards/server/services/permissions/mmpermissions/mocks"
-	permissionsMocks "github.com/mattermost/mattermost-plugin-boards/server/services/permissions/mocks"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
+	mmpermissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mmpermissions/mocks"
+	permissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mocks"
 
 	mmModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"

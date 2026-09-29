@@ -4,7 +4,7 @@
 package notifymentions
 
 import (
-	"github.com/mattermost/mattermost-plugin-boards/server/services/notify"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/notify"
 
 	mm_model "github.com/mattermost/mattermost/server/public/model"
 )

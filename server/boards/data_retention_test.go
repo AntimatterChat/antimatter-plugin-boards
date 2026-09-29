@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/antimatterchat/antimatter-plugin-boards/server/server"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/config"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/localpermissions"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store/mockstore"
 	"github.com/golang/mock/gomock"
-	"github.com/mattermost/mattermost-plugin-boards/server/server"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/config"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/permissions/localpermissions"
-	"github.com/mattermost/mattermost-plugin-boards/server/services/store/mockstore"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"

@@ -1,4 +1,4 @@
-module github.com/mattermost/mattermost-plugin-boards
+module github.com/antimatterchat/antimatter-plugin-boards
 
 go 1.24.6
 
@@ -115,5 +115,3 @@ require (
 	modernc.org/memory v1.10.0 // indirect
 	modernc.org/sqlite v1.37.0 // indirect
 )
-
-replace github.com/mattermost/focalboard/server => ../server

@@ -12,7 +12,7 @@ import (
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/utils"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
 	"github.com/stretchr/testify/require"
 )

@@ -10,8 +10,8 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/app"
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/app"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 

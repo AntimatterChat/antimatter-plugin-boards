@@ -1,4 +1,4 @@
-module github.com/mattermost/mattermost-plugin-boards/server
+module github.com/antimatterchat/antimatter-plugin-boards/server
 
 go 1.19
 

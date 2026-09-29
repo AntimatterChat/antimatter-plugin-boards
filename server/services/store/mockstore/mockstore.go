@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 	time "time"
 
+	model "github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	gomock "github.com/golang/mock/gomock"
-	model "github.com/mattermost/mattermost-plugin-boards/server/model"
 	model0 "github.com/mattermost/mattermost/server/public/model"
 )
 

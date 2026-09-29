@@ -6,8 +6,8 @@ package app
 import (
 	"testing"
 
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/golang/mock/gomock"
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
 	mmModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/assert"
 )

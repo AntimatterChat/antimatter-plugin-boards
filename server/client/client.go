@@ -12,8 +12,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/api"
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/api"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
 	mmModel "github.com/mattermost/mattermost/server/public/model"
 )

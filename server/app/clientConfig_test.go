@@ -6,7 +6,7 @@ package app
 import (
 	"testing"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/services/config"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/services/config"
 	"github.com/stretchr/testify/require"
 )
 

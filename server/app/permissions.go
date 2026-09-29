@@ -4,7 +4,7 @@
 package app
 
 import (
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
 	mm_model "github.com/mattermost/mattermost/server/public/model"
 )

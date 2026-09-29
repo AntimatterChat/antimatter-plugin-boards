@@ -7,8 +7,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/gorilla/mux"
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
 	mmModel "github.com/mattermost/mattermost/server/public/model"
 )
 

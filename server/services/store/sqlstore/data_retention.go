@@ -10,8 +10,8 @@ import (
 	"github.com/pkg/errors"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	_ "github.com/lib/pq" // postgres driver
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )

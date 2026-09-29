@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/antimatterchat/antimatter-plugin-boards/server/auth"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
-	"github.com/mattermost/mattermost-plugin-boards/server/auth"
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	"github.com/mattermost/mattermost-plugin-boards/server/utils"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )

@@ -7,7 +7,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/mattermost/mattermost-plugin-boards/server/utils"
+	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 )
 
 // BlockType represents a block type.

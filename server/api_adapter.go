@@ -6,8 +6,8 @@ package main
 import (
 	"database/sql"
 
+	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/gorilla/mux"
-	"github.com/mattermost/mattermost-plugin-boards/server/model"
 
 	"github.com/mattermost/mattermost/server/public/plugin"
 
