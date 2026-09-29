@@ -4,7 +4,7 @@
     "description": "The Antimatter Boards plugin",
     "homepage_url": "https://github.com/antimatterchat/antimatter-plugin-boards",
     "support_url": "https://github.com/antimatterchat/antimatter-plugin-boards/issues",
-    "icon_path": "assets/starter-template-icon.svg",
+    "icon_path": "assets/antimatter-icon.svg",
     "min_server_version": "12.0.0",
     "server": {
         "executables": {
