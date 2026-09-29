@@ -28,8 +28,8 @@ func (th *TestHelper) IsSQLite() bool {
 	return th.f.DB().DriverName() == "sqlite3"
 }
 
-// SetupPluginTestHelper sets up a test helper in plugin mode (with Mattermost
-// migrations), which makes migration templates use Mattermost core tables
+// SetupPluginTestHelper sets up a test helper in plugin mode (with Antimatter
+// migrations), which makes migration templates use Antimatter core tables
 // (e.g. Preferences instead of focalboard_preferences).
 func SetupPluginTestHelper(t *testing.T) (*TestHelper, func()) {
 	driverName := strings.TrimSpace(os.Getenv("TEST_DATABASE_DRIVERNAME"))
@@ -40,7 +40,7 @@ func SetupPluginTestHelper(t *testing.T) (*TestHelper, func()) {
 	return setupTestHelper(t, true)
 }
 
-// SetupTestHelper sets up a test helper in standalone mode (without Mattermost
+// SetupTestHelper sets up a test helper in standalone mode (without Antimatter
 // migrations), which makes migration templates use focalboard_* tables.
 func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	driverName := strings.TrimSpace(os.Getenv("TEST_DATABASE_DRIVERNAME"))

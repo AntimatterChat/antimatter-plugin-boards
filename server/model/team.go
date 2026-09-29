@@ -57,7 +57,7 @@ func ValidateTeamID(teamID string, isTemplate bool) error {
 
 	// Security: GlobalTeamID ("0") is ONLY allowed for template operations
 	// Even in test environments, we reject GlobalTeamID for non-template file operations
-	// to prevent path traversal attacks. Integration tests should use valid Mattermost team IDs.
+	// to prevent path traversal attacks. Integration tests should use valid Antimatter team IDs.
 	allowGlobalTeamID := isTemplate && teamID == GlobalTeamID
 
 	if !am_model.IsValidId(teamID) && !allowGlobalTeamID {

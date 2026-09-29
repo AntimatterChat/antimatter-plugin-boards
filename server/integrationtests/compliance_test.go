@@ -103,7 +103,7 @@ func TestGetBoardsForCompliance(t *testing.T) {
 		_ = th.CreateBoards(teamID, model.BoardTypeOpen, 2)
 
 		// Try to get compliance with an invalid team ID format (27 characters instead of 26)
-		invalidTeamID := utils.NewID(utils.IDTypeTeam) // 27 characters - invalid format for Mattermost team ID
+		invalidTeamID := utils.NewID(utils.IDTypeTeam) // 27 characters - invalid format for Antimatter team ID
 		bcr, resp := clients.Admin.GetBoardsForCompliance(invalidTeamID, 0, 0)
 
 		th.CheckBadRequest(resp)
@@ -215,7 +215,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 		_ = th.CreateBoards(teamID, model.BoardTypeOpen, 2)
 
 		// Try to get compliance history with an invalid team ID format (27 characters instead of 26)
-		invalidTeamID := utils.NewID(utils.IDTypeTeam) // 27 characters - invalid format for Mattermost team ID
+		invalidTeamID := utils.NewID(utils.IDTypeTeam) // 27 characters - invalid format for Antimatter team ID
 		bchr, resp := clients.Admin.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, invalidTeamID, 0, 0)
 
 		th.CheckBadRequest(resp)
@@ -327,7 +327,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 		board, _ := th.CreateBoardAndCards(teamID, model.BoardTypeOpen, 2)
 
 		// Try to get compliance history with an invalid team ID format (27 characters instead of 26)
-		invalidTeamID := utils.NewID(utils.IDTypeTeam) // 27 characters - invalid format for Mattermost team ID
+		invalidTeamID := utils.NewID(utils.IDTypeTeam) // 27 characters - invalid format for Antimatter team ID
 		bchr, resp := clients.Admin.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, invalidTeamID, board.ID, 0, 0)
 
 		th.CheckBadRequest(resp)

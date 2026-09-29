@@ -233,7 +233,7 @@ func (a *pluginAPIAdapter) GetPreferencesForUser(userID string) (am_model.Prefer
 
 	boardsPreferences := am_model.Preferences{}
 
-	// Mattermost API gives us all preferences.
+	// Antimatter API gives us all preferences.
 	// We want just the Focalboard ones.
 	for _, preference := range preferences {
 		if preference.Category == model.PreferencesCategoryFocalboard {

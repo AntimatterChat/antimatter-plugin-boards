@@ -272,7 +272,7 @@ func IsErrNotFound(err error) bool {
 		return true
 	}
 
-	// check if this is a Mattermost AppError with a Not Found status
+	// check if this is an Antimatter AppError with a Not Found status
 	var appErr *amModel.AppError
 	if errors.As(err, &appErr) {
 		if appErr.StatusCode == http.StatusNotFound {

@@ -36,7 +36,7 @@ type TestError struct{}
 func (err *TestError) Error() string { return "Mocked File backend error" }
 
 func TestGetFileReader(t *testing.T) {
-	validTeamID := "abcdefghijklmnopqrstuvwxyz" // 26 chars - valid Mattermost ID
+	validTeamID := "abcdefghijklmnopqrstuvwxyz" // 26 chars - valid Antimatter ID
 	testFilePath := filepath.Join(validTeamID, testBoardID, testFileName)
 
 	th, _ := SetupTestHelper(t)
@@ -322,7 +322,7 @@ func TestGetFileInfo(t *testing.T) {
 
 func TestGetFile(t *testing.T) {
 	th, _ := SetupTestHelper(t)
-	validTeamID := "abcdefghijklmnopqrstuvwxyz" // 26 chars (valid Mattermost ID)
+	validTeamID := "abcdefghijklmnopqrstuvwxyz" // 26 chars (valid Antimatter ID)
 
 	t.Run("happy path, no errors", func(t *testing.T) {
 		validBoardID := utils.NewID(utils.IDTypeBoard)
@@ -410,7 +410,7 @@ func TestGetFilePath(t *testing.T) {
 			Path: testPath,
 		}, nil)
 
-		validTeamID := "abcdefghijklmnopqrstuvwxyz" // 26 chars - valid Mattermost ID
+		validTeamID := "abcdefghijklmnopqrstuvwxyz" // 26 chars - valid Antimatter ID
 		validBoardID := utils.NewID(utils.IDTypeBoard)
 		fileInfo, filePath, err := th.App.GetFilePath(validTeamID, validBoardID, "7fileInfoID.txt")
 		assert.NoError(t, err)
@@ -421,7 +421,7 @@ func TestGetFilePath(t *testing.T) {
 	t.Run("when FileInfo doesn't exist", func(t *testing.T) {
 		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(nil, nil)
 
-		validTeamID := "abcdefghijklmnopqrstuvwxyz" // 26 chars - valid Mattermost ID
+		validTeamID := "abcdefghijklmnopqrstuvwxyz" // 26 chars - valid Antimatter ID
 		validBoardID := utils.NewID(utils.IDTypeBoard)
 		fileInfo, filePath, err := th.App.GetFilePath(validTeamID, validBoardID, "7fileInfoID.txt")
 		assert.NoError(t, err)
@@ -435,7 +435,7 @@ func TestGetFilePath(t *testing.T) {
 			Path: "",
 		}, nil)
 
-		validTeamID := "abcdefghijklmnopqrstuvwxyz" // 26 chars - valid Mattermost ID
+		validTeamID := "abcdefghijklmnopqrstuvwxyz" // 26 chars - valid Antimatter ID
 		validBoardID := utils.NewID(utils.IDTypeBoard)
 		fileInfo, filePath, err := th.App.GetFilePath(validTeamID, validBoardID, "7fileInfoID.txt")
 		assert.NoError(t, err)
@@ -688,7 +688,7 @@ func TestCopyCardFiles(t *testing.T) {
 	t.Run("ValidFileID", func(t *testing.T) {
 		sourceBoardID := utils.NewID(utils.IDTypeBoard)
 		destBoardID := utils.NewID(utils.IDTypeBoard)
-		validAntimatterID := am_model.NewId()           // 26-char valid Mattermost ID
+		validAntimatterID := am_model.NewId()           // 26-char valid Antimatter ID
 		validFileID := "7" + validAntimatterID + ".jpg" // Valid file ID: '7' + 26-char ID + extension
 		fileInfoID := validAntimatterID                 // GetFileInfo extracts ID by removing '7' prefix and extension
 		copiedBlocks := []*model.Block{

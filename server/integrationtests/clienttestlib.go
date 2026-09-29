@@ -261,7 +261,7 @@ func (t *testServicesAPI) GetUserByID(userID string) (*amModel.User, error) {
 	if user == nil {
 		return nil, amModel.NewAppError("GetUserByID", "app.user.get.app_error", nil, "user not found: "+userID, http.StatusNotFound)
 	}
-	// Convert Boards model.User to Mattermost model.User
+	// Convert Boards model.User to Antimatter model.User
 	return &amModel.User{
 		Id:       user.ID,
 		Username: user.Username,
@@ -328,7 +328,7 @@ func (t *testServicesAPI) GetDirectChannel(userID1, userID2 string) (*amModel.Ch
 }
 
 func (t *testServicesAPI) GetChannelMember(channelID string, userID string) (*amModel.ChannelMember, error) {
-	// Return NotFound error if user doesn't exist (matches Mattermost behavior)
+	// Return NotFound error if user doesn't exist (matches Antimatter behavior)
 	if _, exists := t.users[userID]; !exists {
 		return nil, amModel.NewAppError("GetChannelMember", "app.channel.get_member.missing.app_error", nil, "", http.StatusNotFound)
 	}
@@ -345,8 +345,8 @@ func (t *testServicesAPI) GetChannelsForTeamForUser(teamID string, userID string
 }
 
 func (t *testServicesAPI) GetFileInfo(fileID string) (*amModel.FileInfo, error) {
-	// Query the FileInfo table (Mattermost's table) to retrieve saved file info
-	// This matches what the real Mattermost servicesAPI would do
+	// Query the FileInfo table (Antimatter's table) to retrieve saved file info
+	// This matches what the real Antimatter servicesAPI would do
 	query := `SELECT Id, CreateAt, UpdateAt, DeleteAt, Path, ThumbnailPath, PreviewPath, Name, Extension, Size, MimeType, Width, Height, HasPreviewImage, MiniPreview, Content, RemoteId, CreatorId, PostId FROM fileinfo WHERE id = $1`
 
 	var fileInfo amModel.FileInfo
@@ -391,7 +391,7 @@ func (t *testServicesAPI) EnsureBot(bot *amModel.Bot) (string, error) {
 }
 
 func (t *testServicesAPI) GetTeamMember(teamID string, userID string) (*amModel.TeamMember, error) {
-	// Return NotFound error if user doesn't exist (matches Mattermost behavior)
+	// Return NotFound error if user doesn't exist (matches Antimatter behavior)
 	if _, exists := t.users[userID]; !exists {
 		return nil, amModel.NewAppError("GetTeamMember", "app.team.get_member.missing.app_error", nil, "", http.StatusNotFound)
 	}
@@ -441,9 +441,9 @@ func newTestServerPluginMode(sqlSettings *amModel.SqlSettings) (*server.Server, 
 		panic(fmt.Errorf("Database Ping failed: %w", err))
 	}
 
-	// Create Mattermost tables needed for migrations (Playbooks approach)
+	// Create Antimatter tables needed for migrations (Playbooks approach)
 	if err2 := sqlstore.SetupAntimatterTablesForIntegration(sqlDB); err2 != nil {
-		panic(fmt.Errorf("failed to setup Mattermost tables: %w", err2))
+		panic(fmt.Errorf("failed to setup Antimatter tables: %w", err2))
 	}
 
 	// Create test users map for servicesAPI

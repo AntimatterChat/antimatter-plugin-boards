@@ -19,7 +19,7 @@ import (
 
 func (s *SQLStore) CloseRows(rows *sql.Rows) {
 	if err := rows.Close(); err != nil {
-		s.logger.Error("error closing MattermostAuthLayer row set", mlog.Err(err))
+		s.logger.Error("error closing AntimatterAuthLayer row set", mlog.Err(err))
 	}
 }
 

@@ -1,9 +1,9 @@
 {
     "id": "focalboard",
-    "name": "Mattermost Boards",
-    "description": "The Mattermost Boards plugin",
-    "homepage_url": "https://github.com/mattermost/mattermost-plugin-boards",
-    "support_url": "https://github.com/mattermost/mattermost-plugin-boards/issues",
+    "name": "Antimatter Boards",
+    "description": "The Antimatter Boards plugin",
+    "homepage_url": "https://github.com/antimatterchat/antimatter-plugin-boards",
+    "support_url": "https://github.com/antimatterchat/antimatter-plugin-boards/issues",
     "icon_path": "assets/starter-template-icon.svg",
     "min_server_version": "12.0.0",
     "server": {

@@ -200,8 +200,8 @@ func (t *testServicesAPIForUnitTests) GetChannelsForTeamForUser(teamID string, u
 }
 
 func (t *testServicesAPIForUnitTests) GetFileInfo(fileID string) (*amModel.FileInfo, error) {
-	// Query the FileInfo table (Mattermost's table) to retrieve saved file info
-	// This matches what the real Mattermost servicesAPI would do
+	// Query the FileInfo table (Antimatter's table) to retrieve saved file info
+	// This matches what the real Antimatter servicesAPI would do
 	query := `SELECT Id, CreateAt, UpdateAt, DeleteAt, Path, ThumbnailPath, PreviewPath, Name, Extension, Size, MimeType, Width, Height, HasPreviewImage, MiniPreview, Content, RemoteId, CreatorId, PostId FROM fileinfo WHERE id = $1`
 
 	var fileInfo amModel.FileInfo
@@ -299,7 +299,7 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 	err = sqlDB.Ping()
 	require.NoError(t, err)
 
-	// Create Mattermost tables needed for migrations (Playbooks approach)
+	// Create Antimatter tables needed for migrations (Playbooks approach)
 	setupAntimatterTables(t, sqlDB)
 
 	// Create a minimal testServicesAPI for unit tests

@@ -116,7 +116,7 @@ func (s *SQLStore) Shutdown() error {
 }
 
 // DBHandle returns the raw sql.DB handle.
-// It is used by the mattermostauthlayer to run their own
+// It is used by the antimatterauthlayer to run their own
 // raw SQL queries.
 func (s *SQLStore) DBHandle() *sql.DB {
 	return s.db

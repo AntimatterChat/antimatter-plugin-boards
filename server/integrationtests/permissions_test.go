@@ -657,7 +657,7 @@ func TestPermissionsPatchBoardChannelId(t *testing.T) {
 	// This is done by modifying the permission check in the test setup
 	// Note: The actual permission check happens in the API layer, so we need to ensure
 	// the channel ID is valid format. The FakePermissionPluginAPI in clienttestlib.go
-	// will need to be updated to accept any valid Mattermost ID format.
+	// will need to be updated to accept any valid Antimatter ID format.
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userAnon, http.StatusUnauthorized, 0},

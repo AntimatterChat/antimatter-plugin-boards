@@ -35,7 +35,7 @@ type servicesAPI interface {
 	CreateMember(teamID string, userID string) (*am_model.TeamMember, error)
 }
 
-// PluginDelivery provides ability to send notifications to direct message channels via Mattermost plugin API.
+// PluginDelivery provides ability to send notifications to direct message channels via Antimatter plugin API.
 type PluginDelivery struct {
 	botID      string
 	serverRoot string

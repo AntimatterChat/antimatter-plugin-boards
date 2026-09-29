@@ -252,8 +252,8 @@ func (bm *BoardsMigrator) Interceptors() map[int]func() error {
 			return bm.store.RunDeDuplicateCategoryBoardsMigration(35)
 		},
 	}
-	// Step 18 interceptor queries Mattermost core tables (e.g. TeamMembers)
-	// that only exist when Mattermost migrations have been applied (plugin mode).
+	// Step 18 interceptor queries Antimatter core tables (e.g. TeamMembers)
+	// that only exist when Antimatter migrations have been applied (plugin mode).
 	if bm.withAntimatterMigrations {
 		interceptors[18] = bm.store.RunDeletedMembershipBoardsMigration
 	}

@@ -21,9 +21,9 @@ type dbHandle interface {
 	DBHandle() *sql.DB
 }
 
-// insertTestUser inserts a user row directly into the Mattermost users table.
+// insertTestUser inserts a user row directly into the Antimatter users table.
 // This is necessary because the store interface doesn't expose user creation —
-// users are managed by Mattermost and only read by Boards.
+// users are managed by Antimatter and only read by Boards.
 func insertTestUser(t *testing.T, store store.Store, userID, username, email string) {
 	t.Helper()
 	dbStore, ok := store.(dbHandle)
@@ -35,7 +35,7 @@ func insertTestUser(t *testing.T, store store.Store, userID, username, email str
 	require.NoError(t, err)
 }
 
-// insertTestTeamMember inserts a team membership row directly into the Mattermost teammembers table.
+// insertTestTeamMember inserts a team membership row directly into the Antimatter teammembers table.
 func insertTestTeamMember(t *testing.T, store store.Store, teamID, userID string) {
 	t.Helper()
 	dbStore, ok := store.(dbHandle)

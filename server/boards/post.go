@@ -119,10 +119,10 @@ func returnBoardsParams(pathArray []string) (teamID, boardID, viewID, cardID str
 	// If at index, the parameter in the path is plugins,
 	// then we've copied this from a shared board
 
-	// For card links copied on a non-shared board, the path looks like {...Mattermost Url}.../boards/team/teamID/boardID/viewID/cardID
+	// For card links copied on a non-shared board, the path looks like {...Antimatter Url}.../boards/team/teamID/boardID/viewID/cardID
 
 	// For card links copied on a shared board, the path looks like
-	// {...Mattermost Url}.../plugins/focalboard/team/teamID/shared/boardID/viewID/cardID?r=read_token
+	// {...Antimatter Url}.../plugins/focalboard/team/teamID/shared/boardID/viewID/cardID?r=read_token
 
 	// This is a non-shared board card link
 	if len(pathArray)-index == 6 && pathArray[index] == "boards" && pathArray[index+1] == "team" {

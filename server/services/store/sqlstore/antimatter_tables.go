@@ -7,20 +7,20 @@ import (
 	"database/sql"
 )
 
-// SetupAntimatterTablesForIntegration creates Mattermost tables for integration tests
+// SetupAntimatterTablesForIntegration creates Antimatter tables for integration tests
 // without requiring testing.T (for use in non-test contexts like NewTestServerPluginMode).
 //
 // IMPORTANT: Schema Versioning and Maintenance
 // =============================================
-// The table schemas defined in this file are based on Mattermost server schemas and are
+// The table schemas defined in this file are based on Antimatter server schemas and are
 // intentionally minimal - they only include columns required for plugin migrations and tests.
 //
-// Schema Source: These schemas are derived from Mattermost server table definitions, but
-// are NOT kept in sync with Mattermost's schema evolution. They represent a snapshot at
+// Schema Source: These schemas are derived from Antimatter server table definitions, but
+// are NOT kept in sync with Antimatter's schema evolution. They represent a snapshot at
 // the time of implementation.
 //
 // Maintenance Strategy:
-//  1. When Mattermost adds new columns that our code uses, update the relevant table
+//  1. When Antimatter adds new columns that our code uses, update the relevant table
 //     definition in this file and support_for_test.go
 //  2. When tests fail due to missing columns, add the required columns to the table definitions
 func SetupAntimatterTablesForIntegration(db *sql.DB) error {

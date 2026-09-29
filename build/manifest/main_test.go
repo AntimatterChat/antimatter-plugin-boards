@@ -19,9 +19,9 @@ func TestDistManifest(t *testing.T) {
 
 		manifest := &model.Manifest{
 			Id:              "focalboard",
-			Name:            "Mattermost Boards",
+			Name:            "Antimatter Boards",
 			Version:         "9.3.0",
-			ReleaseNotesURL: "https://github.com/mattermost/mattermost-plugin-boards/releases/tag/v9.3.0",
+			ReleaseNotesURL: "https://github.com/antimatterchat/antimatter-plugin-boards/releases/tag/v9.3.0",
 		}
 
 		require.NoError(t, distManifest(manifest, destDir))
@@ -71,7 +71,7 @@ func writeTempManifest(t *testing.T, contents string) {
 func TestFindManifestResolvesVersion(t *testing.T) {
 	const versionlessManifest = `{
 		"id": "focalboard",
-		"homepage_url": "https://github.com/mattermost/mattermost-plugin-boards"
+		"homepage_url": "https://github.com/antimatterchat/antimatter-plugin-boards"
 	}`
 
 	t.Run("uses the tag at the current commit over the latest tag", func(t *testing.T) {
@@ -111,7 +111,7 @@ func TestFindManifestResolvesVersion(t *testing.T) {
 		writeTempManifest(t, `{
 			"id": "focalboard",
 			"version": "1.2.3",
-			"homepage_url": "https://github.com/mattermost/mattermost-plugin-boards"
+			"homepage_url": "https://github.com/antimatterchat/antimatter-plugin-boards"
 		}`)
 		BuildTagCurrent = "v9.3.0"
 		BuildTagLatest = "v9.2.0"
@@ -128,19 +128,19 @@ func TestFindManifestReleaseNotesURL(t *testing.T) {
 	t.Run("generates a release notes URL from the latest tag when absent", func(t *testing.T) {
 		writeTempManifest(t, `{
 			"id": "focalboard",
-			"homepage_url": "https://github.com/mattermost/mattermost-plugin-boards"
+			"homepage_url": "https://github.com/antimatterchat/antimatter-plugin-boards"
 		}`)
 		BuildTagLatest = "v9.3.0"
 
 		manifest, err := findManifest()
 		require.NoError(t, err)
-		require.Equal(t, "https://github.com/mattermost/mattermost-plugin-boards/releases/tag/v9.3.0", manifest.ReleaseNotesURL)
+		require.Equal(t, "https://github.com/antimatterchat/antimatter-plugin-boards/releases/tag/v9.3.0", manifest.ReleaseNotesURL)
 	})
 
 	t.Run("does not overwrite an existing release notes URL", func(t *testing.T) {
 		writeTempManifest(t, `{
 			"id": "focalboard",
-			"homepage_url": "https://github.com/mattermost/mattermost-plugin-boards",
+			"homepage_url": "https://github.com/antimatterchat/antimatter-plugin-boards",
 			"release_notes_url": "https://example.com/custom"
 		}`)
 		BuildTagLatest = "v9.3.0"

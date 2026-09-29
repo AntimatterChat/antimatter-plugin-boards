@@ -300,14 +300,14 @@ func (s *PluginTestStore) GetChannel(teamID, channel string) (*amModel.Channel, 
 func (s *PluginTestStore) SearchBoardsForUser(term string, field model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
 	// Guests only see boards they are directly a member of. The underlying SQL
 	// query for includePublicBoards=false uses only the board_members table,
-	// so it works correctly without any Mattermost TeamMembers data.
+	// so it works correctly without any Antimatter TeamMembers data.
 	if !includePublicBoards {
 		return s.Store.SearchBoardsForUser(term, field, userID, false)
 	}
 
 	// For non-guests we iterate over the user's teams and call
 	// SearchBoardsForUserInTeam for each one. That query finds open boards
-	// directly by team_id, so it never touches the Mattermost TeamMembers
+	// directly by team_id, so it never touches the Antimatter TeamMembers
 	// table (which is absent in the integration-test database).
 	teams, err := s.GetTeamsForUser(userID)
 	if err != nil {
