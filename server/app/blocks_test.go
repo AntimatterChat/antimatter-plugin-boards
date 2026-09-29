@@ -10,7 +10,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 )
@@ -57,7 +57,7 @@ func TestPatchBlocks(t *testing.T) {
 		blockPatches := model.BlockPatchBatch{
 			BlockIDs: []string{"block1"},
 			BlockPatches: []model.BlockPatch{
-				{Title: mmModel.NewPointer("new title")},
+				{Title: amModel.NewPointer("new title")},
 			},
 		}
 
@@ -82,7 +82,7 @@ func TestPatchBlocks(t *testing.T) {
 		blockPatches := model.BlockPatchBatch{
 			BlockIDs: []string{"block1"},
 			BlockPatches: []model.BlockPatch{
-				{Title: mmModel.NewPointer("new title")},
+				{Title: amModel.NewPointer("new title")},
 			},
 		}
 
@@ -98,8 +98,8 @@ func TestPatchBlocks(t *testing.T) {
 		blockPatches := model.BlockPatchBatch{
 			BlockIDs: []string{"block1", "block2"},
 			BlockPatches: []model.BlockPatch{
-				{Title: mmModel.NewPointer("new title 1")},
-				{Title: mmModel.NewPointer("new title 2")},
+				{Title: amModel.NewPointer("new title 1")},
+				{Title: amModel.NewPointer("new title 2")},
 			},
 		}
 

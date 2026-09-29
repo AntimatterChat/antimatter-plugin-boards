@@ -9,7 +9,7 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 )
 
 var (
@@ -18,7 +18,7 @@ var (
 
 // SubscriptionDeliverSlashAttachments notifies a user that changes were made to a block they are subscribed to.
 func (pd *PluginDelivery) SubscriptionDeliverSlackAttachments(teamID string, subscriberID string, subscriptionType model.SubscriberType,
-	attachments []*mm_model.SlackAttachment) error {
+	attachments []*am_model.SlackAttachment) error {
 	// check subscriber is member of channel
 	_, err := pd.api.GetUserByID(subscriberID)
 	if err != nil {
@@ -34,12 +34,12 @@ func (pd *PluginDelivery) SubscriptionDeliverSlackAttachments(teamID string, sub
 		return err
 	}
 
-	post := &mm_model.Post{
+	post := &am_model.Post{
 		UserId:    pd.botID,
 		ChannelId: channelID,
 	}
 
-	mm_model.ParseSlackAttachment(post, attachments)
+	am_model.ParseSlackAttachment(post, attachments)
 
 	_, err = pd.api.CreatePost(post)
 	return err
@@ -64,7 +64,7 @@ func (pd *PluginDelivery) getDirectChannelID(teamID string, subscriberID string,
 	}
 }
 
-func (pd *PluginDelivery) getDirectChannel(teamID string, userID string, botID string) (*mm_model.Channel, error) {
+func (pd *PluginDelivery) getDirectChannel(teamID string, userID string, botID string) (*am_model.Channel, error) {
 	// first ensure the bot is a member of the team.
 	_, err := pd.api.CreateMember(teamID, botID)
 	if err != nil {

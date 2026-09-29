@@ -13,7 +13,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/audit"
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 )
 
 const (
@@ -217,7 +217,7 @@ func ValidateFileId(id string) error {
 	}
 
 	//nolint:gocritic
-	if mmModel.IsValidId(id[1:27]) {
+	if amModel.IsValidId(id[1:27]) {
 		return nil
 	} else if len(id) >= (legacyIDLength + 1) {
 		return legacyIdCheck(id[1 : legacyIDLength+1])

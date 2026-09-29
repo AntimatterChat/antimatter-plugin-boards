@@ -10,12 +10,12 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/config"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 )
 
 const defaultS3Timeout = 60 * 1000 // 60 seconds
 
-func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID string) *config.Configuration {
+func createBoardsConfig(mmconfig am_model.Config, baseURL string, serverID string) *config.Configuration {
 	filesS3Config := config.AmazonS3Config{}
 	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
 		filesS3Config.AccessKeyID = *mmconfig.FileSettings.AmazonS3AccessKeyId
@@ -69,7 +69,7 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 	}
 
 	// Removed from the server config in v12, so the pointer is nil there.
-	boardsRetentionDays := mm_model.DataRetentionSettingsDefaultBoardsRetentionDays
+	boardsRetentionDays := am_model.DataRetentionSettingsDefaultBoardsRetentionDays
 	if mmconfig.DataRetentionSettings.BoardsRetentionDays != nil {
 		boardsRetentionDays = *mmconfig.DataRetentionSettings.BoardsRetentionDays
 	}
@@ -137,7 +137,7 @@ func parseFeatureFlags(configFeatureFlags map[string]string) map[string]string {
 	return featureFlags
 }
 
-func getPluginSetting(mmConfig mm_model.Config, key string) (interface{}, bool) {
+func getPluginSetting(mmConfig am_model.Config, key string) (interface{}, bool) {
 	plugin, ok := mmConfig.PluginSettings.Plugins[PluginName]
 	if !ok {
 		return nil, false
@@ -150,7 +150,7 @@ func getPluginSetting(mmConfig mm_model.Config, key string) (interface{}, bool) 
 	return val, true
 }
 
-func getPluginSettingInt(mmConfig mm_model.Config, key string, def int) int {
+func getPluginSettingInt(mmConfig am_model.Config, key string, def int) int {
 	val, ok := getPluginSetting(mmConfig, key)
 	if !ok {
 		return def

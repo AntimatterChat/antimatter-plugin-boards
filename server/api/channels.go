@@ -12,7 +12,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/audit"
 	"github.com/gorilla/mux"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
@@ -84,7 +84,7 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if channel.TeamId != teamID {
-		if channel.Type != mm_model.ChannelTypeDirect && channel.Type != mm_model.ChannelTypeGroup {
+		if channel.Type != am_model.ChannelTypeDirect && channel.Type != am_model.ChannelTypeGroup {
 			message := fmt.Sprintf("channel ID=%s on TeamID=%s", channel.Id, teamID)
 			a.errorResponse(w, r, model.NewErrNotFound(message))
 			return

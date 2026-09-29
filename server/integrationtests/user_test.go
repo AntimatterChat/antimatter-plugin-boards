@@ -11,7 +11,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/client"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -142,7 +142,7 @@ func TestTeamUploadFile(t *testing.T) {
 
 		// Use unauthenticated client
 		th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		boardID := utils.NewID(utils.IDTypeBoard)
 		data := randomBytes(t, 1024)
 		result, resp := th.Client.TeamUploadFile(teamID, boardID, bytes.NewReader(data))
@@ -156,7 +156,7 @@ func TestTeamUploadFile(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Type:   model.BoardTypeOpen,
 			TeamID: teamID,
@@ -180,7 +180,7 @@ func TestTeamUploadFile(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 		th.Client2 = clients.Viewer
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Type:   model.BoardTypeOpen,
 			TeamID: teamID,

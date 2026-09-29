@@ -9,7 +9,7 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -34,7 +34,7 @@ func TestGetBoardsForCompliance(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		_ = th.CreateBoards(teamID, model.BoardTypeOpen, 2)
 
 		bcr, resp := clients.Anon.GetBoardsForCompliance(teamID, 0, 0)
@@ -47,7 +47,7 @@ func TestGetBoardsForCompliance(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		_ = th.CreateBoards(teamID, model.BoardTypeOpen, 2)
 
 		bcr, resp := clients.TeamMember.GetBoardsForCompliance(teamID, 0, 0)
@@ -60,7 +60,7 @@ func TestGetBoardsForCompliance(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		const count = 10
 		_ = th.CreateBoards(teamID, model.BoardTypeOpen, count)
 
@@ -74,7 +74,7 @@ func TestGetBoardsForCompliance(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		const count = 20
 		const perPage = 3
 		_ = th.CreateBoards(teamID, model.BoardTypeOpen, count)
@@ -99,7 +99,7 @@ func TestGetBoardsForCompliance(t *testing.T) {
 		defer th.TearDown()
 
 		// Create boards with a valid team ID
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		_ = th.CreateBoards(teamID, model.BoardTypeOpen, 2)
 
 		// Try to get compliance with an invalid team ID format (27 characters instead of 26)
@@ -116,7 +116,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		_ = th.CreateBoards(teamID, model.BoardTypeOpen, 2)
 
 		bchr, resp := clients.Anon.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, teamID, 0, 0)
@@ -129,7 +129,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		_ = th.CreateBoards(teamID, model.BoardTypeOpen, 2)
 
 		bchr, resp := clients.TeamMember.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, teamID, 0, 0)
@@ -142,7 +142,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		const count = 10
 		boards := th.CreateBoards(teamID, model.BoardTypeOpen, count)
 
@@ -164,7 +164,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		const count = 10
 		boards := th.CreateBoards(teamID, model.BoardTypeOpen, count)
 
@@ -186,7 +186,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		const count = 20
 		const perPage = 3
 		_ = th.CreateBoards(teamID, model.BoardTypeOpen, count)
@@ -211,7 +211,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 		defer th.TearDown()
 
 		// Create boards with a valid team ID
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		_ = th.CreateBoards(teamID, model.BoardTypeOpen, 2)
 
 		// Try to get compliance history with an invalid team ID format (27 characters instead of 26)
@@ -228,7 +228,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		board, _ := th.CreateBoardAndCards(teamID, model.BoardTypeOpen, 2)
 
 		bchr, resp := clients.Anon.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, teamID, board.ID, 0, 0)
@@ -241,7 +241,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		board, _ := th.CreateBoardAndCards(teamID, model.BoardTypeOpen, 2)
 
 		bchr, resp := clients.TeamMember.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, teamID, board.ID, 0, 0)
@@ -254,7 +254,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		const count = 10
 		board, cards := th.CreateBoardAndCards(teamID, model.BoardTypeOpen, count)
 
@@ -276,7 +276,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		const count = 10
 		board, cards := th.CreateBoardAndCards(teamID, model.BoardTypeOpen, count)
 
@@ -298,7 +298,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		const count = 20
 		const perPage = 3
 		board, _ := th.CreateBoardAndCards(teamID, model.BoardTypeOpen, count)
@@ -323,7 +323,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 		defer th.TearDown()
 
 		// Create board with a valid team ID
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		board, _ := th.CreateBoardAndCards(teamID, model.BoardTypeOpen, 2)
 
 		// Try to get compliance history with an invalid team ID format (27 characters instead of 26)
@@ -338,7 +338,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t)
 		defer th.TearDown()
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		_, _ = th.CreateBoardAndCards(teamID, model.BoardTypeOpen, 2)
 
 		bchr, resp := clients.Admin.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, teamID, utils.NewID(utils.IDTypeBoard), 0, 0)

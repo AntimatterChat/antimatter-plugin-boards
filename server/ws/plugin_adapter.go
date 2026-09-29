@@ -15,7 +15,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
@@ -34,12 +34,12 @@ type PluginAdapterInterface interface {
 	Adapter
 	OnWebSocketConnect(webConnID, userID string)
 	OnWebSocketDisconnect(webConnID, userID string)
-	WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest)
+	WebSocketMessageHasBeenPosted(webConnID, userID string, req *amModel.WebSocketRequest)
 	BroadcastConfigChange(clientConfig model.ClientConfig)
 	BroadcastBlockChange(teamID string, block *model.Block)
 	BroadcastBlockDelete(teamID, blockID, parentID string)
 	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
-	HandleClusterEvent(ev mmModel.PluginClusterEvent)
+	HandleClusterEvent(ev amModel.PluginClusterEvent)
 }
 
 type PluginAdapter struct {
@@ -61,8 +61,8 @@ type PluginAdapter struct {
 // servicesAPI is the interface required by the PluginAdapter to interact with
 // the mattermost-server.
 type servicesAPI interface {
-	PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mmModel.WebsocketBroadcast)
-	PublishPluginClusterEvent(ev mmModel.PluginClusterEvent, opts mmModel.PluginClusterEventSendOptions) error
+	PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *amModel.WebsocketBroadcast)
+	PublishPluginClusterEvent(ev amModel.PluginClusterEvent, opts amModel.PluginClusterEventSendOptions) error
 }
 
 func NewPluginAdapter(api servicesAPI, auth auth.AuthInterface, store Store, logger mlog.LoggerIFace) *PluginAdapter {
@@ -311,10 +311,10 @@ func (pa *PluginAdapter) OnWebSocketDisconnect(webConnID, userID string) {
 		return
 	}
 
-	atomic.StoreInt64(&pac.inactiveAt, mmModel.GetMillis())
+	atomic.StoreInt64(&pac.inactiveAt, amModel.GetMillis())
 }
 
-func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error) {
+func commandFromRequest(req *amModel.WebSocketRequest) (*WebsocketCommand, error) {
 	c := &WebsocketCommand{Action: strings.TrimPrefix(req.Action, websocketMessagePrefix)}
 
 	rawTeamID, ok := req.Data["teamId"]
@@ -354,7 +354,7 @@ func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error
 	return c, nil
 }
 
-func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest) {
+func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string, req *amModel.WebSocketRequest) {
 	defer func() {
 		if r := recover(); r != nil {
 			pa.logger.Error("recovered from panic in WebSocketMessageHasBeenPosted",
@@ -430,8 +430,8 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 
 // sendMessageToAll will send a websocket message to all clients on all nodes.
 func (pa *PluginAdapter) sendMessageToAll(event string, payload map[string]interface{}) {
-	// Empty &mmModel.WebsocketBroadcast will send to all users
-	pa.api.PublishWebSocketEvent(event, payload, &mmModel.WebsocketBroadcast{})
+	// Empty &amModel.WebsocketBroadcast will send to all users
+	pa.api.PublishWebSocketEvent(event, payload, &amModel.WebsocketBroadcast{})
 }
 
 func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) {
@@ -441,7 +441,7 @@ func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) 
 // sendUserMessageSkipCluster sends the message to specific users.
 func (pa *PluginAdapter) sendUserMessageSkipCluster(event string, payload map[string]interface{}, userIDs ...string) {
 	for _, userID := range userIDs {
-		pa.api.PublishWebSocketEvent(event, payload, &mmModel.WebsocketBroadcast{UserId: userID})
+		pa.api.PublishWebSocketEvent(event, payload, &amModel.WebsocketBroadcast{UserId: userID})
 	}
 }
 

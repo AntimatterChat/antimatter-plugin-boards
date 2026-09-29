@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"io"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 )
 
 // Team is information global to a team
@@ -60,7 +60,7 @@ func ValidateTeamID(teamID string, isTemplate bool) error {
 	// to prevent path traversal attacks. Integration tests should use valid Mattermost team IDs.
 	allowGlobalTeamID := isTemplate && teamID == GlobalTeamID
 
-	if !mm_model.IsValidId(teamID) && !allowGlobalTeamID {
+	if !am_model.IsValidId(teamID) && !allowGlobalTeamID {
 		return fmt.Errorf("invalid teamID in ValidateTeamID: %s", teamID) //nolint:err113
 	}
 	return nil

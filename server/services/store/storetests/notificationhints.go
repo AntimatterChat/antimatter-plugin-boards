@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store"
@@ -48,7 +48,7 @@ func testUpsertNotificationHint(t *testing.T, store store.Store) {
 		hint := &model.NotificationHint{
 			BlockType:    model.TypeCard,
 			BlockID:      utils.NewID(utils.IDTypeBlock),
-			ModifiedByID: mmModel.NewId(),
+			ModifiedByID: amModel.NewId(),
 		}
 
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
@@ -61,7 +61,7 @@ func testUpsertNotificationHint(t *testing.T, store store.Store) {
 		hint := &model.NotificationHint{
 			BlockType:    model.TypeCard,
 			BlockID:      utils.NewID(utils.IDTypeBlock),
-			ModifiedByID: mmModel.NewId(),
+			ModifiedByID: amModel.NewId(),
 		}
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
 		require.NoError(t, err, "upsert notification hint should not error")
@@ -94,7 +94,7 @@ func testUpsertNotificationHint(t *testing.T, store store.Store) {
 		_, err = store.UpsertNotificationHint(hint, time.Second*15)
 		assert.ErrorAs(t, err, &model.ErrInvalidNotificationHint{}, "invalid notification hint should error")
 
-		hint.ModifiedByID = mmModel.NewId()
+		hint.ModifiedByID = amModel.NewId()
 		_, err = store.UpsertNotificationHint(hint, time.Second*15)
 		assert.ErrorAs(t, err, &model.ErrInvalidNotificationHint{}, "invalid notification hint should error")
 
@@ -110,7 +110,7 @@ func testDeleteNotificationHint(t *testing.T, store store.Store) {
 		hint := &model.NotificationHint{
 			BlockType:    model.TypeCard,
 			BlockID:      utils.NewID(utils.IDTypeBlock),
-			ModifiedByID: mmModel.NewId(),
+			ModifiedByID: amModel.NewId(),
 		}
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
 		require.NoError(t, err, "create notification hint should not error")
@@ -141,7 +141,7 @@ func testGetNotificationHint(t *testing.T, store store.Store) {
 		hint := &model.NotificationHint{
 			BlockType:    model.TypeCard,
 			BlockID:      utils.NewID(utils.IDTypeBlock),
-			ModifiedByID: mmModel.NewId(),
+			ModifiedByID: amModel.NewId(),
 		}
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
 		require.NoError(t, err, "create notification hint should not error")
@@ -163,7 +163,7 @@ func testGetNextNotificationHint(t *testing.T, store store.Store) {
 	t.Run("get next notification hint", func(t *testing.T) {
 		const loops = 5
 		ids := [5]string{}
-		modifiedBy := mmModel.NewId()
+		modifiedBy := amModel.NewId()
 
 		// create some hints with unique notifyAt
 		for i := 0; i < loops; i++ {
@@ -222,7 +222,7 @@ func testGetNextNotificationHint(t *testing.T, store store.Store) {
 		hint := &model.NotificationHint{
 			BlockType:    model.TypeCard,
 			BlockID:      utils.NewID(utils.IDTypeBlock),
-			ModifiedByID: mmModel.NewId(),
+			ModifiedByID: amModel.NewId(),
 		}
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*1)
 		require.NoError(t, err, "create notification hint should not error")

@@ -10,7 +10,7 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 
@@ -84,7 +84,7 @@ func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
 	return users, nil
 }
 
-func mmUserToFbUser(mmUser *mmModel.User) model.User {
+func mmUserToFbUser(mmUser *amModel.User) model.User {
 	authData := ""
 	if mmUser.AuthData != nil {
 		authData = *mmUser.AuthData
@@ -153,16 +153,16 @@ func (s *SQLStore) getUserByUsername(_ sq.BaseRunner, username string) (*model.U
 	return &user, nil
 }
 
-func (s *SQLStore) patchUserPreferences(db sq.BaseRunner, userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error) {
+func (s *SQLStore) patchUserPreferences(db sq.BaseRunner, userID string, patch model.UserPreferencesPatch) (amModel.Preferences, error) {
 	preferences, err := s.getUserPreferences(db, userID)
 	if err != nil {
 		return nil, err
 	}
 
 	if len(patch.UpdatedFields) > 0 {
-		updatedPreferences := mmModel.Preferences{}
+		updatedPreferences := amModel.Preferences{}
 		for key, value := range patch.UpdatedFields {
-			preference := mmModel.Preference{
+			preference := amModel.Preference{
 				UserId:   userID,
 				Category: model.PreferencesCategoryFocalboard,
 				Name:     key,
@@ -179,7 +179,7 @@ func (s *SQLStore) patchUserPreferences(db sq.BaseRunner, userID string, patch m
 
 		// we update the preferences list replacing or adding those
 		// that were updated
-		newPreferences := mmModel.Preferences{}
+		newPreferences := amModel.Preferences{}
 		for _, existingPreference := range preferences {
 			hasBeenUpdated := false
 			for _, updatedPreference := range updatedPreferences {
@@ -198,9 +198,9 @@ func (s *SQLStore) patchUserPreferences(db sq.BaseRunner, userID string, patch m
 	}
 
 	if len(patch.DeletedFields) > 0 {
-		deletedPreferences := mmModel.Preferences{}
+		deletedPreferences := amModel.Preferences{}
 		for _, key := range patch.DeletedFields {
-			preference := mmModel.Preference{
+			preference := amModel.Preference{
 				UserId:   userID,
 				Category: model.PreferencesCategoryFocalboard,
 				Name:     key,
@@ -216,7 +216,7 @@ func (s *SQLStore) patchUserPreferences(db sq.BaseRunner, userID string, patch m
 
 		// we update the preferences removing those that have been
 		// deleted
-		newPreferences := mmModel.Preferences{}
+		newPreferences := amModel.Preferences{}
 		for _, existingPreference := range preferences {
 			hasBeenDeleted := false
 			for _, deletedPreference := range deletedPreferences {
@@ -236,7 +236,7 @@ func (s *SQLStore) patchUserPreferences(db sq.BaseRunner, userID string, patch m
 	return preferences, nil
 }
 
-func (s *SQLStore) getUserPreferences(_ sq.BaseRunner, userID string) (mmModel.Preferences, error) {
+func (s *SQLStore) getUserPreferences(_ sq.BaseRunner, userID string) (amModel.Preferences, error) {
 	return s.servicesAPI.GetPreferencesForUser(userID)
 }
 
@@ -386,7 +386,7 @@ func (s *SQLStore) getUserTimezone(_ sq.BaseRunner, userID string) (string, erro
 		return "", err
 	}
 	timezone := user.Timezone
-	return mmModel.GetPreferredTimezone(timezone), nil
+	return amModel.GetPreferredTimezone(timezone), nil
 }
 
 func (s *SQLStore) canSeeUser(db sq.BaseRunner, seerID string, seenID string) (bool, error) {

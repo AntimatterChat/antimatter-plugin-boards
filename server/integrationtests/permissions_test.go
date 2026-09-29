@@ -16,7 +16,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/api"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -431,7 +431,7 @@ func TestPermissionsCreateBoard(t *testing.T) {
 	testData := setupData(t, th)
 
 	// Generate a valid team ID for board creation
-	teamID := mmModel.NewId()
+	teamID := amModel.NewId()
 	publicBoard := toJSON(t, model.Board{Title: "Board To Create", TeamID: teamID, Type: model.BoardTypeOpen})
 	privateBoard := toJSON(t, model.Board{Title: "Board To Create", TeamID: teamID, Type: model.BoardTypeOpen})
 
@@ -650,7 +650,7 @@ func TestPermissionsPatchBoardChannelId(t *testing.T) {
 	testData := setupData(t, th)
 
 	// Generate a valid channel ID for patching
-	validChannelID := mmModel.NewId()
+	validChannelID := amModel.NewId()
 	patch := toJSON(t, map[string]string{"channelId": validChannelID})
 
 	// Update FakePermissionPluginAPI to accept the generated channel ID
@@ -2213,7 +2213,7 @@ func TestPermissionsCreateBoardsAndBlocks(t *testing.T) {
 	clients := setupClients(th)
 	testData := setupData(t, th)
 
-	validTeamID := mmModel.NewId()
+	validTeamID := amModel.NewId()
 	testBoardID := "test"
 	testBlockID := "test-block"
 	bab := toJSON(t, model.BoardsAndBlocks{
@@ -2282,7 +2282,7 @@ func TestPermissionsUpdateBoardsAndBlocks(t *testing.T) {
 
 func TestPermissionsPatchBoardsAndBlocksChannelId(t *testing.T) {
 	ttCasesF := func(t *testing.T, testData TestData) []TestCase {
-		validChannelID := mmModel.NewId()
+		validChannelID := amModel.NewId()
 		bab := toJSON(t, model.PatchBoardsAndBlocks{
 			BoardIDs:     []string{testData.publicBoard.ID},
 			BoardPatches: []*model.BoardPatch{{ChannelID: &validChannelID}},
@@ -2628,7 +2628,7 @@ func TestPermissionsGetFile(t *testing.T) {
 	clients := setupClients(th)
 	testData := setupData(t, th)
 
-	validTeamID := mmModel.NewId()
+	validTeamID := amModel.NewId()
 	newFileID, err := th.Server.App().SaveFile(bytes.NewBuffer([]byte("test")), validTeamID, testData.privateBoard.ID, "test.png", false)
 	require.NoError(t, err)
 

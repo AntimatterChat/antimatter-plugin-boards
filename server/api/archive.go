@@ -13,7 +13,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/audit"
 	"github.com/gorilla/mux"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
@@ -63,7 +63,7 @@ func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
 	// check user has permission to board
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
 		// if this user has `manage_system` permission, then we will allow the export.
-		if !a.permissions.HasPermissionTo(userID, mmModel.PermissionManageSystem) {
+		if !a.permissions.HasPermissionTo(userID, amModel.PermissionManageSystem) {
 			a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 			return
 		}

@@ -11,7 +11,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,7 +22,7 @@ func TestUploadFile(t *testing.T) {
 
 		// Use unauthenticated client
 		th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		file, resp := th.Client.TeamUploadFile(teamID, "test-board-id", bytes.NewBuffer([]byte("test")))
 		th.CheckUnauthorized(resp)
 		require.Nil(t, file)
@@ -34,7 +34,7 @@ func TestUploadFile(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		file, resp := th.Client.TeamUploadFile(teamID, "not-valid-board", bytes.NewBuffer([]byte("test")))
 		th.CheckForbidden(resp)
 		require.Nil(t, file)
@@ -46,7 +46,7 @@ func TestUploadFile(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		testBoard := th.CreateBoard(teamID, model.BoardTypeOpen)
 		file, resp := th.Client.TeamUploadFile(teamID, testBoard.ID, bytes.NewBuffer([]byte("test")))
 		th.CheckOK(resp)
@@ -61,7 +61,7 @@ func TestUploadFile(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		testBoard := th.CreateBoard(teamID, model.BoardTypeOpen)
 
 		config := th.Server.App().GetConfig()
@@ -96,7 +96,7 @@ func TestFileInfo(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		testBoard := th.CreateBoard(teamID, model.BoardTypeOpen)
 
 		file, resp := th.Client.TeamUploadFile(teamID, testBoard.ID, bytes.NewBuffer([]byte("test file content")))

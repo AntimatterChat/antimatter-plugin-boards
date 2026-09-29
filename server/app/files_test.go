@@ -16,7 +16,7 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/plugin/plugintest/mock"
 	"github.com/mattermost/mattermost/server/v8/platform/shared/filestore"
 	"github.com/mattermost/mattermost/server/v8/platform/shared/filestore/mocks"
@@ -210,11 +210,11 @@ func TestSaveFile(t *testing.T) {
 
 	t.Run("should save file to file store with boardID in path", func(t *testing.T) {
 		fileName := "temp-file-name.txt"
-		validTeamID := mm_model.NewId()
+		validTeamID := am_model.NewId()
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
 
-		th.Store.EXPECT().SaveFileInfo(gomock.Any()).DoAndReturn(func(info *mm_model.FileInfo) error {
+		th.Store.EXPECT().SaveFileInfo(gomock.Any()).DoAndReturn(func(info *am_model.FileInfo) error {
 			parts := strings.Split(filepath.ToSlash(info.Path), "/")
 			assert.Equal(t, "boards", parts[0])
 			assert.Equal(t, testBoardID, parts[2]) // boardID is the 3rd path component
@@ -232,12 +232,12 @@ func TestSaveFile(t *testing.T) {
 
 	t.Run("should save .jpeg file as .jpg with boardID in path", func(t *testing.T) {
 		fileName := "temp-file-name.jpeg"
-		validTeamID := mm_model.NewId()
+		validTeamID := am_model.NewId()
 		validBoardID := utils.NewID(utils.IDTypeBoard)
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
 
-		th.Store.EXPECT().SaveFileInfo(gomock.Any()).DoAndReturn(func(info *mm_model.FileInfo) error {
+		th.Store.EXPECT().SaveFileInfo(gomock.Any()).DoAndReturn(func(info *am_model.FileInfo) error {
 			normalizedPath := filepath.ToSlash(info.Path)
 			assert.Contains(t, normalizedPath, validBoardID)
 			assert.Equal(t, "jpg", strings.Split(normalizedPath, ".")[1])
@@ -254,7 +254,7 @@ func TestSaveFile(t *testing.T) {
 
 	t.Run("should return error when fileBackend.WriteFile returns error", func(t *testing.T) {
 		fileName := "temp-file-name.jpeg"
-		validTeamID := mm_model.NewId()
+		validTeamID := am_model.NewId()
 		validBoardID := utils.NewID(utils.IDTypeBoard)
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
@@ -279,7 +279,7 @@ func TestGetFileInfo(t *testing.T) {
 	th, _ := SetupTestHelper(t)
 
 	t.Run("should return file info", func(t *testing.T) {
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:       "file_info_id",
 			Archived: false,
 		}
@@ -298,7 +298,7 @@ func TestGetFileInfo(t *testing.T) {
 	})
 
 	t.Run("should return archived file info", func(t *testing.T) {
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:       "file_info_id",
 			Archived: true,
 		}
@@ -328,7 +328,7 @@ func TestGetFile(t *testing.T) {
 		validBoardID := utils.NewID(utils.IDTypeBoard)
 		fileName := "7fileInfoID.txt"
 		expectedPath := filepath.Join(validTeamID, validBoardID, fileName)
-		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&am_model.FileInfo{
 			Id:   "fileInfoID",
 			Path: expectedPath,
 		}, nil).Times(2)
@@ -366,7 +366,7 @@ func TestGetFile(t *testing.T) {
 		validBoardID := utils.NewID(utils.IDTypeBoard)
 		fileName := "7fileInfoID.txt"
 		expectedPath := filepath.Join(validTeamID, validBoardID, fileName)
-		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&am_model.FileInfo{
 			Id:   "fileInfoID",
 			Path: expectedPath,
 		}, nil).Times(2)
@@ -384,7 +384,7 @@ func TestGetFile(t *testing.T) {
 		validBoardID := utils.NewID(utils.IDTypeBoard)
 		fileName := "7fileInfoID.txt"
 		expectedPath := filepath.Join(validTeamID, validBoardID, fileName)
-		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&am_model.FileInfo{
 			Id:   "fileInfoID",
 			Path: expectedPath,
 		}, nil).Times(2)
@@ -405,7 +405,7 @@ func TestGetFilePath(t *testing.T) {
 	th, _ := SetupTestHelper(t)
 
 	t.Run("when FileInfo exists", func(t *testing.T) {
-		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&am_model.FileInfo{
 			Id:   "fileInfoID",
 			Path: testPath,
 		}, nil)
@@ -430,7 +430,7 @@ func TestGetFilePath(t *testing.T) {
 	})
 
 	t.Run("when FileInfo exists but FileInfo.Path is not set", func(t *testing.T) {
-		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&mm_model.FileInfo{
+		th.Store.EXPECT().GetFileInfo("fileInfoID").Return(&am_model.FileInfo{
 			Id:   "fileInfoID",
 			Path: "",
 		}, nil)
@@ -469,7 +469,7 @@ func TestCopyCard(t *testing.T) {
 	})
 
 	t.Run("Board exists, image block, with FileInfo", func(t *testing.T) {
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   "imageBlock",
 			Path: testPath,
 		}
@@ -509,7 +509,7 @@ func TestCopyCard(t *testing.T) {
 			BoardID:    validTestBoardID,
 		}
 
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   "attachmentBlock",
 			Path: testPath,
 		}
@@ -618,7 +618,7 @@ func TestCopyAndUpdateCardFiles(t *testing.T) {
 	}
 
 	t.Run("Board exists, image block, with FileInfo", func(t *testing.T) {
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   "imageBlock",
 			Path: testPath,
 		}
@@ -643,7 +643,7 @@ func TestCopyAndUpdateCardFiles(t *testing.T) {
 	})
 
 	t.Run("Valid file ID", func(t *testing.T) {
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   "validImageBlock",
 			Path: testPath,
 		}
@@ -688,7 +688,7 @@ func TestCopyCardFiles(t *testing.T) {
 	t.Run("ValidFileID", func(t *testing.T) {
 		sourceBoardID := utils.NewID(utils.IDTypeBoard)
 		destBoardID := utils.NewID(utils.IDTypeBoard)
-		validMattermostID := mm_model.NewId()           // 26-char valid Mattermost ID
+		validMattermostID := am_model.NewId()           // 26-char valid Mattermost ID
 		validFileID := "7" + validMattermostID + ".jpg" // Valid file ID: '7' + 26-char ID + extension
 		fileInfoID := validMattermostID                 // GetFileInfo extracts ID by removing '7' prefix and extension
 		copiedBlocks := []*model.Block{
@@ -699,7 +699,7 @@ func TestCopyCardFiles(t *testing.T) {
 			},
 		}
 
-		teamID := mm_model.NewId()
+		teamID := am_model.NewId()
 		th.Store.EXPECT().GetBoard(sourceBoardID).Return(&model.Board{
 			ID:         sourceBoardID,
 			TeamID:     teamID,
@@ -1093,7 +1093,7 @@ func TestValidateFileOwnership(t *testing.T) {
 	// Paths that carry the owning board, so ownership resolves without scanning blocks.
 	t.Run("Should allow a template file whose path matches the board", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   ownershipFileID,
 			Path: filepath.Join(validTeamID, validBoardID, filename),
 		}
@@ -1105,7 +1105,7 @@ func TestValidateFileOwnership(t *testing.T) {
 
 	t.Run("Should allow access when boardID in path matches", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   ownershipFileID,
 			Path: "boards/20260317/" + validBoardID + "/" + filename,
 		}
@@ -1117,7 +1117,7 @@ func TestValidateFileOwnership(t *testing.T) {
 
 	t.Run("Should deny access when boardID in path belongs to a different board", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   ownershipFileID,
 			Path: "boards/20260317/" + otherBoardID + "/" + filename,
 		}
@@ -1133,7 +1133,7 @@ func TestValidateFileOwnership(t *testing.T) {
 	for _, tc := range legacyRefCases(filename) {
 		t.Run("Legacy path, "+tc.name, func(t *testing.T) {
 			th, _ := SetupTestHelper(t)
-			fileInfo := &mm_model.FileInfo{
+			fileInfo := &am_model.FileInfo{
 				Id:   ownershipFileID,
 				Path: "boards/20240618/" + filename,
 			}
@@ -1154,7 +1154,7 @@ func TestValidateFileOwnership(t *testing.T) {
 	// may still have been shared into this board, so the scan gets the final say.
 	t.Run("Should fall back to the block scan when a template path names a different board", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   ownershipFileID,
 			Path: filepath.Join(validTeamID, otherBoardID, filename),
 		}
@@ -1167,7 +1167,7 @@ func TestValidateFileOwnership(t *testing.T) {
 
 	t.Run("Should deny a template path naming a different board that no block references", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   ownershipFileID,
 			Path: filepath.Join(validTeamID, otherBoardID, filename),
 		}
@@ -1181,7 +1181,7 @@ func TestValidateFileOwnership(t *testing.T) {
 
 	t.Run("Should allow access to legacy file (empty PostId) referenced by board", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:     ownershipFileID,
 			PostId: "", // legacy file — no board recorded
 		}
@@ -1194,7 +1194,7 @@ func TestValidateFileOwnership(t *testing.T) {
 
 	t.Run("Should fall back to the block scan when the stored path is the empty sentinel", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{Id: ownershipFileID, Path: emptyString}
+		fileInfo := &am_model.FileInfo{Id: ownershipFileID, Path: emptyString}
 		th.Store.EXPECT().GetFileInfo(ownershipFileID).Return(fileInfo, nil)
 		expectBlockScan(th, []*model.Block{}, []*model.Block{fileRefBlock(model.TypeAttachment, model.BlockFieldFileId, filename)})
 
@@ -1204,7 +1204,7 @@ func TestValidateFileOwnership(t *testing.T) {
 
 	t.Run("Should propagate store errors raised by the block scan", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{Id: ownershipFileID, Path: "boards/20240618/" + filename}
+		fileInfo := &am_model.FileInfo{Id: ownershipFileID, Path: "boards/20240618/" + filename}
 		th.Store.EXPECT().GetFileInfo(ownershipFileID).Return(fileInfo, nil)
 		th.Store.EXPECT().GetBlocksWithType(validBoardID, model.TypeImage).Return(nil, errDummy)
 
@@ -1230,7 +1230,7 @@ func TestValidateFileOwnershipForBlockWrite(t *testing.T) {
 
 	t.Run("Should allow file whose boardID in path matches", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   ownershipFileID,
 			Path: "boards/20260317/" + validBoardID + "/" + filename,
 		}
@@ -1242,7 +1242,7 @@ func TestValidateFileOwnershipForBlockWrite(t *testing.T) {
 
 	t.Run("Should reject file whose boardID in path belongs to a different board", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   ownershipFileID,
 			Path: "boards/20260317/" + otherBoardID + "/" + filename,
 		}
@@ -1255,7 +1255,7 @@ func TestValidateFileOwnershipForBlockWrite(t *testing.T) {
 
 	t.Run("Should allow template file whose path matches the board", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   ownershipFileID,
 			Path: filepath.Join(validTeamID, validBoardID, filename),
 		}
@@ -1267,7 +1267,7 @@ func TestValidateFileOwnershipForBlockWrite(t *testing.T) {
 
 	t.Run("Should reject template file whose path belongs to a different board", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{
+		fileInfo := &am_model.FileInfo{
 			Id:   ownershipFileID,
 			Path: filepath.Join(validTeamID, otherBoardID, filename),
 		}
@@ -1283,7 +1283,7 @@ func TestValidateFileOwnershipForBlockWrite(t *testing.T) {
 	for _, tc := range legacyRefCases(filename) {
 		t.Run("Legacy path, "+tc.name, func(t *testing.T) {
 			th, _ := SetupTestHelper(t)
-			fileInfo := &mm_model.FileInfo{
+			fileInfo := &am_model.FileInfo{
 				Id:   ownershipFileID,
 				Path: "boards/20260317/" + filename, // old format: no boardID in path
 			}
@@ -1302,7 +1302,7 @@ func TestValidateFileOwnershipForBlockWrite(t *testing.T) {
 
 	t.Run("Should propagate store errors raised by the block scan", func(t *testing.T) {
 		th, _ := SetupTestHelper(t)
-		fileInfo := &mm_model.FileInfo{Id: ownershipFileID, Path: "boards/20260317/" + filename}
+		fileInfo := &am_model.FileInfo{Id: ownershipFileID, Path: "boards/20260317/" + filename}
 		th.Store.EXPECT().GetFileInfo(ownershipFileID).Return(fileInfo, nil)
 		th.Store.EXPECT().GetBlocksWithType(validBoardID, model.TypeImage).Return(nil, errDummy)
 

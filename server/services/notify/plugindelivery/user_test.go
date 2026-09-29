@@ -9,34 +9,34 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 )
 
 var (
-	defTeamID = mm_model.NewId()
+	defTeamID = am_model.NewId()
 
-	user1 = &mm_model.User{
-		Id:       mm_model.NewId(),
+	user1 = &am_model.User{
+		Id:       am_model.NewId(),
 		Username: "dlauder",
 	}
-	user2 = &mm_model.User{
-		Id:       mm_model.NewId(),
+	user2 = &am_model.User{
+		Id:       am_model.NewId(),
 		Username: "steve.mqueen",
 	}
-	user3 = &mm_model.User{
-		Id:       mm_model.NewId(),
+	user3 = &am_model.User{
+		Id:       am_model.NewId(),
 		Username: "bart_",
 	}
-	user4 = &mm_model.User{
-		Id:       mm_model.NewId(),
+	user4 = &am_model.User{
+		Id:       am_model.NewId(),
 		Username: "missing_",
 	}
-	user5 = &mm_model.User{
-		Id:       mm_model.NewId(),
+	user5 = &am_model.User{
+		Id:       am_model.NewId(),
 		Username: "wrong_team",
 	}
 
-	mockUsers = map[string]*mm_model.User{
+	mockUsers = map[string]*am_model.User{
 		"dlauder":      user1,
 		"steve.mqueen": user2,
 		"bart_":        user3,
@@ -52,7 +52,7 @@ func Test_userByUsername(t *testing.T) {
 		name    string
 		uname   string
 		teamID  string
-		want    *mm_model.User
+		want    *am_model.User
 		wantErr bool
 	}{
 		{name: "user1", uname: user1.Username, want: user1, wantErr: false},
@@ -80,16 +80,16 @@ func Test_userByUsername(t *testing.T) {
 }
 
 type servicesAPIMock struct {
-	users map[string]*mm_model.User
+	users map[string]*am_model.User
 }
 
-func newServicesAPIMock(users map[string]*mm_model.User) servicesAPIMock {
+func newServicesAPIMock(users map[string]*am_model.User) servicesAPIMock {
 	return servicesAPIMock{
 		users: users,
 	}
 }
 
-func (m servicesAPIMock) GetUserByUsername(name string) (*mm_model.User, error) {
+func (m servicesAPIMock) GetUserByUsername(name string) (*am_model.User, error) {
 	user, ok := m.users[name]
 	if !ok {
 		return nil, model.NewErrNotFound(name)
@@ -97,19 +97,19 @@ func (m servicesAPIMock) GetUserByUsername(name string) (*mm_model.User, error) 
 	return user, nil
 }
 
-func (m servicesAPIMock) GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error) {
+func (m servicesAPIMock) GetDirectChannel(userID1, userID2 string) (*am_model.Channel, error) {
 	return nil, nil
 }
 
-func (m servicesAPIMock) GetDirectChannelOrCreate(userID1, userID2 string) (*mm_model.Channel, error) {
+func (m servicesAPIMock) GetDirectChannelOrCreate(userID1, userID2 string) (*am_model.Channel, error) {
 	return nil, nil
 }
 
-func (m servicesAPIMock) CreatePost(post *mm_model.Post) (*mm_model.Post, error) {
+func (m servicesAPIMock) CreatePost(post *am_model.Post) (*am_model.Post, error) {
 	return post, nil
 }
 
-func (m servicesAPIMock) GetUserByID(userID string) (*mm_model.User, error) {
+func (m servicesAPIMock) GetUserByID(userID string) (*am_model.User, error) {
 	for _, user := range m.users {
 		if user.Id == userID {
 			return user, nil
@@ -118,7 +118,7 @@ func (m servicesAPIMock) GetUserByID(userID string) (*mm_model.User, error) {
 	return nil, model.NewErrNotFound(userID)
 }
 
-func (m servicesAPIMock) GetTeamMember(teamID string, userID string) (*mm_model.TeamMember, error) {
+func (m servicesAPIMock) GetTeamMember(teamID string, userID string) (*am_model.TeamMember, error) {
 	user, err := m.GetUserByID(userID)
 	if err != nil {
 		return nil, err
@@ -128,23 +128,23 @@ func (m servicesAPIMock) GetTeamMember(teamID string, userID string) (*mm_model.
 		return nil, model.NewErrNotFound(teamID)
 	}
 
-	member := &mm_model.TeamMember{
+	member := &am_model.TeamMember{
 		UserId: user.Id,
 		TeamId: teamID,
 	}
 	return member, nil
 }
 
-func (m servicesAPIMock) GetChannelByID(channelID string) (*mm_model.Channel, error) {
+func (m servicesAPIMock) GetChannelByID(channelID string) (*am_model.Channel, error) {
 	return nil, model.NewErrNotFound(channelID)
 }
 
-func (m servicesAPIMock) GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error) {
+func (m servicesAPIMock) GetChannelMember(channelID string, userID string) (*am_model.ChannelMember, error) {
 	return nil, model.NewErrNotFound(userID)
 }
 
-func (m servicesAPIMock) CreateMember(teamID string, userID string) (*mm_model.TeamMember, error) {
-	member := &mm_model.TeamMember{
+func (m servicesAPIMock) CreateMember(teamID string, userID string) (*am_model.TeamMember, error) {
+	member := &am_model.TeamMember{
 		UserId: userID,
 		TeamId: teamID,
 	}

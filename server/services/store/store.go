@@ -10,7 +10,7 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 )
 
 // Store represents the abstraction of the data storage.
@@ -63,8 +63,8 @@ type Store interface {
 	GetUserByUsername(username string) (*model.User, error)
 	GetUsersByTeam(teamID string, asGuestID string, showEmail, showName bool) ([]*model.User, error)
 	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool, showEmail, showName bool) ([]*model.User, error)
-	PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error)
-	GetUserPreferences(userID string) (mmModel.Preferences, error)
+	PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (amModel.Preferences, error)
+	GetUserPreferences(userID string) (amModel.Preferences, error)
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 
@@ -119,8 +119,8 @@ type Store interface {
 
 	GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error)
 
-	GetFileInfo(id string) (*mmModel.FileInfo, error)
-	SaveFileInfo(fileInfo *mmModel.FileInfo) error
+	GetFileInfo(id string) (*amModel.FileInfo, error)
+	SaveFileInfo(fileInfo *amModel.FileInfo) error
 	RestoreFiles(fileIDs []string) error
 
 	// @withTransaction
@@ -153,8 +153,8 @@ type Store interface {
 	DBType() string
 	DBVersion() string
 
-	SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error)
-	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
+	SearchUserChannels(teamID, userID, query string) ([]*amModel.Channel, error)
+	GetChannel(teamID, channelID string) (*amModel.Channel, error)
 	PostMessage(message, postType, channelID string) error
 	SendMessage(message, postType string, receipts []string) error
 

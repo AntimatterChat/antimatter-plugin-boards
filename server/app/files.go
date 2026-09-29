@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
@@ -64,7 +64,7 @@ func (a *App) SaveFile(reader io.Reader, teamID, boardID, filename string, asTem
 	return newFileName, nil
 }
 
-func (a *App) GetFileInfo(filename string) (*mm_model.FileInfo, error) {
+func (a *App) GetFileInfo(filename string) (*am_model.FileInfo, error) {
 	if len(filename) == 0 {
 		return nil, errEmptyFilename
 	}
@@ -227,7 +227,7 @@ func (a *App) validateFileReferencedByBoard(boardID, filename string) error {
 	return fmt.Errorf("%w: file %s is not referenced by any block in board %s", ErrFileNotReferencedByBoard, filename, boardID)
 }
 
-func (a *App) GetFile(teamID, boardID, fileName string) (*mm_model.FileInfo, filestore.ReadCloseSeeker, error) {
+func (a *App) GetFile(teamID, boardID, fileName string) (*am_model.FileInfo, filestore.ReadCloseSeeker, error) {
 	if err := a.ValidateFileOwnership(teamID, boardID, fileName); err != nil {
 		a.logger.Error("GetFile: File ownership validation failed",
 			mlog.String("Team", teamID),
@@ -262,7 +262,7 @@ func (a *App) GetFile(teamID, boardID, fileName string) (*mm_model.FileInfo, fil
 	return fileInfo, reader, nil
 }
 
-func (a *App) GetFilePath(teamID, boardID, fileName string) (*mm_model.FileInfo, string, error) {
+func (a *App) GetFilePath(teamID, boardID, fileName string) (*am_model.FileInfo, string, error) {
 	fileInfo, err := a.GetFileInfo(fileName)
 	if err != nil && !model.IsErrNotFound(err) {
 		return nil, "", err
@@ -420,10 +420,10 @@ func (a *App) GetFileReader(teamID, boardID, filename string) (filestore.ReadClo
 
 func (a *App) MoveFile(channelID, teamID, boardID, filename string) error {
 	// Validate path components to ensure proper file path handling
-	if !mm_model.IsValidId(channelID) {
+	if !am_model.IsValidId(channelID) {
 		return fmt.Errorf("MoveFile: invalid channel ID for channelID %s", channelID) //nolint:err113
 	}
-	if !mm_model.IsValidId(teamID) {
+	if !am_model.IsValidId(teamID) {
 		return fmt.Errorf("MoveFile: invalid team ID for teamID %s", teamID) //nolint:err113
 	}
 	if err := model.IsValidId(boardID); err != nil {

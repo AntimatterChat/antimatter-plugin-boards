@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
@@ -582,7 +582,7 @@ func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (
 		if err != nil {
 			// Normalize both the plugin-API AppError and the local UserNotFoundError
 			// into model.ErrNotFound so callers can use model.IsErrNotFound uniformly.
-			var appErr *mmModel.AppError
+			var appErr *amModel.AppError
 			if errors.As(err, &appErr) && appErr.StatusCode == http.StatusNotFound {
 				return nil, model.NewErrNotFound("user ID=" + userID)
 			}
@@ -604,7 +604,7 @@ func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (
 		if b.ChannelID != "" {
 			_, memberErr := s.servicesAPI.GetChannelMember(b.ChannelID, userID)
 			if memberErr != nil {
-				var appErr *mmModel.AppError
+				var appErr *amModel.AppError
 				if errors.As(memberErr, &appErr) && appErr.StatusCode == http.StatusNotFound {
 					// Plugin API returns error if channel member doesn't exist.
 					// We're fine if it doesn't exist, so its not an error for us.
@@ -629,7 +629,7 @@ func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (
 		if b.Type == model.BoardTypeOpen && b.IsTemplate {
 			_, memberErr := s.servicesAPI.GetTeamMember(b.TeamID, userID)
 			if memberErr != nil {
-				var appErr *mmModel.AppError
+				var appErr *amModel.AppError
 				if errors.As(memberErr, &appErr) && appErr.StatusCode == http.StatusNotFound {
 					return nil, model.NewErrNotFound(userID)
 				}

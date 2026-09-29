@@ -6,7 +6,7 @@ package model
 import (
 	"time"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 
 	"github.com/mattermost/mattermost/server/v8/channels/utils"
 )
@@ -48,7 +48,7 @@ func (s *NotificationHint) IsValid() error {
 		return ErrInvalidNotificationHint{"missing block type"}
 	}
 
-	if !mmModel.IsValidId(s.ModifiedByID) {
+	if !amModel.IsValidId(s.ModifiedByID) {
 		return ErrInvalidNotificationHint{"missing modified_by id"}
 	}
 	return nil

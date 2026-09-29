@@ -9,17 +9,17 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
-func (s *SQLStore) getFileInfo(_ sq.BaseRunner, id string) (*mmModel.FileInfo, error) {
+func (s *SQLStore) getFileInfo(_ sq.BaseRunner, id string) (*amModel.FileInfo, error) {
 	fileInfo, err := s.servicesAPI.GetFileInfo(id)
 	if err != nil {
 		// Not finding fileinfo is fine because we don't have data for
 		// any existing files already uploaded in Boards before this code
 		// was deployed.
-		var appErr *mmModel.AppError
+		var appErr *amModel.AppError
 		if errors.As(err, &appErr) {
 			if appErr.StatusCode == http.StatusNotFound {
 				return nil, model.NewErrNotFound("file info ID=" + id)
@@ -36,7 +36,7 @@ func (s *SQLStore) getFileInfo(_ sq.BaseRunner, id string) (*mmModel.FileInfo, e
 	return fileInfo, nil
 }
 
-func (s *SQLStore) saveFileInfo(db sq.BaseRunner, fileInfo *mmModel.FileInfo) error {
+func (s *SQLStore) saveFileInfo(db sq.BaseRunner, fileInfo *amModel.FileInfo) error {
 	query := s.getQueryBuilder(db).
 		Insert("FileInfo").
 		Columns(

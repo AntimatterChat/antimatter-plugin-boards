@@ -8,14 +8,14 @@ package permissions
 import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 )
 
 type PermissionsService interface {
-	HasPermissionTo(userID string, permission *mmModel.Permission) bool
-	HasPermissionToTeam(userID, teamID string, permission *mmModel.Permission) bool
-	HasPermissionToChannel(userID, channelID string, permission *mmModel.Permission) bool
-	HasPermissionToBoard(userID, boardID string, permission *mmModel.Permission) bool
+	HasPermissionTo(userID string, permission *amModel.Permission) bool
+	HasPermissionToTeam(userID, teamID string, permission *amModel.Permission) bool
+	HasPermissionToChannel(userID, channelID string, permission *amModel.Permission) bool
+	HasPermissionToBoard(userID, boardID string, permission *amModel.Permission) bool
 }
 
 type Store interface {

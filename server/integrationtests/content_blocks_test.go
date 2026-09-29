@@ -10,7 +10,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -21,7 +21,7 @@ func TestMoveContentBlock(t *testing.T) {
 	clients := setupClients(th)
 	th.Client = clients.TeamMember
 
-	teamID := mmModel.NewId()
+	teamID := amModel.NewId()
 	board := th.CreateBoard(teamID, model.BoardTypeOpen)
 
 	cardID1 := utils.NewID(utils.IDTypeBlock)

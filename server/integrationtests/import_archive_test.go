@@ -15,7 +15,7 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -39,7 +39,7 @@ func TestImportArchiveAPIErrors(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 
 		config := th.Server.App().GetConfig()
 		origMaxFileSize := config.MaxFileSize
@@ -70,7 +70,7 @@ func TestImportArchiveAPIErrors(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 
 		url := th.Client.GetTeamRoute(teamID) + "/archive/import"
 		r, err := th.Client.DoAPIPost(url, "not-a-multipart-body")
@@ -92,7 +92,7 @@ func TestImportArchiveStripsGuestSchemeAdmin(t *testing.T) {
 		th.Client = clients.TeamMember
 
 		const boardTitle = "MM-68841 guest import archive test"
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 
 		board := &model.Board{
 			ID:        utils.NewID(utils.IDTypeBoard),

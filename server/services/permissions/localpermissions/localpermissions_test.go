@@ -9,7 +9,7 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -63,7 +63,7 @@ func TestHasPermissionToBoard(t *testing.T) {
 			SchemeAdmin: true,
 		}
 
-		hasPermissionTo := []*mmModel.Permission{
+		hasPermissionTo := []*amModel.Permission{
 			model.PermissionManageBoardType,
 			model.PermissionDeleteBoard,
 			model.PermissionManageBoardRoles,
@@ -75,7 +75,7 @@ func TestHasPermissionToBoard(t *testing.T) {
 			model.PermissionViewBoard,
 		}
 
-		hasNotPermissionTo := []*mmModel.Permission{}
+		hasNotPermissionTo := []*amModel.Permission{}
 
 		th.checkBoardPermissions("admin", member, hasPermissionTo, hasNotPermissionTo)
 	})
@@ -87,14 +87,14 @@ func TestHasPermissionToBoard(t *testing.T) {
 			SchemeEditor: true,
 		}
 
-		hasPermissionTo := []*mmModel.Permission{
+		hasPermissionTo := []*amModel.Permission{
 			model.PermissionManageBoardCards,
 			model.PermissionManageBoardProperties,
 			model.PermissionCommentBoardCards,
 			model.PermissionViewBoard,
 		}
 
-		hasNotPermissionTo := []*mmModel.Permission{
+		hasNotPermissionTo := []*amModel.Permission{
 			model.PermissionManageBoardType,
 			model.PermissionDeleteBoard,
 			model.PermissionManageBoardRoles,
@@ -112,12 +112,12 @@ func TestHasPermissionToBoard(t *testing.T) {
 			SchemeCommenter: true,
 		}
 
-		hasPermissionTo := []*mmModel.Permission{
+		hasPermissionTo := []*amModel.Permission{
 			model.PermissionCommentBoardCards,
 			model.PermissionViewBoard,
 		}
 
-		hasNotPermissionTo := []*mmModel.Permission{
+		hasNotPermissionTo := []*amModel.Permission{
 			model.PermissionManageBoardType,
 			model.PermissionDeleteBoard,
 			model.PermissionManageBoardRoles,
@@ -137,11 +137,11 @@ func TestHasPermissionToBoard(t *testing.T) {
 			SchemeViewer: true,
 		}
 
-		hasPermissionTo := []*mmModel.Permission{
+		hasPermissionTo := []*amModel.Permission{
 			model.PermissionViewBoard,
 		}
 
-		hasNotPermissionTo := []*mmModel.Permission{
+		hasNotPermissionTo := []*amModel.Permission{
 			model.PermissionManageBoardType,
 			model.PermissionDeleteBoard,
 			model.PermissionManageBoardRoles,
@@ -164,7 +164,7 @@ func TestHasPermissionToBoard(t *testing.T) {
 				MinimumRole:  "admin",
 			}
 
-			hasPermissionTo := []*mmModel.Permission{
+			hasPermissionTo := []*amModel.Permission{
 				model.PermissionManageBoardType,
 				model.PermissionDeleteBoard,
 				model.PermissionManageBoardRoles,
@@ -176,7 +176,7 @@ func TestHasPermissionToBoard(t *testing.T) {
 				model.PermissionViewBoard,
 			}
 
-			th.checkBoardPermissions("viewer-with-admin-minimum-role", member, hasPermissionTo, []*mmModel.Permission{})
+			th.checkBoardPermissions("viewer-with-admin-minimum-role", member, hasPermissionTo, []*amModel.Permission{})
 		})
 
 		t.Run("MinimumRole editor grants editor permissions to viewer scheme member", func(t *testing.T) {
@@ -187,14 +187,14 @@ func TestHasPermissionToBoard(t *testing.T) {
 				MinimumRole:  "editor",
 			}
 
-			hasPermissionTo := []*mmModel.Permission{
+			hasPermissionTo := []*amModel.Permission{
 				model.PermissionManageBoardCards,
 				model.PermissionManageBoardProperties,
 				model.PermissionCommentBoardCards,
 				model.PermissionViewBoard,
 			}
 
-			hasNotPermissionTo := []*mmModel.Permission{
+			hasNotPermissionTo := []*amModel.Permission{
 				model.PermissionManageBoardType,
 				model.PermissionDeleteBoard,
 				model.PermissionManageBoardRoles,

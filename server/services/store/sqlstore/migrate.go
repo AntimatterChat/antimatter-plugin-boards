@@ -17,7 +17,7 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	mysqlDriver "github.com/go-sql-driver/mysql"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 	sqlUtils "github.com/mattermost/mattermost/server/public/utils/sql"
 
@@ -88,7 +88,7 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 		}
 	}
 
-	var settings mmModel.SqlSettings
+	var settings amModel.SqlSettings
 	settings.SetDefaults(false)
 	if s.configFn != nil {
 		settings = s.configFn().SqlSettings

@@ -18,7 +18,7 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
@@ -408,12 +408,12 @@ func (s *SQLStore) GetCategory(id string) (*model.Category, error) {
 
 }
 
-func (s *SQLStore) GetChannel(teamID string, channelID string) (*mmModel.Channel, error) {
+func (s *SQLStore) GetChannel(teamID string, channelID string) (*amModel.Channel, error) {
 	return s.getChannel(s.db, teamID, channelID)
 
 }
 
-func (s *SQLStore) GetFileInfo(id string) (*mmModel.FileInfo, error) {
+func (s *SQLStore) GetFileInfo(id string) (*amModel.FileInfo, error) {
 	return s.getFileInfo(s.db, id)
 
 }
@@ -538,7 +538,7 @@ func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.
 
 }
 
-func (s *SQLStore) GetUserPreferences(userID string) (mmModel.Preferences, error) {
+func (s *SQLStore) GetUserPreferences(userID string) (amModel.Preferences, error) {
 	return s.getUserPreferences(s.db, userID)
 
 }
@@ -731,7 +731,7 @@ func (s *SQLStore) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID
 
 }
 
-func (s *SQLStore) PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error) {
+func (s *SQLStore) PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (amModel.Preferences, error) {
 	return s.patchUserPreferences(s.db, userID, patch)
 
 }
@@ -785,7 +785,7 @@ func (s *SQLStore) RunDataRetention(globalRetentionDate int64, batchSize int64) 
 
 }
 
-func (s *SQLStore) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
+func (s *SQLStore) SaveFileInfo(fileInfo *amModel.FileInfo) error {
 	return s.saveFileInfo(s.db, fileInfo)
 
 }
@@ -805,7 +805,7 @@ func (s *SQLStore) SearchBoardsForUserInTeam(teamID string, term string, userID 
 
 }
 
-func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string) ([]*mmModel.Channel, error) {
+func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string) ([]*amModel.Channel, error) {
 	return s.searchUserChannels(s.db, teamID, userID, query)
 
 }

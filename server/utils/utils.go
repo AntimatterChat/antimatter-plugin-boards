@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 )
 
 type IDType byte
@@ -33,22 +33,22 @@ const (
 // with the padding stripped off, and a one character alpha prefix indicating the
 // type of entity or a `7` if unknown type.
 func NewID(idType IDType) string {
-	return string(idType) + mmModel.NewId()
+	return string(idType) + amModel.NewId()
 }
 
 // GetMillis is a convenience method to get milliseconds since epoch.
 func GetMillis() int64 {
-	return mmModel.GetMillis()
+	return amModel.GetMillis()
 }
 
 // GetMillisForTime is a convenience method to get milliseconds since epoch for provided Time.
 func GetMillisForTime(thisTime time.Time) int64 {
-	return mmModel.GetMillisForTime(thisTime)
+	return amModel.GetMillisForTime(thisTime)
 }
 
 // GetTimeForMillis is a convenience method to get time.Time for milliseconds since epoch.
 func GetTimeForMillis(millis int64) time.Time {
-	return mmModel.GetTimeForMillis(millis)
+	return amModel.GetTimeForMillis(millis)
 }
 
 // SecondsToMillis is a convenience method to convert seconds to milliseconds.

@@ -9,7 +9,7 @@ import (
 	authMocks "github.com/antimatterchat/antimatter-plugin-boards/server/auth/mocks"
 	wsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/ws/mocks"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 
 	"github.com/golang/mock/gomock"
@@ -44,7 +44,7 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 }
 
 func (th *TestHelper) ReceiveWebSocketMessage(webConnID, userID, action string, data map[string]interface{}) {
-	req := &mmModel.WebSocketRequest{Action: websocketMessagePrefix + action, Data: data}
+	req := &amModel.WebSocketRequest{Action: websocketMessagePrefix + action, Data: data}
 
 	th.pa.WebSocketMessageHasBeenPosted(webConnID, userID, req)
 }

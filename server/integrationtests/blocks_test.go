@@ -12,7 +12,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -23,7 +23,7 @@ func TestGetBlocks(t *testing.T) {
 	clients := setupClients(th)
 	th.Client = clients.TeamMember
 
-	teamID := mmModel.NewId()
+	teamID := amModel.NewId()
 	board := th.CreateBoard(teamID, model.BoardTypeOpen)
 
 	initialID1 := utils.NewID(utils.IDTypeBlock)
@@ -69,7 +69,7 @@ func TestPostBlock(t *testing.T) {
 	clients := setupClients(th)
 	th.Client = clients.TeamMember
 
-	teamID := mmModel.NewId()
+	teamID := amModel.NewId()
 	board := th.CreateBoard(teamID, model.BoardTypeOpen)
 
 	var blockID1 string
@@ -202,7 +202,7 @@ func TestPatchBlock(t *testing.T) {
 
 	initialID := utils.NewID(utils.IDTypeBlock)
 
-	teamID := mmModel.NewId()
+	teamID := amModel.NewId()
 	board := th.CreateBoard(teamID, model.BoardTypeOpen)
 	time.Sleep(10 * time.Millisecond)
 
@@ -326,7 +326,7 @@ func TestDeleteBlock(t *testing.T) {
 	clients := setupClients(th)
 	th.Client = clients.TeamMember
 
-	teamID := mmModel.NewId()
+	teamID := amModel.NewId()
 	board := th.CreateBoard(teamID, model.BoardTypeOpen)
 	time.Sleep(10 * time.Millisecond)
 
@@ -382,7 +382,7 @@ func TestUndeleteBlock(t *testing.T) {
 	th.Client = clients.TeamMember
 	th.Client2 = clients.Viewer
 
-	teamID := mmModel.NewId()
+	teamID := amModel.NewId()
 	board := th.CreateBoard(teamID, model.BoardTypeOpen)
 
 	blocks, resp := th.Client.GetBlocksForBoard(board.ID)

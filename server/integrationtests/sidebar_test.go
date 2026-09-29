@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -18,7 +18,7 @@ func TestSidebar(t *testing.T) {
 	clients := setupClients(th)
 	th.Client = clients.TeamMember
 
-	teamID := mmModel.NewId()
+	teamID := amModel.NewId()
 
 	// we'll create a new board.
 	// The board should end up in a default "Boards" category
@@ -70,7 +70,7 @@ func TestHideUnhideBoard(t *testing.T) {
 	clients := setupClients(th)
 	th.Client = clients.TeamMember
 
-	teamID := mmModel.NewId()
+	teamID := amModel.NewId()
 
 	// we'll create a new board.
 	// The board should end up in a default "Boards" category

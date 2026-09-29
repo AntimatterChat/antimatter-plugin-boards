@@ -13,7 +13,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -677,7 +677,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 	testBlockID1 := utils.NewID(utils.IDTypeBlock)
 	testBlockID1a := utils.NewID(utils.IDTypeBlock)
 	testBlockID2 := utils.NewID(utils.IDTypeBlock)
-	testChannelID := mmModel.NewId()
+	testChannelID := amModel.NewId()
 
 	newBab := &model.BoardsAndBlocks{
 		Boards: []*model.Board{

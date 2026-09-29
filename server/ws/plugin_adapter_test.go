@@ -9,14 +9,14 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 
 	"github.com/stretchr/testify/require"
 )
 
 func TestCommandFromRequest(t *testing.T) {
 	t.Run("rejects missing teamId", func(t *testing.T) {
-		req := &mmModel.WebSocketRequest{
+		req := &amModel.WebSocketRequest{
 			Action: websocketMessagePrefix + websocketActionSubscribeTeam,
 			Data:   map[string]interface{}{},
 		}
@@ -25,7 +25,7 @@ func TestCommandFromRequest(t *testing.T) {
 	})
 
 	t.Run("rejects non-string teamId without panicking", func(t *testing.T) {
-		req := &mmModel.WebSocketRequest{
+		req := &amModel.WebSocketRequest{
 			Action: websocketMessagePrefix + websocketActionSubscribeTeam,
 			Data:   map[string]interface{}{"teamId": 1.0},
 		}
@@ -37,7 +37,7 @@ func TestCommandFromRequest(t *testing.T) {
 	})
 
 	t.Run("rejects non-string readToken", func(t *testing.T) {
-		req := &mmModel.WebSocketRequest{
+		req := &amModel.WebSocketRequest{
 			Action: websocketMessagePrefix + websocketActionSubscribeTeam,
 			Data:   map[string]interface{}{"teamId": "team1", "readToken": 42.0},
 		}
@@ -49,7 +49,7 @@ func TestCommandFromRequest(t *testing.T) {
 	})
 
 	t.Run("accepts blockIds as a JSON array of strings", func(t *testing.T) {
-		req := &mmModel.WebSocketRequest{
+		req := &amModel.WebSocketRequest{
 			Action: websocketMessagePrefix + websocketActionSubscribeBlocks,
 			Data: map[string]interface{}{
 				"teamId":   "team1",
@@ -62,7 +62,7 @@ func TestCommandFromRequest(t *testing.T) {
 	})
 
 	t.Run("rejects blockIds with non-string elements", func(t *testing.T) {
-		req := &mmModel.WebSocketRequest{
+		req := &amModel.WebSocketRequest{
 			Action: websocketMessagePrefix + websocketActionSubscribeBlocks,
 			Data: map[string]interface{}{
 				"teamId":   "team1",
@@ -77,7 +77,7 @@ func TestCommandFromRequest(t *testing.T) {
 	})
 
 	t.Run("rejects blockIds that are not a JSON array", func(t *testing.T) {
-		req := &mmModel.WebSocketRequest{
+		req := &amModel.WebSocketRequest{
 			Action: websocketMessagePrefix + websocketActionSubscribeBlocks,
 			Data: map[string]interface{}{
 				"teamId":   "team1",
@@ -95,8 +95,8 @@ func TestCommandFromRequest(t *testing.T) {
 func TestWebSocketMessageHasBeenPostedDoesNotPanicOnMalformedTeamID(t *testing.T) {
 	th := SetupTestHelper(t)
 
-	webConnID := mmModel.NewId()
-	userID := mmModel.NewId()
+	webConnID := amModel.NewId()
+	userID := amModel.NewId()
 	th.pa.OnWebSocketConnect(webConnID, userID)
 
 	require.NotPanics(t, func() {
@@ -107,9 +107,9 @@ func TestWebSocketMessageHasBeenPostedDoesNotPanicOnMalformedTeamID(t *testing.T
 func TestPluginAdapterTeamSubscription(t *testing.T) {
 	th := SetupTestHelper(t)
 
-	webConnID := mmModel.NewId()
-	userID := mmModel.NewId()
-	teamID := mmModel.NewId()
+	webConnID := amModel.NewId()
+	userID := amModel.NewId()
+	teamID := amModel.NewId()
 
 	var pac *PluginAdapterClient
 	t.Run("Should correctly add a connection", func(t *testing.T) {
@@ -198,9 +198,9 @@ func TestPluginAdapterTeamSubscription(t *testing.T) {
 func TestPluginAdapterClientReconnect(t *testing.T) {
 	th := SetupTestHelper(t)
 
-	webConnID := mmModel.NewId()
-	userID := mmModel.NewId()
-	teamID := mmModel.NewId()
+	webConnID := amModel.NewId()
+	userID := amModel.NewId()
+	teamID := amModel.NewId()
 
 	var pac *PluginAdapterClient
 	t.Run("A user should be able to reconnect within the accepted threshold and keep their subscriptions", func(t *testing.T) {
@@ -242,7 +242,7 @@ func TestPluginAdapterClientReconnect(t *testing.T) {
 		require.Len(t, th.pa.listenersByUserID[userID], 1)
 		require.Equal(t, webConnID, th.pa.listenersByUserID[userID][0].webConnID)
 
-		newWebConnID := mmModel.NewId()
+		newWebConnID := amModel.NewId()
 		th.pa.OnWebSocketConnect(newWebConnID, userID)
 
 		require.Len(t, th.pa.listeners, 1)
@@ -270,7 +270,7 @@ func TestPluginAdapterClientReconnect(t *testing.T) {
 		require.Len(t, th.pa.listeners, 2)
 
 		// a new user connects
-		th.pa.OnWebSocketConnect(mmModel.NewId(), userID)
+		th.pa.OnWebSocketConnect(amModel.NewId(), userID)
 
 		// and we should have three connections, all of them active
 		require.Len(t, th.pa.listeners, 3)
@@ -285,17 +285,17 @@ func TestGetUserIDsForTeam(t *testing.T) {
 	th := SetupTestHelper(t)
 
 	// we have two teams
-	teamID1 := mmModel.NewId()
-	teamID2 := mmModel.NewId()
+	teamID1 := amModel.NewId()
+	teamID2 := amModel.NewId()
 
 	// user 1 has two connections
-	userID1 := mmModel.NewId()
-	webConnID1 := mmModel.NewId()
-	webConnID2 := mmModel.NewId()
+	userID1 := amModel.NewId()
+	webConnID1 := amModel.NewId()
+	webConnID2 := amModel.NewId()
 
 	// user 2 has one connection
-	userID2 := mmModel.NewId()
-	webConnID3 := mmModel.NewId()
+	userID2 := amModel.NewId()
+	webConnID3 := amModel.NewId()
 
 	wg := new(sync.WaitGroup)
 	wg.Add(3)
@@ -403,19 +403,19 @@ func TestGetUserIDsForTeamAndBoard(t *testing.T) {
 	th := SetupTestHelper(t)
 
 	// we have two teams
-	teamID1 := mmModel.NewId()
-	boardID1 := mmModel.NewId()
-	teamID2 := mmModel.NewId()
-	boardID2 := mmModel.NewId()
+	teamID1 := amModel.NewId()
+	boardID1 := amModel.NewId()
+	teamID2 := amModel.NewId()
+	boardID2 := amModel.NewId()
 
 	// user 1 has two connections
-	userID1 := mmModel.NewId()
-	webConnID1 := mmModel.NewId()
-	webConnID2 := mmModel.NewId()
+	userID1 := amModel.NewId()
+	webConnID1 := amModel.NewId()
+	webConnID2 := amModel.NewId()
 
 	// user 2 has one connection
-	userID2 := mmModel.NewId()
-	webConnID3 := mmModel.NewId()
+	userID2 := amModel.NewId()
+	webConnID3 := amModel.NewId()
 
 	wg := new(sync.WaitGroup)
 	wg.Add(3)
@@ -512,7 +512,7 @@ func TestGetUserIDsForTeamAndBoard(t *testing.T) {
 	})
 
 	t.Run("should include a user that is not present if it's ensured", func(t *testing.T) {
-		userID3 := mmModel.NewId()
+		userID3 := amModel.NewId()
 		mockedMembers := []*model.BoardMember{{UserID: userID1}, {UserID: userID2}}
 		th.store.EXPECT().
 			GetMembersForBoard(boardID2).
@@ -558,14 +558,14 @@ func TestGetUserIDsForTeamAndBoard(t *testing.T) {
 func TestParallelSubscriptionsOnMultipleConnections(t *testing.T) {
 	th := SetupTestHelper(t)
 
-	teamID1 := mmModel.NewId()
-	teamID2 := mmModel.NewId()
-	teamID3 := mmModel.NewId()
-	teamID4 := mmModel.NewId()
+	teamID1 := amModel.NewId()
+	teamID2 := amModel.NewId()
+	teamID3 := amModel.NewId()
+	teamID4 := amModel.NewId()
 
-	userID := mmModel.NewId()
-	webConnID1 := mmModel.NewId()
-	webConnID2 := mmModel.NewId()
+	userID := amModel.NewId()
+	webConnID1 := amModel.NewId()
+	webConnID2 := amModel.NewId()
 
 	th.pa.OnWebSocketConnect(webConnID1, userID)
 	pac1, ok := th.pa.GetListenerByWebConnID(webConnID1)

@@ -17,7 +17,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/ws"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 	"github.com/mattermost/mattermost/server/v8/platform/shared/filestore"
 )
@@ -29,7 +29,7 @@ const (
 )
 
 type servicesAPI interface {
-	GetUsersFromProfiles(options *mm_model.UserGetOptions) ([]*mm_model.User, error)
+	GetUsersFromProfiles(options *am_model.UserGetOptions) ([]*am_model.User, error)
 }
 
 type ReadCloseSeeker = filestore.ReadCloseSeeker

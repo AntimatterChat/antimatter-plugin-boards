@@ -13,7 +13,7 @@ import (
 
 	pluginapi "github.com/mattermost/mattermost/server/public/pluginapi"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/plugin"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
@@ -71,7 +71,7 @@ func (p *Plugin) OnWebSocketDisconnect(webConnID, userID string) {
 	p.boardsApp.OnWebSocketDisconnect(webConnID, userID)
 }
 
-func (p *Plugin) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mm_model.WebSocketRequest) {
+func (p *Plugin) WebSocketMessageHasBeenPosted(webConnID, userID string, req *am_model.WebSocketRequest) {
 	p.boardsApp.WebSocketMessageHasBeenPosted(webConnID, userID, req)
 }
 
@@ -79,19 +79,19 @@ func (p *Plugin) OnDeactivate() error {
 	return p.boardsApp.Stop()
 }
 
-func (p *Plugin) OnPluginClusterEvent(ctx *plugin.Context, ev mm_model.PluginClusterEvent) {
+func (p *Plugin) OnPluginClusterEvent(ctx *plugin.Context, ev am_model.PluginClusterEvent) {
 	p.boardsApp.OnPluginClusterEvent(ctx, ev)
 }
 
-func (p *Plugin) MessageWillBePosted(ctx *plugin.Context, post *mm_model.Post) (*mm_model.Post, string) {
+func (p *Plugin) MessageWillBePosted(ctx *plugin.Context, post *am_model.Post) (*am_model.Post, string) {
 	return p.boardsApp.MessageWillBePosted(ctx, post)
 }
 
-func (p *Plugin) MessageWillBeUpdated(ctx *plugin.Context, newPost, oldPost *mm_model.Post) (*mm_model.Post, string) {
+func (p *Plugin) MessageWillBeUpdated(ctx *plugin.Context, newPost, oldPost *am_model.Post) (*am_model.Post, string) {
 	return p.boardsApp.MessageWillBeUpdated(ctx, newPost, oldPost)
 }
 
-func (p *Plugin) UserHasLoggedIn(ctx *plugin.Context, user *mm_model.User) {
+func (p *Plugin) UserHasLoggedIn(ctx *plugin.Context, user *am_model.User) {
 	p.boardsApp.UserHasLoggedIn(ctx, user)
 }
 
@@ -99,7 +99,7 @@ func (p *Plugin) RunDataRetention(nowTime, batchSize int64) (int64, error) {
 	return p.boardsApp.RunDataRetention(nowTime, batchSize)
 }
 
-func (p *Plugin) GenerateSupportData(ctx *plugin.Context) ([]*mm_model.FileData, error) {
+func (p *Plugin) GenerateSupportData(ctx *plugin.Context) ([]*am_model.FileData, error) {
 	return p.boardsApp.GenerateSupportData(ctx)
 }
 

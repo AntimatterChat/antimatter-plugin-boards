@@ -15,7 +15,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store"
 	"github.com/stretchr/testify/require"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/pluginapi/cluster"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 	"github.com/mattermost/mattermost/server/v8/channels/store/storetest"
@@ -28,7 +28,7 @@ var (
 // testMutexAPI provides a no-op mutex for tests.
 type testMutexAPI struct{}
 
-func (f *testMutexAPI) KVSetWithOptions(key string, value []byte, options mmModel.PluginKVSetOptions) (bool, *mmModel.AppError) {
+func (f *testMutexAPI) KVSetWithOptions(key string, value []byte, options amModel.PluginKVSetOptions) (bool, *amModel.AppError) {
 	// Return true to simulate successful set (mutex acquired)
 	return true, nil
 }
@@ -43,10 +43,10 @@ type testServicesAPIForUnitTests struct {
 	db    *sql.DB
 }
 
-func (t *testServicesAPIForUnitTests) GetUserByID(userID string) (*mmModel.User, error) {
+func (t *testServicesAPIForUnitTests) GetUserByID(userID string) (*amModel.User, error) {
 	user := t.users[userID]
 	if user != nil {
-		return &mmModel.User{
+		return &amModel.User{
 			Id:       user.ID,
 			Username: user.Username,
 			Email:    user.Email,
@@ -72,7 +72,7 @@ func (t *testServicesAPIForUnitTests) GetUserByID(userID string) (*mmModel.User,
 		).Scan(
 			&dbUser.ID, &dbUser.Username, &dbUser.Email, &dbUser.CreateAt, &dbUser.UpdateAt, &dbUser.DeleteAt)
 		if err == nil {
-			return &mmModel.User{
+			return &amModel.User{
 				Id:       dbUser.ID,
 				Username: dbUser.Username,
 				Email:    dbUser.Email,
@@ -88,10 +88,10 @@ func (t *testServicesAPIForUnitTests) GetUserByID(userID string) (*mmModel.User,
 	return nil, model.NewErrNotFound("user ID=" + userID)
 }
 
-func (t *testServicesAPIForUnitTests) GetUserByEmail(email string) (*mmModel.User, error) {
+func (t *testServicesAPIForUnitTests) GetUserByEmail(email string) (*amModel.User, error) {
 	for _, user := range t.users {
 		if user.Email == email {
-			return &mmModel.User{
+			return &amModel.User{
 				Id:       user.ID,
 				Username: user.Username,
 				Email:    user.Email,
@@ -118,7 +118,7 @@ func (t *testServicesAPIForUnitTests) GetUserByEmail(email string) (*mmModel.Use
 		).Scan(
 			&dbUser.ID, &dbUser.Username, &dbUser.Email, &dbUser.CreateAt, &dbUser.UpdateAt, &dbUser.DeleteAt)
 		if err == nil {
-			return &mmModel.User{
+			return &amModel.User{
 				Id:       dbUser.ID,
 				Username: dbUser.Username,
 				Email:    dbUser.Email,
@@ -132,10 +132,10 @@ func (t *testServicesAPIForUnitTests) GetUserByEmail(email string) (*mmModel.Use
 	return nil, model.NewErrNotFound("user email=" + email)
 }
 
-func (t *testServicesAPIForUnitTests) GetUserByUsername(username string) (*mmModel.User, error) {
+func (t *testServicesAPIForUnitTests) GetUserByUsername(username string) (*amModel.User, error) {
 	for _, user := range t.users {
 		if user.Username == username {
-			return &mmModel.User{
+			return &amModel.User{
 				Id:       user.ID,
 				Username: user.Username,
 				Email:    user.Email,
@@ -162,7 +162,7 @@ func (t *testServicesAPIForUnitTests) GetUserByUsername(username string) (*mmMod
 		).Scan(
 			&dbUser.ID, &dbUser.Username, &dbUser.Email, &dbUser.CreateAt, &dbUser.UpdateAt, &dbUser.DeleteAt)
 		if err == nil {
-			return &mmModel.User{
+			return &amModel.User{
 				Id:       dbUser.ID,
 				Username: dbUser.Username,
 				Email:    dbUser.Email,
@@ -176,35 +176,35 @@ func (t *testServicesAPIForUnitTests) GetUserByUsername(username string) (*mmMod
 	return nil, model.NewErrNotFound("user username=" + username)
 }
 
-func (t *testServicesAPIForUnitTests) UpdateUser(user *mmModel.User) (*mmModel.User, error) {
+func (t *testServicesAPIForUnitTests) UpdateUser(user *amModel.User) (*amModel.User, error) {
 	return user, nil
 }
 
-func (t *testServicesAPIForUnitTests) GetChannelByID(channelID string) (*mmModel.Channel, error) {
-	return &mmModel.Channel{Id: channelID, Type: mmModel.ChannelTypeDirect, CreatorId: "test-user"}, nil
+func (t *testServicesAPIForUnitTests) GetChannelByID(channelID string) (*amModel.Channel, error) {
+	return &amModel.Channel{Id: channelID, Type: amModel.ChannelTypeDirect, CreatorId: "test-user"}, nil
 }
 
-func (t *testServicesAPIForUnitTests) GetDirectChannel(userID1, userID2 string) (*mmModel.Channel, error) {
-	return &mmModel.Channel{Id: mmModel.NewId(), Type: mmModel.ChannelTypeDirect, CreatorId: userID1}, nil
+func (t *testServicesAPIForUnitTests) GetDirectChannel(userID1, userID2 string) (*amModel.Channel, error) {
+	return &amModel.Channel{Id: amModel.NewId(), Type: amModel.ChannelTypeDirect, CreatorId: userID1}, nil
 }
 
-func (t *testServicesAPIForUnitTests) GetChannelMember(channelID string, userID string) (*mmModel.ChannelMember, error) {
+func (t *testServicesAPIForUnitTests) GetChannelMember(channelID string, userID string) (*amModel.ChannelMember, error) {
 	if _, exists := t.users[userID]; !exists {
-		return nil, mmModel.NewAppError("GetChannelMember", "app.channel.get_member.missing.app_error", nil, "", http.StatusNotFound)
+		return nil, amModel.NewAppError("GetChannelMember", "app.channel.get_member.missing.app_error", nil, "", http.StatusNotFound)
 	}
-	return &mmModel.ChannelMember{ChannelId: channelID, UserId: userID}, nil
+	return &amModel.ChannelMember{ChannelId: channelID, UserId: userID}, nil
 }
 
-func (t *testServicesAPIForUnitTests) GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (mmModel.ChannelList, error) {
-	return mmModel.ChannelList{}, nil
+func (t *testServicesAPIForUnitTests) GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (amModel.ChannelList, error) {
+	return amModel.ChannelList{}, nil
 }
 
-func (t *testServicesAPIForUnitTests) GetFileInfo(fileID string) (*mmModel.FileInfo, error) {
+func (t *testServicesAPIForUnitTests) GetFileInfo(fileID string) (*amModel.FileInfo, error) {
 	// Query the FileInfo table (Mattermost's table) to retrieve saved file info
 	// This matches what the real Mattermost servicesAPI would do
 	query := `SELECT Id, CreateAt, UpdateAt, DeleteAt, Path, ThumbnailPath, PreviewPath, Name, Extension, Size, MimeType, Width, Height, HasPreviewImage, MiniPreview, Content, RemoteId, CreatorId, PostId FROM fileinfo WHERE id = $1`
 
-	var fileInfo mmModel.FileInfo
+	var fileInfo amModel.FileInfo
 	err := t.db.QueryRow(query, fileID).Scan(
 		&fileInfo.Id,
 		&fileInfo.CreateAt,
@@ -228,7 +228,7 @@ func (t *testServicesAPIForUnitTests) GetFileInfo(fileID string) (*mmModel.FileI
 	)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		return nil, mmModel.NewAppError("GetFileInfo", "app.file_info.get.app_error", nil, "", http.StatusNotFound)
+		return nil, amModel.NewAppError("GetFileInfo", "app.file_info.get.app_error", nil, "", http.StatusNotFound)
 	}
 	if err != nil {
 		return nil, err
@@ -237,30 +237,30 @@ func (t *testServicesAPIForUnitTests) GetFileInfo(fileID string) (*mmModel.FileI
 	return &fileInfo, nil
 }
 
-func (t *testServicesAPIForUnitTests) CreatePost(post *mmModel.Post) (*mmModel.Post, error) {
+func (t *testServicesAPIForUnitTests) CreatePost(post *amModel.Post) (*amModel.Post, error) {
 	return nil, ErrNotImplemented
 }
 
-func (t *testServicesAPIForUnitTests) EnsureBot(bot *mmModel.Bot) (string, error) {
+func (t *testServicesAPIForUnitTests) EnsureBot(bot *amModel.Bot) (string, error) {
 	return "", ErrNotImplemented
 }
 
-func (t *testServicesAPIForUnitTests) GetTeamMember(teamID string, userID string) (*mmModel.TeamMember, error) {
+func (t *testServicesAPIForUnitTests) GetTeamMember(teamID string, userID string) (*amModel.TeamMember, error) {
 	if _, exists := t.users[userID]; !exists {
-		return nil, mmModel.NewAppError("GetTeamMember", "app.team.get_member.missing.app_error", nil, "", http.StatusNotFound)
+		return nil, amModel.NewAppError("GetTeamMember", "app.team.get_member.missing.app_error", nil, "", http.StatusNotFound)
 	}
-	return &mmModel.TeamMember{TeamId: teamID, UserId: userID}, nil
+	return &amModel.TeamMember{TeamId: teamID, UserId: userID}, nil
 }
 
-func (t *testServicesAPIForUnitTests) GetPreferencesForUser(userID string) (mmModel.Preferences, error) {
+func (t *testServicesAPIForUnitTests) GetPreferencesForUser(userID string) (amModel.Preferences, error) {
 	return nil, nil
 }
 
-func (t *testServicesAPIForUnitTests) DeletePreferencesForUser(userID string, preferences mmModel.Preferences) error {
+func (t *testServicesAPIForUnitTests) DeletePreferencesForUser(userID string, preferences amModel.Preferences) error {
 	return nil
 }
 
-func (t *testServicesAPIForUnitTests) UpdatePreferencesForUser(userID string, preferences mmModel.Preferences) error {
+func (t *testServicesAPIForUnitTests) UpdatePreferencesForUser(userID string, preferences amModel.Preferences) error {
 	return nil
 }
 

@@ -18,7 +18,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/ws"
 	"github.com/mattermost/mattermost/server/public/pluginapi/cluster"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/plugin"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
@@ -49,7 +49,7 @@ type BoardsApp struct {
 	// setConfiguration for usage.
 	configuration *configuration
 
-	manifest *mm_model.Manifest
+	manifest *am_model.Manifest
 
 	server          *server.Server
 	wsPluginAdapter ws.PluginAdapterInterface
@@ -58,7 +58,7 @@ type BoardsApp struct {
 	logger      mlog.LoggerIFace
 }
 
-func NewBoardsApp(api model.ServicesAPI, manifest *mm_model.Manifest) (*BoardsApp, error) {
+func NewBoardsApp(api model.ServicesAPI, manifest *am_model.Manifest) (*BoardsApp, error) {
 	mmconfig := api.GetConfig()
 	logger := api.GetLogger()
 
@@ -168,11 +168,11 @@ func (b *BoardsApp) Stop() error {
 // These callbacks are called automatically by the suite server.
 //
 
-func (b *BoardsApp) MessageWillBePosted(_ *plugin.Context, post *mm_model.Post) (*mm_model.Post, string) {
+func (b *BoardsApp) MessageWillBePosted(_ *plugin.Context, post *am_model.Post) (*am_model.Post, string) {
 	return postWithBoardsEmbed(post), ""
 }
 
-func (b *BoardsApp) MessageWillBeUpdated(_ *plugin.Context, newPost, _ *mm_model.Post) (*mm_model.Post, string) {
+func (b *BoardsApp) MessageWillBeUpdated(_ *plugin.Context, newPost, _ *am_model.Post) (*am_model.Post, string) {
 	return postWithBoardsEmbed(newPost), ""
 }
 
@@ -184,11 +184,11 @@ func (b *BoardsApp) OnWebSocketDisconnect(webConnID, userID string) {
 	b.wsPluginAdapter.OnWebSocketDisconnect(webConnID, userID)
 }
 
-func (b *BoardsApp) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mm_model.WebSocketRequest) {
+func (b *BoardsApp) WebSocketMessageHasBeenPosted(webConnID, userID string, req *am_model.WebSocketRequest) {
 	b.wsPluginAdapter.WebSocketMessageHasBeenPosted(webConnID, userID, req)
 }
 
-func (b *BoardsApp) OnPluginClusterEvent(_ *plugin.Context, ev mm_model.PluginClusterEvent) {
+func (b *BoardsApp) OnPluginClusterEvent(_ *plugin.Context, ev am_model.PluginClusterEvent) {
 	b.wsPluginAdapter.HandleClusterEvent(ev)
 }
 
@@ -199,7 +199,7 @@ func (b *BoardsApp) OnPluginClusterEvent(_ *plugin.Context, ev mm_model.PluginCl
 // that any subsequent re-promotion to member cannot resurface stale admin
 // rights. The Hooks interface in mattermost/server/public does not expose
 // UserHasBeenUpdated, so login is the earliest reliable trigger.
-func (b *BoardsApp) UserHasLoggedIn(_ *plugin.Context, user *mm_model.User) {
+func (b *BoardsApp) UserHasLoggedIn(_ *plugin.Context, user *am_model.User) {
 	if user == nil || !user.IsGuest() {
 		return
 	}

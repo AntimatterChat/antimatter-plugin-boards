@@ -6,7 +6,7 @@ package model
 import (
 	"testing"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 
 	"github.com/stretchr/testify/assert"
 
@@ -462,10 +462,10 @@ func TestValidateFileId(t *testing.T) {
 func TestBlockIsValid(t *testing.T) {
 	t.Run("Should return nil for valid block", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Valid Block",
@@ -479,10 +479,10 @@ func TestBlockIsValid(t *testing.T) {
 
 	t.Run("Should return error for block with empty BoardID", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
 			BoardID:    "",
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Invalid Block",
@@ -501,10 +501,10 @@ func TestBlockIsValid(t *testing.T) {
 			longTitle[i] = 'a'
 		}
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      string(longTitle),
@@ -523,10 +523,10 @@ func TestBlockIsValid(t *testing.T) {
 			longField[i] = 'a'
 		}
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Valid Block",
@@ -541,10 +541,10 @@ func TestBlockIsValid(t *testing.T) {
 
 	t.Run("Should return error for block with invalid file ID in fields", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Valid Block",
@@ -559,10 +559,10 @@ func TestBlockIsValid(t *testing.T) {
 
 	t.Run("Should return error for block with invalid attachment ID in fields", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Valid Block",
@@ -577,10 +577,10 @@ func TestBlockIsValid(t *testing.T) {
 
 	t.Run("Should return error when fields.properties is JSON null", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Block with null properties",
@@ -594,10 +594,10 @@ func TestBlockIsValid(t *testing.T) {
 
 	t.Run("Should return error when fields.properties is not a JSON object", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Block with malformed properties",
@@ -611,10 +611,10 @@ func TestBlockIsValid(t *testing.T) {
 
 	t.Run("Should accept block with empty fileId (no file attached)", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeImage,
 			Title:      "Image with empty fileId",
@@ -627,10 +627,10 @@ func TestBlockIsValid(t *testing.T) {
 
 	t.Run("Should accept block with empty attachmentId (no file attached)", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeAttachment,
 			Title:      "Attachment with empty attachmentId",
@@ -643,10 +643,10 @@ func TestBlockIsValid(t *testing.T) {
 
 	t.Run("Should accept block with properties as map", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Block with properties map",
@@ -662,10 +662,10 @@ func TestBlockIsValid(t *testing.T) {
 func TestBlock_IsValidForImport(t *testing.T) {
 	t.Run("Should return nil for valid block", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Valid Block",
@@ -679,10 +679,10 @@ func TestBlock_IsValidForImport(t *testing.T) {
 
 	t.Run("Should not return error for block with empty BoardID", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
 			BoardID:    "",
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Invalid Block",
@@ -700,10 +700,10 @@ func TestBlock_IsValidForImport(t *testing.T) {
 			longTitle[i] = 'a'
 		}
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      string(longTitle),
@@ -722,10 +722,10 @@ func TestBlock_IsValidForImport(t *testing.T) {
 			longField[i] = 'a'
 		}
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Valid Block",
@@ -740,10 +740,10 @@ func TestBlock_IsValidForImport(t *testing.T) {
 
 	t.Run("Should return error for block with invalid file ID in fields", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Valid Block",
@@ -758,10 +758,10 @@ func TestBlock_IsValidForImport(t *testing.T) {
 
 	t.Run("Should return error for block with invalid attachment ID in fields", func(t *testing.T) {
 		block := &Block{
-			ID:         string(utils.IDTypeNone) + mmModel.NewId(),
-			BoardID:    string(utils.IDTypeNone) + mmModel.NewId(),
-			CreatedBy:  string(utils.IDTypeNone) + mmModel.NewId(),
-			ModifiedBy: string(utils.IDTypeNone) + mmModel.NewId(),
+			ID:         string(utils.IDTypeNone) + amModel.NewId(),
+			BoardID:    string(utils.IDTypeNone) + amModel.NewId(),
+			CreatedBy:  string(utils.IDTypeNone) + amModel.NewId(),
+			ModifiedBy: string(utils.IDTypeNone) + amModel.NewId(),
 			Schema:     1,
 			Type:       TypeCard,
 			Title:      "Valid Block",

@@ -14,7 +14,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/mattermost/mattermost/server/public/pluginapi/cluster"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
@@ -30,7 +30,7 @@ type SQLStore struct {
 	servicesAPI      servicesAPI
 	isBinaryParam    bool
 	schemaName       string
-	configFn         func() *mmModel.Config
+	configFn         func() *amModel.Config
 }
 
 // MutexFactory is used by the store in plugin mode to generate

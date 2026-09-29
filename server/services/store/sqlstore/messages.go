@@ -6,7 +6,7 @@ package sqlstore
 import (
 	sq "github.com/Masterminds/squirrel"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
@@ -59,7 +59,7 @@ func (s *SQLStore) postMessage(_ sq.BaseRunner, message, postType, channelID str
 		return err
 	}
 
-	post := &mmModel.Post{
+	post := &amModel.Post{
 		Message:   message,
 		UserId:    botID,
 		ChannelId: channelID,

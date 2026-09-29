@@ -22,7 +22,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store/sqlstore"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/pluginapi/cluster"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 	"github.com/mattermost/mattermost/server/v8/channels/store/storetest"
@@ -111,7 +111,7 @@ type TestHelper struct {
 	PermissionAPI *FakePermissionPluginAPI
 
 	origEnvUnitTesting string
-	sqlSettings        *mmModel.SqlSettings
+	sqlSettings        *amModel.SqlSettings
 	cleanupDone        bool
 }
 
@@ -125,7 +125,7 @@ type FakePermissionPluginAPI struct {
 }
 
 // DenyTeamPermission simulates revoking a team-level permission for a user.
-func (f *FakePermissionPluginAPI) DenyTeamPermission(userID string, permission *mmModel.Permission) {
+func (f *FakePermissionPluginAPI) DenyTeamPermission(userID string, permission *amModel.Permission) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	if f.deniedTeamPermissions == nil {
@@ -137,17 +137,17 @@ func (f *FakePermissionPluginAPI) DenyTeamPermission(userID string, permission *
 	f.deniedTeamPermissions[userID][permission.Id] = true
 }
 
-func (f *FakePermissionPluginAPI) isTeamPermissionDenied(userID string, permission *mmModel.Permission) bool {
+func (f *FakePermissionPluginAPI) isTeamPermissionDenied(userID string, permission *amModel.Permission) bool {
 	f.mu.RLock()
 	defer f.mu.RUnlock()
 	return f.deniedTeamPermissions[userID][permission.Id]
 }
 
-func (f *FakePermissionPluginAPI) HasPermissionTo(userID string, permission *mmModel.Permission) bool {
+func (f *FakePermissionPluginAPI) HasPermissionTo(userID string, permission *amModel.Permission) bool {
 	return userID == userAdmin
 }
 
-func (f *FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool {
+func (f *FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string, permission *amModel.Permission) bool {
 	if permission.Id == model.PermissionManageTeam.Id {
 		return false
 	}
@@ -164,9 +164,9 @@ func (f *FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID stri
 	return true
 }
 
-func (*FakePermissionPluginAPI) HasPermissionToChannel(userID string, channelID string, permission *mmModel.Permission) bool {
+func (*FakePermissionPluginAPI) HasPermissionToChannel(userID string, channelID string, permission *amModel.Permission) bool {
 	// This allows tests to use dynamically generated channel IDs or hardcoded test IDs
-	if mmModel.IsValidId(channelID) {
+	if amModel.IsValidId(channelID) {
 		return true
 	}
 	// Also accept test channel IDs used in integration tests
@@ -179,7 +179,7 @@ func (*FakePermissionPluginAPI) HasPermissionToChannel(userID string, channelID 
 // testMutexAPI provides a no-op mutex for tests.
 type testMutexAPI struct{}
 
-func (f *testMutexAPI) KVSetWithOptions(key string, value []byte, options mmModel.PluginKVSetOptions) (bool, *mmModel.AppError) {
+func (f *testMutexAPI) KVSetWithOptions(key string, value []byte, options amModel.PluginKVSetOptions) (bool, *amModel.AppError) {
 	// Return true to simulate successful set (mutex acquired)
 	return true, nil
 }
@@ -206,7 +206,7 @@ func getAvailablePort() (int, error) {
 	return addr.Port, nil
 }
 
-func getTestConfig(sqlSettings *mmModel.SqlSettings) (*config.Configuration, error) {
+func getTestConfig(sqlSettings *amModel.SqlSettings) (*config.Configuration, error) {
 	// Get an available port dynamically to avoid conflicts when tests run in parallel
 	port, err := getAvailablePort()
 	if err != nil {
@@ -256,13 +256,13 @@ type testServicesAPI struct {
 	db    *sql.DB
 }
 
-func (t *testServicesAPI) GetUserByID(userID string) (*mmModel.User, error) {
+func (t *testServicesAPI) GetUserByID(userID string) (*amModel.User, error) {
 	user := t.users[userID]
 	if user == nil {
-		return nil, mmModel.NewAppError("GetUserByID", "app.user.get.app_error", nil, "user not found: "+userID, http.StatusNotFound)
+		return nil, amModel.NewAppError("GetUserByID", "app.user.get.app_error", nil, "user not found: "+userID, http.StatusNotFound)
 	}
 	// Convert Boards model.User to Mattermost model.User
-	return &mmModel.User{
+	return &amModel.User{
 		Id:       user.ID,
 		Username: user.Username,
 		Email:    user.Email,
@@ -272,10 +272,10 @@ func (t *testServicesAPI) GetUserByID(userID string) (*mmModel.User, error) {
 	}, nil
 }
 
-func (t *testServicesAPI) GetUserByEmail(email string) (*mmModel.User, error) {
+func (t *testServicesAPI) GetUserByEmail(email string) (*amModel.User, error) {
 	for _, user := range t.users {
 		if user.Email == email {
-			return &mmModel.User{
+			return &amModel.User{
 				Id:       user.ID,
 				Username: user.Username,
 				Email:    user.Email,
@@ -288,10 +288,10 @@ func (t *testServicesAPI) GetUserByEmail(email string) (*mmModel.User, error) {
 	return nil, fmt.Errorf("%w: %s", ErrUserNotFound, email)
 }
 
-func (t *testServicesAPI) GetUserByUsername(username string) (*mmModel.User, error) {
+func (t *testServicesAPI) GetUserByUsername(username string) (*amModel.User, error) {
 	for _, user := range t.users {
 		if user.Username == username {
-			return &mmModel.User{
+			return &amModel.User{
 				Id:       user.ID,
 				Username: user.Username,
 				Email:    user.Email,
@@ -304,52 +304,52 @@ func (t *testServicesAPI) GetUserByUsername(username string) (*mmModel.User, err
 	return nil, fmt.Errorf("%w: %s", ErrUserNotFound, username)
 }
 
-func (t *testServicesAPI) UpdateUser(user *mmModel.User) (*mmModel.User, error) {
+func (t *testServicesAPI) UpdateUser(user *amModel.User) (*amModel.User, error) {
 	return user, nil
 }
 
-func (t *testServicesAPI) GetChannelByID(channelID string) (*mmModel.Channel, error) {
+func (t *testServicesAPI) GetChannelByID(channelID string) (*amModel.Channel, error) {
 	// Return a mock channel for tests - this is used in migrations
-	return &mmModel.Channel{
+	return &amModel.Channel{
 		Id:        channelID,
-		Type:      mmModel.ChannelTypeDirect,
+		Type:      amModel.ChannelTypeDirect,
 		CreatorId: "team-member", // Default creator
 	}, nil
 }
 
-func (t *testServicesAPI) GetDirectChannel(userID1, userID2 string) (*mmModel.Channel, error) {
+func (t *testServicesAPI) GetDirectChannel(userID1, userID2 string) (*amModel.Channel, error) {
 	// Return a mock direct channel
-	channelID := mmModel.NewId()
-	return &mmModel.Channel{
+	channelID := amModel.NewId()
+	return &amModel.Channel{
 		Id:        channelID,
-		Type:      mmModel.ChannelTypeDirect,
+		Type:      amModel.ChannelTypeDirect,
 		CreatorId: userID1,
 	}, nil
 }
 
-func (t *testServicesAPI) GetChannelMember(channelID string, userID string) (*mmModel.ChannelMember, error) {
+func (t *testServicesAPI) GetChannelMember(channelID string, userID string) (*amModel.ChannelMember, error) {
 	// Return NotFound error if user doesn't exist (matches Mattermost behavior)
 	if _, exists := t.users[userID]; !exists {
-		return nil, mmModel.NewAppError("GetChannelMember", "app.channel.get_member.missing.app_error", nil, "", http.StatusNotFound)
+		return nil, amModel.NewAppError("GetChannelMember", "app.channel.get_member.missing.app_error", nil, "", http.StatusNotFound)
 	}
 	// Return a mock channel member
-	return &mmModel.ChannelMember{
+	return &amModel.ChannelMember{
 		ChannelId: channelID,
 		UserId:    userID,
 	}, nil
 }
 
-func (t *testServicesAPI) GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (mmModel.ChannelList, error) {
+func (t *testServicesAPI) GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (amModel.ChannelList, error) {
 	// Return empty list for tests - this is used for channel search
-	return mmModel.ChannelList{}, nil
+	return amModel.ChannelList{}, nil
 }
 
-func (t *testServicesAPI) GetFileInfo(fileID string) (*mmModel.FileInfo, error) {
+func (t *testServicesAPI) GetFileInfo(fileID string) (*amModel.FileInfo, error) {
 	// Query the FileInfo table (Mattermost's table) to retrieve saved file info
 	// This matches what the real Mattermost servicesAPI would do
 	query := `SELECT Id, CreateAt, UpdateAt, DeleteAt, Path, ThumbnailPath, PreviewPath, Name, Extension, Size, MimeType, Width, Height, HasPreviewImage, MiniPreview, Content, RemoteId, CreatorId, PostId FROM fileinfo WHERE id = $1`
 
-	var fileInfo mmModel.FileInfo
+	var fileInfo amModel.FileInfo
 	err := t.db.QueryRow(query, fileID).Scan(
 		&fileInfo.Id,
 		&fileInfo.CreateAt,
@@ -373,7 +373,7 @@ func (t *testServicesAPI) GetFileInfo(fileID string) (*mmModel.FileInfo, error) 
 	)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		return nil, mmModel.NewAppError("GetFileInfo", "app.file_info.get.app_error", nil, "", http.StatusNotFound)
+		return nil, amModel.NewAppError("GetFileInfo", "app.file_info.get.app_error", nil, "", http.StatusNotFound)
 	}
 	if err != nil {
 		return nil, err
@@ -382,44 +382,44 @@ func (t *testServicesAPI) GetFileInfo(fileID string) (*mmModel.FileInfo, error) 
 	return &fileInfo, nil
 }
 
-func (t *testServicesAPI) CreatePost(post *mmModel.Post) (*mmModel.Post, error) {
+func (t *testServicesAPI) CreatePost(post *amModel.Post) (*amModel.Post, error) {
 	return nil, ErrNotImplemented
 }
 
-func (t *testServicesAPI) EnsureBot(bot *mmModel.Bot) (string, error) {
+func (t *testServicesAPI) EnsureBot(bot *amModel.Bot) (string, error) {
 	return "", ErrNotImplemented
 }
 
-func (t *testServicesAPI) GetTeamMember(teamID string, userID string) (*mmModel.TeamMember, error) {
+func (t *testServicesAPI) GetTeamMember(teamID string, userID string) (*amModel.TeamMember, error) {
 	// Return NotFound error if user doesn't exist (matches Mattermost behavior)
 	if _, exists := t.users[userID]; !exists {
-		return nil, mmModel.NewAppError("GetTeamMember", "app.team.get_member.missing.app_error", nil, "", http.StatusNotFound)
+		return nil, amModel.NewAppError("GetTeamMember", "app.team.get_member.missing.app_error", nil, "", http.StatusNotFound)
 	}
 	// Return a mock team member
-	return &mmModel.TeamMember{
+	return &amModel.TeamMember{
 		TeamId: teamID,
 		UserId: userID,
 	}, nil
 }
 
-func (t *testServicesAPI) GetPreferencesForUser(userID string) (mmModel.Preferences, error) {
+func (t *testServicesAPI) GetPreferencesForUser(userID string) (amModel.Preferences, error) {
 	return nil, nil
 }
 
-func (t *testServicesAPI) DeletePreferencesForUser(userID string, preferences mmModel.Preferences) error {
+func (t *testServicesAPI) DeletePreferencesForUser(userID string, preferences amModel.Preferences) error {
 	return nil
 }
 
-func (t *testServicesAPI) UpdatePreferencesForUser(userID string, preferences mmModel.Preferences) error {
+func (t *testServicesAPI) UpdatePreferencesForUser(userID string, preferences amModel.Preferences) error {
 	return nil
 }
 
-func NewTestServerPluginMode(sqlSettings *mmModel.SqlSettings) *server.Server {
+func NewTestServerPluginMode(sqlSettings *amModel.SqlSettings) *server.Server {
 	srv, _ := newTestServerPluginMode(sqlSettings)
 	return srv
 }
 
-func newTestServerPluginMode(sqlSettings *mmModel.SqlSettings) (*server.Server, *FakePermissionPluginAPI) {
+func newTestServerPluginMode(sqlSettings *amModel.SqlSettings) (*server.Server, *FakePermissionPluginAPI) {
 	cfg, err := getTestConfig(sqlSettings)
 	if err != nil {
 		panic(err)

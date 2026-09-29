@@ -21,7 +21,7 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/audit"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
@@ -65,8 +65,8 @@ func FileUploadResponseFromJSON(data io.Reader) (*FileUploadResponse, error) {
 	return &fileUploadResponse, nil
 }
 
-func FileInfoResponseFromJSON(data io.Reader) (*mmModel.FileInfo, error) {
-	var fileInfo mmModel.FileInfo
+func FileInfoResponseFromJSON(data io.Reader) (*amModel.FileInfo, error) {
+	var fileInfo amModel.FileInfo
 
 	if err := json.NewDecoder(data).Decode(&fileInfo); err != nil {
 		return nil, err

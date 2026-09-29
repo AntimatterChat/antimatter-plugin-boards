@@ -8,16 +8,16 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 )
 
 const (
 	usernameSpecialChars = ".-_ "
 )
 
-func (pd *PluginDelivery) UserByUsername(username string) (*mm_model.User, error) {
+func (pd *PluginDelivery) UserByUsername(username string) (*am_model.User, error) {
 	// check for usernames that might have trailing punctuation
-	var user *mm_model.User
+	var user *am_model.User
 	var err error
 	ok := true
 	trimmed := username

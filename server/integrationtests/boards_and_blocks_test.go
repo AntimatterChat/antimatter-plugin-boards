@@ -10,7 +10,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -37,7 +37,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 
 		t.Run("no boards", func(t *testing.T) {
 			newBab := &model.BoardsAndBlocks{
@@ -210,7 +210,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID
 		initialTitle := "initial title 1"
 		newTitle := "new title 1"
@@ -352,7 +352,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID
 		initialTitle := "initial title 2"
 		newTitle := "new title 2"
@@ -419,7 +419,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID
 		initialTitle := "initial title 3"
 		newTitle := "new title 3"
@@ -433,7 +433,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, board1)
 
-		teamID2 := mmModel.NewId()
+		teamID2 := amModel.NewId()
 		newBoard2 := &model.Board{
 			Title:  initialTitle,
 			TeamID: teamID2,
@@ -487,7 +487,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID
 		initialTitle := "initial title 4"
 		newTitle := "new title 4"
@@ -557,7 +557,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID
 		initialTitle := "initial title"
 		newTitle := "new patched title"
@@ -623,7 +623,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID
 		initialTitle := "initial title"
 		newTitle := "new other title"
@@ -707,7 +707,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID
 		initialTitle := "initial title"
 		newTitle := "new other title"
@@ -779,7 +779,7 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		// a board and a block are required for the permission checks
 		newBoard := &model.Board{
 			TeamID: teamID,
@@ -810,7 +810,7 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 		})
 
 		t.Run("boards from different teams", func(t *testing.T) {
-			teamID2 := mmModel.NewId()
+			teamID2 := amModel.NewId()
 			newOtherTeamsBoard := &model.Board{
 				TeamID: teamID2,
 				Type:   model.BoardTypeOpen,
@@ -836,7 +836,7 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		// the user is an admin of the first board
 		newBoard1 := &model.Board{
 			Type:   model.BoardTypeOpen,
@@ -871,7 +871,7 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID
 		// Create boards first, then create blocks with proper BoardID references
 		// Use addMember=true to ensure user has permission to delete

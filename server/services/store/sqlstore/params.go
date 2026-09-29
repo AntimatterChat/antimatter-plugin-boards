@@ -7,7 +7,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
@@ -15,21 +15,21 @@ import (
 // servicesAPI is the interface required my the Params to interact with the mattermost-server.
 // You can use plugin-api or product-api adapter implementations.
 type servicesAPI interface {
-	GetChannelByID(string) (*mmModel.Channel, error)
-	GetDirectChannel(userID1, userID2 string) (*mmModel.Channel, error)
-	GetChannelMember(channelID string, userID string) (*mmModel.ChannelMember, error)
-	GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (mmModel.ChannelList, error)
-	GetUserByID(userID string) (*mmModel.User, error)
-	UpdateUser(user *mmModel.User) (*mmModel.User, error)
-	GetUserByEmail(email string) (*mmModel.User, error)
-	GetUserByUsername(username string) (*mmModel.User, error)
-	GetFileInfo(fileID string) (*mmModel.FileInfo, error)
-	EnsureBot(bot *mmModel.Bot) (string, error)
-	CreatePost(post *mmModel.Post) (*mmModel.Post, error)
-	GetTeamMember(teamID string, userID string) (*mmModel.TeamMember, error)
-	GetPreferencesForUser(userID string) (mmModel.Preferences, error)
-	DeletePreferencesForUser(userID string, preferences mmModel.Preferences) error
-	UpdatePreferencesForUser(userID string, preferences mmModel.Preferences) error
+	GetChannelByID(string) (*amModel.Channel, error)
+	GetDirectChannel(userID1, userID2 string) (*amModel.Channel, error)
+	GetChannelMember(channelID string, userID string) (*amModel.ChannelMember, error)
+	GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (amModel.ChannelList, error)
+	GetUserByID(userID string) (*amModel.User, error)
+	UpdateUser(user *amModel.User) (*amModel.User, error)
+	GetUserByEmail(email string) (*amModel.User, error)
+	GetUserByUsername(username string) (*amModel.User, error)
+	GetFileInfo(fileID string) (*amModel.FileInfo, error)
+	EnsureBot(bot *amModel.Bot) (string, error)
+	CreatePost(post *amModel.Post) (*amModel.Post, error)
+	GetTeamMember(teamID string, userID string) (*amModel.TeamMember, error)
+	GetPreferencesForUser(userID string) (amModel.Preferences, error)
+	DeletePreferencesForUser(userID string, preferences amModel.Preferences) error
+	UpdatePreferencesForUser(userID string, preferences amModel.Preferences) error
 }
 
 type Params struct {
@@ -42,7 +42,7 @@ type Params struct {
 	NewMutexFn       MutexFactory
 	ServicesAPI      servicesAPI
 	SkipMigrations   bool
-	ConfigFn         func() *mmModel.Config
+	ConfigFn         func() *amModel.Config
 }
 
 func (p Params) CheckValid() error {

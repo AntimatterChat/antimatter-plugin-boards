@@ -9,7 +9,7 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -25,7 +25,7 @@ func TestBoardCreationPermissionEnforcement(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		th.PermissionAPI.DenyTeamPermission(userTeamMember, model.PermissionCreatePublicChannel)
 		th.PermissionAPI.DenyTeamPermission(userTeamMember, model.PermissionCreatePrivateChannel)
 
@@ -42,7 +42,7 @@ func TestBoardCreationPermissionEnforcement(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 
 		// Revoke only the private board permission: creating a private board
 		// must be denied while a public board is still allowed.
@@ -74,7 +74,7 @@ func TestBoardCreationPermissionEnforcement(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 
 		// Duplicated boards are always created as private, so revoking the
 		// private create permission must block duplication.
@@ -94,7 +94,7 @@ func TestBoardCreationPermissionEnforcement(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 
 		// Build a source private board and export it so we have a valid archive.
 		sourceBab, resp := th.Client.CreateBoardsAndBlocks(newBoardAndBlocks(teamID, model.BoardTypePrivate))

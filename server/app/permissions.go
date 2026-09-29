@@ -6,10 +6,10 @@ package app
 import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 )
 
-func (a *App) HasPermissionToBoard(userID, boardID string, permission *mm_model.Permission) bool {
+func (a *App) HasPermissionToBoard(userID, boardID string, permission *am_model.Permission) bool {
 	return a.permissions.HasPermissionToBoard(userID, boardID, permission)
 }
 

@@ -14,7 +14,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -130,7 +130,7 @@ func TestCreateBoard(t *testing.T) {
 		defer th.TearDown()
 		th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "board title",
 			Type:   model.BoardTypeOpen,
@@ -152,7 +152,7 @@ func TestCreateBoard(t *testing.T) {
 		me := th.GetUser1()
 
 		title := "board title 1"
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  title,
 			Type:   model.BoardTypeOpen,
@@ -212,7 +212,7 @@ func TestCreateBoard(t *testing.T) {
 		me := th.GetUser1()
 
 		title := "private board title"
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  title,
 			Type:   model.BoardTypePrivate,
@@ -267,7 +267,7 @@ func TestCreateBoard(t *testing.T) {
 		th.Client = clients.TeamMember
 
 		title := "invalid board title"
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		user1 := th.GetUser1()
 
 		t.Run("invalid board type", func(t *testing.T) {
@@ -328,7 +328,7 @@ func TestCreateBoardTemplate(t *testing.T) {
 		me := th.GetUser1()
 
 		title := "board template 1"
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:      title,
 			Type:       model.BoardTypeOpen,
@@ -389,7 +389,7 @@ func TestCreateBoardTemplate(t *testing.T) {
 		me := th.GetUser1()
 
 		title := "private board template title"
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:      title,
 			Type:       model.BoardTypePrivate,
@@ -444,7 +444,7 @@ func TestGetAllBlocksForBoard(t *testing.T) {
 
 	clients := setupClients(th)
 	th.Client = clients.TeamMember
-	teamID := mmModel.NewId()
+	teamID := amModel.NewId()
 	board := th.CreateBoard(teamID, model.BoardTypeOpen)
 
 	parentBlockID := utils.NewID(utils.IDTypeBlock)
@@ -509,7 +509,7 @@ func TestSearchBoards(t *testing.T) {
 		defer th.TearDown()
 		th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		boards, resp := th.Client.SearchBoardsForTeam(teamID, "term")
 		th.CheckUnauthorized(resp)
 		require.Nil(t, boards)
@@ -639,7 +639,7 @@ func TestGetBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		sharingToken := utils.NewID(utils.IDTypeToken)
 
 		board := &model.Board{
@@ -693,7 +693,7 @@ func TestGetBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Type:   model.BoardTypePrivate,
 			TeamID: teamID,
@@ -713,7 +713,7 @@ func TestGetBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Type:   model.BoardTypePrivate,
 			TeamID: teamID,
@@ -733,7 +733,7 @@ func TestGetBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypeOpen,
@@ -758,7 +758,7 @@ func TestGetBoardMetadata(t *testing.T) {
 		// Create a board first so we can test authentication properly
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		board := &model.Board{
 			Title:  "test board",
 			Type:   model.BoardTypeOpen,
@@ -911,7 +911,7 @@ func TestPatchBoard(t *testing.T) {
 		// Create board with authenticated client first
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		initialTitle := "title 1"
 		newBoard := &model.Board{
 			Title:  initialTitle,
@@ -957,7 +957,7 @@ func TestPatchBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		user1 := th.GetUser1()
 
 		newBoard := &model.Board{
@@ -983,7 +983,7 @@ func TestPatchBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		user1 := th.GetUser1()
 
 		newBoard := &model.Board{
@@ -1007,7 +1007,7 @@ func TestPatchBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		user1 := th.GetUser1()
 
 		newBoard := &model.Board{
@@ -1043,7 +1043,7 @@ func TestPatchBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		user1 := th.GetUser1()
 
 		initialTitle := "title"
@@ -1072,7 +1072,7 @@ func TestPatchBoard(t *testing.T) {
 		th.Client = clients.TeamMember
 		th.Client2 = clients.Viewer
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		user1 := th.GetUser1()
 
 		initialTitle := "title"
@@ -1105,7 +1105,7 @@ func TestDeleteBoard(t *testing.T) {
 		// Create board with authenticated client first
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypeOpen,
@@ -1133,7 +1133,7 @@ func TestDeleteBoard(t *testing.T) {
 		th.Client = clients.TeamMember
 		th.Client2 = clients.Viewer // User without delete permissions
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		user1 := th.GetUser1()
 		newBoard := &model.Board{
 			Title:  "title",
@@ -1172,7 +1172,7 @@ func TestDeleteBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypeOpen,
@@ -1200,7 +1200,7 @@ func TestUndeleteBoard(t *testing.T) {
 		// Create board with authenticated client first
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID
 		newBoard := &model.Board{
 			Title:  "title",
@@ -1233,7 +1233,7 @@ func TestUndeleteBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 		th.Client2 = clients.Viewer
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID
 		newBoard := &model.Board{
 			Title:  "title",
@@ -1264,7 +1264,7 @@ func TestUndeleteBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 		th.Client2 = clients.Viewer
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		creatorID := th.GetUser1().ID
 		newBoard := &model.Board{
 			Title:  "title",
@@ -1317,7 +1317,7 @@ func TestUndeleteBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID
 		newBoard := &model.Board{
 			Title:  "title",
@@ -1373,7 +1373,7 @@ func TestGetMembersForBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 		th.Client2 = clients.Viewer
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		board := createBoardWithUsers(th, teamID)
 
 		// Now use unauthenticated client
@@ -1390,7 +1390,7 @@ func TestGetMembersForBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 		th.Client2 = clients.Viewer
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		board := createBoardWithUsers(th, teamID)
 
 		_ = th.Server.App().DeleteBoardMember(board.ID, th.GetUser2().ID)
@@ -1419,7 +1419,7 @@ func TestGetMembersForBoard(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 		th.Client2 = clients.Viewer
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		board := createBoardWithUsers(th, teamID)
 
 		members, resp := th.Client.GetMembersForBoard(board.ID)
@@ -1436,7 +1436,7 @@ func TestAddMember(t *testing.T) {
 		// Create board with authenticated client first
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID
 		newBoard := &model.Board{
 			Title:  "title",
@@ -1466,7 +1466,7 @@ func TestAddMember(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 		th.Client2 = clients.Viewer // User without add member permissions
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		userID := th.GetUser1().ID // Valid user to create board
 		newBoard := &model.Board{
 			Title:  "title",
@@ -1517,7 +1517,7 @@ func TestAddMember(t *testing.T) {
 			clients := setupClients(th)
 			th.Client = clients.TeamMember
 			th.Client2 = clients.Viewer
-			teamID := mmModel.NewId()
+			teamID := amModel.NewId()
 			newBoard := &model.Board{
 				Title:  "title",
 				Type:   model.BoardTypePrivate,
@@ -1549,7 +1549,7 @@ func TestAddMember(t *testing.T) {
 			clients := setupClients(th)
 			th.Client = clients.TeamMember
 			th.Client2 = clients.Viewer
-			teamID := mmModel.NewId()
+			teamID := amModel.NewId()
 			newBoard := &model.Board{
 				Title:  "title",
 				Type:   model.BoardTypeOpen,
@@ -1596,7 +1596,7 @@ func TestAddMember(t *testing.T) {
 			clients := setupClients(th)
 			th.Client = clients.TeamMember
 			th.Client2 = clients.Viewer
-			teamID := mmModel.NewId()
+			teamID := amModel.NewId()
 			newBoard := &model.Board{
 				Title:  "title",
 				Type:   model.BoardTypePrivate,
@@ -1629,7 +1629,7 @@ func TestAddMember(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypePrivate,
@@ -1670,7 +1670,7 @@ func TestAddMember(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.Admin
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:       "open board",
 			Type:        model.BoardTypeOpen,
@@ -1713,7 +1713,7 @@ func TestAddMember(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.Admin
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypeOpen,
@@ -1750,7 +1750,7 @@ func TestUpdateMember(t *testing.T) {
 		// Create board with authenticated client first
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypeOpen,
@@ -1780,7 +1780,7 @@ func TestUpdateMember(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 		th.Client2 = clients.Viewer
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypeOpen,
@@ -1825,7 +1825,7 @@ func TestUpdateMember(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 		th.Client2 = clients.Viewer
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypeOpen,
@@ -1864,7 +1864,7 @@ func TestUpdateMember(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypeOpen,
@@ -1895,7 +1895,7 @@ func TestUpdateMember(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.Admin
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypeOpen,
@@ -1943,7 +1943,7 @@ func TestUpdateMember(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.Admin
 
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypeOpen,
@@ -1982,7 +1982,7 @@ func TestDeleteMember(t *testing.T) {
 		// Create board with authenticated client first
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypeOpen,
@@ -2012,7 +2012,7 @@ func TestDeleteMember(t *testing.T) {
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
 		th.Client2 = clients.Viewer
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypeOpen,
@@ -2057,7 +2057,7 @@ func TestDeleteMember(t *testing.T) {
 			clients := setupClients(th)
 			th.Client = clients.TeamMember
 			th.Client2 = clients.Viewer
-			teamID := mmModel.NewId()
+			teamID := amModel.NewId()
 			newBoard := &model.Board{
 				Title:  "title",
 				Type:   model.BoardTypePrivate,
@@ -2103,7 +2103,7 @@ func TestDeleteMember(t *testing.T) {
 			clients := setupClients(th)
 			th.Client = clients.TeamMember
 			th.Client2 = clients.Viewer
-			teamID := mmModel.NewId()
+			teamID := amModel.NewId()
 			newBoard := &model.Board{
 				Title:  "title",
 				Type:   model.BoardTypePrivate,
@@ -2150,7 +2150,7 @@ func TestDeleteMember(t *testing.T) {
 			clients := setupClients(th)
 			th.Client = clients.TeamMember
 			th.Client2 = clients.Viewer
-			teamID := mmModel.NewId()
+			teamID := amModel.NewId()
 			newBoard := &model.Board{
 				Title:  "title",
 				Type:   model.BoardTypePrivate,
@@ -2195,7 +2195,7 @@ func TestDeleteMember(t *testing.T) {
 
 		clients := setupClients(th)
 		th.Client = clients.TeamMember
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  "title",
 			Type:   model.BoardTypePrivate,
@@ -2301,7 +2301,7 @@ func TestDuplicateBoard(t *testing.T) {
 		me := th.GetUser1()
 
 		title := "Public board"
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  title,
 			Type:   model.BoardTypeOpen,
@@ -2370,7 +2370,7 @@ func TestDuplicateBoard(t *testing.T) {
 		th.Client2 = clients.Viewer
 
 		me := th.GetUser1()
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 
 		category := model.Category{
 			Name:   "My Category",
@@ -2480,7 +2480,7 @@ func TestJoinBoard(t *testing.T) {
 		me := th.GetUser1()
 
 		title := "Test Public board"
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  title,
 			Type:   model.BoardTypeOpen,
@@ -2520,7 +2520,7 @@ func TestJoinBoard(t *testing.T) {
 		me := th.GetUser1()
 
 		title := "Public board for commenters"
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:       title,
 			Type:        model.BoardTypeOpen,
@@ -2564,7 +2564,7 @@ func TestJoinBoard(t *testing.T) {
 		me := th.GetUser1()
 
 		title := "Public board for editors"
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  title,
 			Type:   model.BoardTypeOpen,
@@ -2607,7 +2607,7 @@ func TestJoinBoard(t *testing.T) {
 		me := th.GetUser1()
 
 		title := "Private board"
-		teamID := mmModel.NewId()
+		teamID := amModel.NewId()
 		newBoard := &model.Board{
 			Title:  title,
 			Type:   model.BoardTypePrivate,

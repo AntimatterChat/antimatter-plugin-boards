@@ -9,7 +9,7 @@ import (
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 )
 
 var atMentionRegexp = regexp.MustCompile(`\B@[[:alnum:]][[:alnum:]\.\-_:]*`)
@@ -25,8 +25,8 @@ func extractMentions(block *model.Block) map[string]struct{} {
 	str := block.Title
 
 	for _, match := range atMentionRegexp.FindAllString(str, -1) {
-		name := mm_model.NormalizeUsername(match[1:])
-		if mm_model.IsValidUsernameAllowRemote(name) {
+		name := am_model.NormalizeUsername(match[1:])
+		if am_model.IsValidUsernameAllowRemote(name) {
 			mentions[name] = struct{}{}
 		}
 	}

@@ -7,7 +7,7 @@ import (
 	"errors"
 	"net/http"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
@@ -17,13 +17,13 @@ type mutexAPIAdapter struct {
 	api model.ServicesAPI
 }
 
-func (m *mutexAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_model.PluginKVSetOptions) (bool, *mm_model.AppError) {
+func (m *mutexAPIAdapter) KVSetWithOptions(key string, value []byte, options am_model.PluginKVSetOptions) (bool, *am_model.AppError) {
 	b, err := m.api.KVSetWithOptions(key, value, options)
 
-	var appErr *mm_model.AppError
+	var appErr *am_model.AppError
 	if err != nil {
 		if !errors.As(err, &appErr) {
-			appErr = mm_model.NewAppError("KVSetWithOptions", "", nil, "", http.StatusInternalServerError)
+			appErr = am_model.NewAppError("KVSetWithOptions", "", nil, "", http.StatusInternalServerError)
 		}
 	}
 	return b, appErr

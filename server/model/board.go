@@ -8,7 +8,7 @@ import (
 	"io"
 	"time"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 )
 
 type BoardType string
@@ -373,7 +373,7 @@ func (p *BoardPatch) IsValid() error {
 		return InvalidBoardErr{"invalid-board-minimum-role"}
 	}
 
-	if p.ChannelID != nil && *p.ChannelID != "" && !mmModel.IsValidId(*p.ChannelID) {
+	if p.ChannelID != nil && *p.ChannelID != "" && !amModel.IsValidId(*p.ChannelID) {
 		return InvalidBoardErr{"invalid-channel-id"}
 	}
 
@@ -394,12 +394,12 @@ func (b *Board) IsValid() error {
 		if !b.IsTemplate {
 			return InvalidBoardErr{"invalid-team-id"}
 		}
-	} else if !mmModel.IsValidId(b.TeamID) {
+	} else if !amModel.IsValidId(b.TeamID) {
 		return InvalidBoardErr{"invalid-team-id"}
 	}
 
 	// Empty channel ID is fine as not every board is associated with a channel.
-	if b.ChannelID != "" && !mmModel.IsValidId(b.ChannelID) {
+	if b.ChannelID != "" && !amModel.IsValidId(b.ChannelID) {
 		return InvalidBoardErr{"invalid-channel-id"}
 	}
 
@@ -411,7 +411,7 @@ func (b *Board) IsValid() error {
 }
 
 func (b *Board) IsValidForImport() error {
-	if !mmModel.IsValidId(b.TeamID) && b.TeamID != GlobalTeamID {
+	if !amModel.IsValidId(b.TeamID) && b.TeamID != GlobalTeamID {
 		return InvalidBoardErr{"invalid-team-id"}
 	}
 

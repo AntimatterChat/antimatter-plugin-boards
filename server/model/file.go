@@ -8,13 +8,13 @@ import (
 	"strings"
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 )
 
-func NewFileInfo(name string) *mm_model.FileInfo {
+func NewFileInfo(name string) *am_model.FileInfo {
 	extension := strings.ToLower(filepath.Ext(name))
 	now := utils.GetMillis()
-	return &mm_model.FileInfo{
+	return &am_model.FileInfo{
 		CreatorId: "boards",
 		CreateAt:  now,
 		UpdateAt:  now,

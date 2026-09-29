@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"strings"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 
 	pluginapi "github.com/mattermost/mattermost/server/public/pluginapi"
 )
@@ -273,7 +273,7 @@ func IsErrNotFound(err error) bool {
 	}
 
 	// check if this is a Mattermost AppError with a Not Found status
-	var appErr *mmModel.AppError
+	var appErr *amModel.AppError
 	if errors.As(err, &appErr) {
 		if appErr.StatusCode == http.StatusNotFound {
 			return true

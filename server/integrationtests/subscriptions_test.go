@@ -10,7 +10,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/client"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -23,7 +23,7 @@ func createTestSubscriptions(client *client.Client, num int) ([]*model.Subscript
 		return nil, "", fmt.Errorf("cannot get current user: %w", resp.Error)
 	}
 
-	teamID := mmModel.NewId()
+	teamID := amModel.NewId()
 	board := &model.Board{
 		TeamID:   teamID,
 		Type:     model.BoardTypeOpen,

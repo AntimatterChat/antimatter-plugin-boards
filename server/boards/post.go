@@ -9,11 +9,11 @@ import (
 	"net/url"
 	"strings"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/markdown"
 )
 
-func postWithBoardsEmbed(post *mm_model.Post) *mm_model.Post {
+func postWithBoardsEmbed(post *am_model.Post) *am_model.Post {
 	if _, ok := post.GetProps()["boards"]; ok {
 		post.AddProp("boards", nil)
 	}
@@ -54,16 +54,16 @@ func postWithBoardsEmbed(post *mm_model.Post) *mm_model.Post {
 			OriginalPath: u.RequestURI(),
 		})
 
-		BoardsPostEmbed := &mm_model.PostEmbed{
-			Type: mm_model.PostEmbedBoards,
+		BoardsPostEmbed := &am_model.PostEmbed{
+			Type: am_model.PostEmbedBoards,
 			Data: string(b),
 		}
 
 		if post.Metadata == nil {
-			post.Metadata = &mm_model.PostMetadata{}
+			post.Metadata = &am_model.PostMetadata{}
 		}
 
-		post.Metadata.Embeds = []*mm_model.PostEmbed{BoardsPostEmbed}
+		post.Metadata.Embeds = []*am_model.PostEmbed{BoardsPostEmbed}
 		post.AddProp("boards", string(b))
 	}
 

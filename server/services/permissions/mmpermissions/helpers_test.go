@@ -10,7 +10,7 @@ import (
 	mmpermissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mmpermissions/mocks"
 	permissionsMocks "github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions/mocks"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 
 	"github.com/golang/mock/gomock"
@@ -40,7 +40,7 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 }
 
 func (th *TestHelper) checkBoardPermissions(roleName string, member *model.BoardMember, teamID string,
-	hasPermissionTo, hasNotPermissionTo []*mmModel.Permission) {
+	hasPermissionTo, hasNotPermissionTo []*amModel.Permission) {
 	setupExpectations := func() {
 		th.store.EXPECT().
 			GetBoard(member.BoardID).

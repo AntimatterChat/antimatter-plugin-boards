@@ -10,7 +10,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 )
 
 var errTestStore = errors.New("plugin test store error")
@@ -25,9 +25,9 @@ type PluginTestStore struct {
 }
 
 func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
-	testTeamID := mmModel.NewId()
-	otherTeamID := mmModel.NewId()
-	emptyTeamID := mmModel.NewId()
+	testTeamID := amModel.NewId()
+	otherTeamID := amModel.NewId()
+	emptyTeamID := amModel.NewId()
 	return &PluginTestStore{
 		Store: innerStore,
 		users: map[string]*model.User{
@@ -100,7 +100,7 @@ func (s *PluginTestStore) GetTeam(id string) (*model.Team, error) {
 	case s.emptyTeam.ID:
 		return s.emptyTeam, nil
 	}
-	if mmModel.IsValidId(id) {
+	if amModel.IsValidId(id) {
 		return &model.Team{ID: id, Title: "Test Team"}, nil
 	}
 	return nil, errTestStore
@@ -163,10 +163,10 @@ func (s *PluginTestStore) GetUserByUsername(username string) (*model.User, error
 	return nil, errTestStore
 }
 
-func (s *PluginTestStore) GetUserPreferences(userID string) (mmModel.Preferences, error) {
+func (s *PluginTestStore) GetUserPreferences(userID string) (amModel.Preferences, error) {
 	if userID == userTeamMember {
-		return mmModel.Preferences{
-			mmModel.Preference{
+		return amModel.Preferences{
+			amModel.Preference{
 				UserId:   userTeamMember,
 				Category: "focalboard",
 				Name:     "test",
@@ -261,8 +261,8 @@ func (s *PluginTestStore) CanSeeUser(seerID string, seenID string) (bool, error)
 	return false, nil
 }
 
-func (s *PluginTestStore) SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error) {
-	return []*mmModel.Channel{
+func (s *PluginTestStore) SearchUserChannels(teamID, userID, query string) ([]*amModel.Channel, error) {
+	return []*amModel.Channel{
 		{
 			TeamId:      teamID,
 			Id:          "valid-channel-id",
@@ -278,16 +278,16 @@ func (s *PluginTestStore) SearchUserChannels(teamID, userID, query string) ([]*m
 	}, nil
 }
 
-func (s *PluginTestStore) GetChannel(teamID, channel string) (*mmModel.Channel, error) {
+func (s *PluginTestStore) GetChannel(teamID, channel string) (*amModel.Channel, error) {
 	if channel == "valid-channel-id" {
-		return &mmModel.Channel{
+		return &amModel.Channel{
 			TeamId:      teamID,
 			Id:          "valid-channel-id",
 			DisplayName: "Valid Channel",
 			Name:        "valid-channel",
 		}, nil
 	} else if channel == "valid-channel-id-2" {
-		return &mmModel.Channel{
+		return &amModel.Channel{
 			TeamId:      teamID,
 			Id:          "valid-channel-id-2",
 			DisplayName: "Valid Channel 2",

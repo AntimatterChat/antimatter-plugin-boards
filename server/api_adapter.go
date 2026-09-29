@@ -11,7 +11,7 @@ import (
 
 	"github.com/mattermost/mattermost/server/public/plugin"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
@@ -21,7 +21,7 @@ type storeService interface {
 
 // normalizeAppError returns a truly nil error if appErr is nil
 // See https://golang.org/doc/faq#nil_error for more details.
-func normalizeAppErr(appErr *mm_model.AppError) error {
+func normalizeAppErr(appErr *am_model.AppError) error {
 	if appErr == nil {
 		return nil
 	}
@@ -49,28 +49,28 @@ func newServiceAPIAdapter(api plugin.API, storeService storeService, logger mlog
 // Channels service.
 //
 
-func (a *pluginAPIAdapter) GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error) {
+func (a *pluginAPIAdapter) GetDirectChannel(userID1, userID2 string) (*am_model.Channel, error) {
 	channel, appErr := a.api.GetDirectChannel(userID1, userID2)
 	return channel, normalizeAppErr(appErr)
 }
 
-func (a *pluginAPIAdapter) GetDirectChannelOrCreate(userID1, userID2 string) (*mm_model.Channel, error) {
+func (a *pluginAPIAdapter) GetDirectChannelOrCreate(userID1, userID2 string) (*am_model.Channel, error) {
 	// plugin API's GetDirectChannel will create channel if it does not exist.
 	channel, appErr := a.api.GetDirectChannel(userID1, userID2)
 	return channel, normalizeAppErr(appErr)
 }
 
-func (a *pluginAPIAdapter) GetChannelByID(channelID string) (*mm_model.Channel, error) {
+func (a *pluginAPIAdapter) GetChannelByID(channelID string) (*am_model.Channel, error) {
 	channel, appErr := a.api.GetChannel(channelID)
 	return channel, normalizeAppErr(appErr)
 }
 
-func (a *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error) {
+func (a *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*am_model.ChannelMember, error) {
 	member, appErr := a.api.GetChannelMember(channelID, userID)
 	return member, normalizeAppErr(appErr)
 }
 
-func (a *pluginAPIAdapter) GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (mm_model.ChannelList, error) {
+func (a *pluginAPIAdapter) GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (am_model.ChannelList, error) {
 	channels, appErr := a.api.GetChannelsForTeamForUser(teamID, userID, includeDeleted)
 	return channels, normalizeAppErr(appErr)
 }
@@ -79,7 +79,7 @@ func (a *pluginAPIAdapter) GetChannelsForTeamForUser(teamID string, userID strin
 // Post service.
 //
 
-func (a *pluginAPIAdapter) CreatePost(post *mm_model.Post) (*mm_model.Post, error) {
+func (a *pluginAPIAdapter) CreatePost(post *am_model.Post) (*am_model.Post, error) {
 	post, appErr := a.api.CreatePost(post)
 	return post, normalizeAppErr(appErr)
 }
@@ -88,27 +88,27 @@ func (a *pluginAPIAdapter) CreatePost(post *mm_model.Post) (*mm_model.Post, erro
 // User service.
 //
 
-func (a *pluginAPIAdapter) GetUserByID(userID string) (*mm_model.User, error) {
+func (a *pluginAPIAdapter) GetUserByID(userID string) (*am_model.User, error) {
 	user, appErr := a.api.GetUser(userID)
 	return user, normalizeAppErr(appErr)
 }
 
-func (a *pluginAPIAdapter) GetUserByUsername(name string) (*mm_model.User, error) {
+func (a *pluginAPIAdapter) GetUserByUsername(name string) (*am_model.User, error) {
 	user, appErr := a.api.GetUserByUsername(name)
 	return user, normalizeAppErr(appErr)
 }
 
-func (a *pluginAPIAdapter) GetUserByEmail(email string) (*mm_model.User, error) {
+func (a *pluginAPIAdapter) GetUserByEmail(email string) (*am_model.User, error) {
 	user, appErr := a.api.GetUserByEmail(email)
 	return user, normalizeAppErr(appErr)
 }
 
-func (a *pluginAPIAdapter) UpdateUser(user *mm_model.User) (*mm_model.User, error) {
+func (a *pluginAPIAdapter) UpdateUser(user *am_model.User) (*am_model.User, error) {
 	user, appErr := a.api.UpdateUser(user)
 	return user, normalizeAppErr(appErr)
 }
 
-func (a *pluginAPIAdapter) GetUsersFromProfiles(options *mm_model.UserGetOptions) ([]*mm_model.User, error) {
+func (a *pluginAPIAdapter) GetUsersFromProfiles(options *am_model.UserGetOptions) ([]*am_model.User, error) {
 	users, appErr := a.api.GetUsers(options)
 	return users, normalizeAppErr(appErr)
 }
@@ -117,12 +117,12 @@ func (a *pluginAPIAdapter) GetUsersFromProfiles(options *mm_model.UserGetOptions
 // Team service.
 //
 
-func (a *pluginAPIAdapter) GetTeamMember(teamID string, userID string) (*mm_model.TeamMember, error) {
+func (a *pluginAPIAdapter) GetTeamMember(teamID string, userID string) (*am_model.TeamMember, error) {
 	member, appErr := a.api.GetTeamMember(teamID, userID)
 	return member, normalizeAppErr(appErr)
 }
 
-func (a *pluginAPIAdapter) CreateMember(teamID string, userID string) (*mm_model.TeamMember, error) {
+func (a *pluginAPIAdapter) CreateMember(teamID string, userID string) (*am_model.TeamMember, error) {
 	member, appErr := a.api.CreateTeamMember(teamID, userID)
 	return member, normalizeAppErr(appErr)
 }
@@ -131,15 +131,15 @@ func (a *pluginAPIAdapter) CreateMember(teamID string, userID string) (*mm_model
 // Permissions service.
 //
 
-func (a *pluginAPIAdapter) HasPermissionTo(userID string, permission *mm_model.Permission) bool {
+func (a *pluginAPIAdapter) HasPermissionTo(userID string, permission *am_model.Permission) bool {
 	return a.api.HasPermissionTo(userID, permission)
 }
 
-func (a *pluginAPIAdapter) HasPermissionToTeam(userID, teamID string, permission *mm_model.Permission) bool {
+func (a *pluginAPIAdapter) HasPermissionToTeam(userID, teamID string, permission *am_model.Permission) bool {
 	return a.api.HasPermissionToTeam(userID, teamID, permission)
 }
 
-func (a *pluginAPIAdapter) HasPermissionToChannel(askingUserID string, channelID string, permission *mm_model.Permission) bool {
+func (a *pluginAPIAdapter) HasPermissionToChannel(askingUserID string, channelID string, permission *am_model.Permission) bool {
 	return a.api.HasPermissionToChannel(askingUserID, channelID, permission)
 }
 
@@ -147,7 +147,7 @@ func (a *pluginAPIAdapter) HasPermissionToChannel(askingUserID string, channelID
 // Bot service.
 //
 
-func (a *pluginAPIAdapter) EnsureBot(bot *mm_model.Bot) (string, error) {
+func (a *pluginAPIAdapter) EnsureBot(bot *am_model.Bot) (string, error) {
 	return a.api.EnsureBotUser(bot)
 }
 
@@ -155,7 +155,7 @@ func (a *pluginAPIAdapter) EnsureBot(bot *mm_model.Bot) (string, error) {
 // FileInfoStore service.
 //
 
-func (a *pluginAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, error) {
+func (a *pluginAPIAdapter) GetFileInfo(fileID string) (*am_model.FileInfo, error) {
 	fi, appErr := a.api.GetFileInfo(fileID)
 	return fi, normalizeAppErr(appErr)
 }
@@ -164,11 +164,11 @@ func (a *pluginAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, error
 // Cluster store.
 //
 
-func (a *pluginAPIAdapter) PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mm_model.WebsocketBroadcast) {
+func (a *pluginAPIAdapter) PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *am_model.WebsocketBroadcast) {
 	a.api.PublishWebSocketEvent(event, payload, broadcast)
 }
 
-func (a *pluginAPIAdapter) PublishPluginClusterEvent(ev mm_model.PluginClusterEvent, opts mm_model.PluginClusterEventSendOptions) error {
+func (a *pluginAPIAdapter) PublishPluginClusterEvent(ev am_model.PluginClusterEvent, opts am_model.PluginClusterEventSendOptions) error {
 	return a.api.PublishPluginClusterEvent(ev, opts)
 }
 
@@ -176,7 +176,7 @@ func (a *pluginAPIAdapter) PublishPluginClusterEvent(ev mm_model.PluginClusterEv
 // Config service.
 //
 
-func (a *pluginAPIAdapter) GetConfig() *mm_model.Config {
+func (a *pluginAPIAdapter) GetConfig() *am_model.Config {
 	return a.api.GetUnsanitizedConfig()
 }
 
@@ -192,7 +192,7 @@ func (a *pluginAPIAdapter) GetLogger() mlog.LoggerIFace {
 // KVStore service.
 //
 
-func (a *pluginAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_model.PluginKVSetOptions) (bool, error) {
+func (a *pluginAPIAdapter) KVSetWithOptions(key string, value []byte, options am_model.PluginKVSetOptions) (bool, error) {
 	b, appErr := a.api.KVSetWithOptions(key, value, options)
 	return b, normalizeAppErr(appErr)
 }
@@ -225,13 +225,13 @@ func (a *pluginAPIAdapter) RegisterRouter(sub *mux.Router) {
 // Preferences service.
 //
 
-func (a *pluginAPIAdapter) GetPreferencesForUser(userID string) (mm_model.Preferences, error) {
+func (a *pluginAPIAdapter) GetPreferencesForUser(userID string) (am_model.Preferences, error) {
 	preferences, appErr := a.api.GetPreferencesForUser(userID)
 	if appErr != nil {
 		return nil, normalizeAppErr(appErr)
 	}
 
-	boardsPreferences := mm_model.Preferences{}
+	boardsPreferences := am_model.Preferences{}
 
 	// Mattermost API gives us all preferences.
 	// We want just the Focalboard ones.
@@ -244,12 +244,12 @@ func (a *pluginAPIAdapter) GetPreferencesForUser(userID string) (mm_model.Prefer
 	return boardsPreferences, nil
 }
 
-func (a *pluginAPIAdapter) UpdatePreferencesForUser(userID string, preferences mm_model.Preferences) error {
+func (a *pluginAPIAdapter) UpdatePreferencesForUser(userID string, preferences am_model.Preferences) error {
 	appErr := a.api.UpdatePreferencesForUser(userID, preferences)
 	return normalizeAppErr(appErr)
 }
 
-func (a *pluginAPIAdapter) DeletePreferencesForUser(userID string, preferences mm_model.Preferences) error {
+func (a *pluginAPIAdapter) DeletePreferencesForUser(userID string, preferences am_model.Preferences) error {
 	appErr := a.api.DeletePreferencesForUser(userID, preferences)
 	return normalizeAppErr(appErr)
 }

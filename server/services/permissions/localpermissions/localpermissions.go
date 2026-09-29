@@ -7,7 +7,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/permissions"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
@@ -23,11 +23,11 @@ func New(store permissions.Store, logger mlog.LoggerIFace) *Service {
 	}
 }
 
-func (s *Service) HasPermissionTo(userID string, permission *mmModel.Permission) bool {
+func (s *Service) HasPermissionTo(userID string, permission *amModel.Permission) bool {
 	return false
 }
 
-func (s *Service) HasPermissionToTeam(userID, teamID string, permission *mmModel.Permission) bool {
+func (s *Service) HasPermissionToTeam(userID, teamID string, permission *amModel.Permission) bool {
 	if userID == "" || teamID == "" || permission == nil {
 		return false
 	}
@@ -37,14 +37,14 @@ func (s *Service) HasPermissionToTeam(userID, teamID string, permission *mmModel
 	return true
 }
 
-func (s *Service) HasPermissionToChannel(userID, channelID string, permission *mmModel.Permission) bool {
+func (s *Service) HasPermissionToChannel(userID, channelID string, permission *amModel.Permission) bool {
 	if userID == "" || channelID == "" || permission == nil {
 		return false
 	}
 	return true
 }
 
-func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmModel.Permission) bool {
+func (s *Service) HasPermissionToBoard(userID, boardID string, permission *amModel.Permission) bool {
 	if userID == "" || boardID == "" || permission == nil {
 		return false
 	}

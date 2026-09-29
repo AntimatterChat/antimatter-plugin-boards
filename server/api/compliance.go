@@ -12,7 +12,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/gorilla/mux"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/shared/mlog"
 )
 
@@ -75,7 +75,7 @@ func (a *API) handleGetBoardsForCompliance(w http.ResponseWriter, r *http.Reques
 
 	// check for permission `manage_system`
 	userID := getUserID(r)
-	if !a.permissions.HasPermissionTo(userID, mm_model.PermissionManageSystem) {
+	if !a.permissions.HasPermissionTo(userID, am_model.PermissionManageSystem) {
 		a.errorResponse(w, r, model.NewErrUnauthorized("access denied Compliance Export getAllBoards"))
 		return
 	}
@@ -203,7 +203,7 @@ func (a *API) handleGetBoardsComplianceHistory(w http.ResponseWriter, r *http.Re
 
 	// check for permission `manage_system`
 	userID := getUserID(r)
-	if !a.permissions.HasPermissionTo(userID, mm_model.PermissionManageSystem) {
+	if !a.permissions.HasPermissionTo(userID, am_model.PermissionManageSystem) {
 		a.errorResponse(w, r, model.NewErrUnauthorized("access denied Compliance Export getBoardsHistory"))
 		return
 	}
@@ -345,7 +345,7 @@ func (a *API) handleGetBlocksComplianceHistory(w http.ResponseWriter, r *http.Re
 
 	// check for permission `manage_system`
 	userID := getUserID(r)
-	if !a.permissions.HasPermissionTo(userID, mm_model.PermissionManageSystem) {
+	if !a.permissions.HasPermissionTo(userID, am_model.PermissionManageSystem) {
 		a.errorResponse(w, r, model.NewErrUnauthorized("access denied Compliance Export getBlocksHistory"))
 		return
 	}

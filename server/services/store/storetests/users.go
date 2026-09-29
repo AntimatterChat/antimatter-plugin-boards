@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 
 	"github.com/antimatterchat/antimatter-plugin-boards/server/model"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store"
@@ -26,7 +26,7 @@ func StoreTestUserStore(t *testing.T, setup func(t *testing.T) (store.Store, fun
 
 func testCreateAndGetUser(t *testing.T, store store.Store) {
 	user := &model.User{
-		ID:       mmModel.NewId(),
+		ID:       amModel.NewId(),
 		Username: "damao",
 		Email:    "mock@email.com",
 		CreateAt: utils.GetMillis(),

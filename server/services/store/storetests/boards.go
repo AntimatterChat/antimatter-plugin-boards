@@ -11,7 +11,7 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/store"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -137,7 +137,7 @@ func testGetBoard(t *testing.T, store store.Store) {
 }
 
 func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
-	userID := mmModel.NewId()
+	userID := amModel.NewId()
 	insertTestUser(t, store, userID, "test-user", "test@example.com")
 
 	t.Run("should return empty list if no results are found", func(t *testing.T) {
@@ -147,8 +147,8 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 	})
 
 	t.Run("should return only the boards of the team that the user is a member of", func(t *testing.T) {
-		teamID1 := mmModel.NewId()
-		teamID2 := mmModel.NewId()
+		teamID1 := amModel.NewId()
+		teamID2 := amModel.NewId()
 
 		// team 1 boards
 		board1 := &model.Board{
@@ -746,7 +746,7 @@ func testGetMembersForBoard(t *testing.T, store store.Store) {
 
 func testGetMembersForUser(t *testing.T, store store.Store) {
 	t.Run("should return empty list if there are no memberships for a user", func(t *testing.T) {
-		userID := mmModel.NewId()
+		userID := amModel.NewId()
 		insertTestUser(t, store, userID, "test-user", "test@example.com")
 
 		members, err := store.GetMembersForUser(userID)
@@ -802,9 +802,9 @@ func testDeleteMember(t *testing.T, store store.Store) {
 }
 
 func testSearchBoardsForUser(t *testing.T, store store.Store) {
-	teamID1 := mmModel.NewId()
-	teamID2 := mmModel.NewId()
-	userID := mmModel.NewId()
+	teamID1 := amModel.NewId()
+	teamID2 := amModel.NewId()
+	userID := amModel.NewId()
 
 	insertTestUser(t, store, userID, "test-user", "test@example.com")
 	insertTestTeamMember(t, store, teamID1, userID)

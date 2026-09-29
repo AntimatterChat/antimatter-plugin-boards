@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	mmModel "github.com/mattermost/mattermost/server/public/model"
+	amModel "github.com/mattermost/mattermost/server/public/model"
 )
 
 const (
@@ -44,7 +44,7 @@ func newIdCheck(id string) error {
 	// ID should have the right format.
 	// Excluding the first letter as it represents the block type
 	// and is not part of the format validation
-	if mmModel.IsValidId(id[1 : len(id)-1]) {
+	if amModel.IsValidId(id[1 : len(id)-1]) {
 		return errInvalidId
 	}
 

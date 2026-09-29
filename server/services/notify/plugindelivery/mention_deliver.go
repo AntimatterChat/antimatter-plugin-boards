@@ -9,11 +9,11 @@ import (
 	"github.com/antimatterchat/antimatter-plugin-boards/server/services/notify"
 	"github.com/antimatterchat/antimatter-plugin-boards/server/utils"
 
-	mm_model "github.com/mattermost/mattermost/server/public/model"
+	am_model "github.com/mattermost/mattermost/server/public/model"
 )
 
 // MentionDeliver notifies a user they have been mentioned in a blockv ia the plugin API.
-func (pd *PluginDelivery) MentionDeliver(mentionedUser *mm_model.User, extract string, evt notify.BlockChangeEvent) (string, error) {
+func (pd *PluginDelivery) MentionDeliver(mentionedUser *am_model.User, extract string, evt notify.BlockChangeEvent) (string, error) {
 	author, err := pd.api.GetUserByID(evt.ModifiedBy.UserID)
 	if err != nil {
 		return "", fmt.Errorf("cannot find user: %w", err)
@@ -26,7 +26,7 @@ func (pd *PluginDelivery) MentionDeliver(mentionedUser *mm_model.User, extract s
 	link := utils.MakeCardLink(pd.serverRoot, evt.Board.TeamID, evt.Board.ID, evt.Card.ID)
 	boardLink := utils.MakeBoardLink(pd.serverRoot, evt.Board.TeamID, evt.Board.ID)
 
-	post := &mm_model.Post{
+	post := &am_model.Post{
 		UserId:    pd.botID,
 		ChannelId: channel.Id,
 		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged, boardLink, evt.Board.Title),
