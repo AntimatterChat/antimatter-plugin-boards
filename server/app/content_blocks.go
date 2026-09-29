@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	"github.com/mattermost/mattermost-plugin-boards/server/model"
-	"github.com/pkg/errors"
 )
 
 func (a *App) MoveContentBlock(block *model.Block, dstBlock *model.Block, where string, userID string) error {
@@ -74,9 +73,6 @@ func (a *App) MoveContentBlock(block *model.Block, dstBlock *model.Block, where 
 	}
 
 	_, err = a.PatchBlock(block.ParentID, patch, userID)
-	if errors.Is(err, model.ErrPatchUpdatesLimitedCards) {
-		return err
-	}
 	if err != nil {
 		return err
 	}

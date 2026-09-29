@@ -139,21 +139,6 @@ func NewBoardsApp(api model.ServicesAPI, manifest *mm_model.Manifest) (*BoardsAp
 
 	backendParams.appAPI.init(db, server.App())
 
-	// ToDo: Cloud Limits have been disabled by design. We should
-	// revisit the decision and update the related code accordingly
-	/*
-		if utils.IsCloudLicense(api.GetLicense()) {
-			limits, err := api.GetCloudLimits()
-			if err != nil {
-				return nil, fmt.Errorf("error fetching cloud limits when starting Boards: %w", err)
-			}
-
-			if err := server.App().SetCloudLimits(limits); err != nil {
-				return nil, fmt.Errorf("error setting cloud limits when starting Boards: %w", err)
-			}
-		}
-	*/
-
 	return &BoardsApp{
 		manifest:        manifest,
 		server:          server,

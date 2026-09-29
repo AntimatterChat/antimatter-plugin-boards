@@ -87,10 +87,6 @@ type Block struct {
 	// The board id that the block belongs to
 	// required: true
 	BoardID string `json:"boardId"`
-
-	// Indicates if the card is limited
-	// required: false
-	Limited bool `json:"limited,omitempty"`
 }
 
 // BlockPatch is a patch for modify blocks
@@ -392,35 +388,4 @@ func StampModificationMetadata(userID string, blocks []*Block, auditRec *audit.R
 			auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), blocks[i])
 		}
 	}
-}
-
-func (b *Block) ShouldBeLimited(cardLimitTimestamp int64) bool {
-	return b.Type == TypeCard &&
-		b.UpdateAt < cardLimitTimestamp
-}
-
-// Returns a limited version of the block that doesn't contain the
-// contents of the block, only its IDs and type.
-func (b *Block) GetLimited() *Block {
-	newBlock := &Block{
-		Title:       b.Title,
-		ID:          b.ID,
-		ParentID:    b.ParentID,
-		BoardID:     b.BoardID,
-		Schema:      b.Schema,
-		Type:        b.Type,
-		CreateAt:    b.CreateAt,
-		UpdateAt:    b.UpdateAt,
-		DeleteAt:    b.DeleteAt,
-		WorkspaceID: b.WorkspaceID,
-		Limited:     true,
-	}
-
-	if iconField, ok := b.Fields["icon"]; ok {
-		newBlock.Fields = map[string]interface{}{
-			"icon": iconField,
-		}
-	}
-
-	return newBlock
 }

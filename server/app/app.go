@@ -5,7 +5,6 @@ package app
 
 import (
 	"io"
-	"sync"
 	"time"
 
 	"github.com/mattermost/mattermost-plugin-boards/server/auth"
@@ -70,9 +69,6 @@ type App struct {
 	permissions         permissions.PermissionsService
 	blockChangeNotifier *utils.CallbackQueue
 	servicesAPI         servicesAPI
-
-	cardLimitMux sync.RWMutex
-	cardLimit    int
 }
 
 func (a *App) SetConfig(config *config.Configuration) {
@@ -100,18 +96,6 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 	}
 	app.initialize(services.SkipTemplateInit)
 	return app
-}
-
-func (a *App) CardLimit() int {
-	a.cardLimitMux.RLock()
-	defer a.cardLimitMux.RUnlock()
-	return a.cardLimit
-}
-
-func (a *App) SetCardLimit(cardLimit int) {
-	a.cardLimitMux.Lock()
-	defer a.cardLimitMux.Unlock()
-	a.cardLimit = cardLimit
 }
 
 func (a *App) GetLicense() *mm_model.License {

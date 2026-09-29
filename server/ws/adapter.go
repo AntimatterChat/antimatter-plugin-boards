@@ -9,22 +9,21 @@ import (
 )
 
 const (
-	websocketActionAuth                     = "AUTH"
-	websocketActionSubscribeTeam            = "SUBSCRIBE_TEAM"
-	websocketActionUnsubscribeTeam          = "UNSUBSCRIBE_TEAM"
-	websocketActionSubscribeBlocks          = "SUBSCRIBE_BLOCKS"
-	websocketActionUnsubscribeBlocks        = "UNSUBSCRIBE_BLOCKS"
-	websocketActionUpdateBoard              = "UPDATE_BOARD"
-	websocketActionUpdateMember             = "UPDATE_MEMBER"
-	websocketActionDeleteMember             = "DELETE_MEMBER"
-	websocketActionUpdateBlock              = "UPDATE_BLOCK"
-	websocketActionUpdateConfig             = "UPDATE_CLIENT_CONFIG"
-	websocketActionUpdateCategory           = "UPDATE_CATEGORY"
-	websocketActionUpdateCategoryBoard      = "UPDATE_BOARD_CATEGORY"
-	websocketActionUpdateSubscription       = "UPDATE_SUBSCRIPTION"
-	websocketActionUpdateCardLimitTimestamp = "UPDATE_CARD_LIMIT_TIMESTAMP"
-	websocketActionReorderCategories        = "REORDER_CATEGORIES"
-	websocketActionReorderCategoryBoards    = "REORDER_CATEGORY_BOARDS"
+	websocketActionAuth                  = "AUTH"
+	websocketActionSubscribeTeam         = "SUBSCRIBE_TEAM"
+	websocketActionUnsubscribeTeam       = "UNSUBSCRIBE_TEAM"
+	websocketActionSubscribeBlocks       = "SUBSCRIBE_BLOCKS"
+	websocketActionUnsubscribeBlocks     = "UNSUBSCRIBE_BLOCKS"
+	websocketActionUpdateBoard           = "UPDATE_BOARD"
+	websocketActionUpdateMember          = "UPDATE_MEMBER"
+	websocketActionDeleteMember          = "DELETE_MEMBER"
+	websocketActionUpdateBlock           = "UPDATE_BLOCK"
+	websocketActionUpdateConfig          = "UPDATE_CLIENT_CONFIG"
+	websocketActionUpdateCategory        = "UPDATE_CATEGORY"
+	websocketActionUpdateCategoryBoard   = "UPDATE_BOARD_CATEGORY"
+	websocketActionUpdateSubscription    = "UPDATE_SUBSCRIPTION"
+	websocketActionReorderCategories     = "REORDER_CATEGORIES"
+	websocketActionReorderCategoryBoards = "REORDER_CATEGORY_BOARDS"
 )
 
 type Store interface {
@@ -42,7 +41,6 @@ type Adapter interface {
 	BroadcastConfigChange(clientConfig model.ClientConfig)
 	BroadcastCategoryChange(category model.Category)
 	BroadcastCategoryBoardChange(teamID, userID string, blockCategory []*model.BoardCategoryWebsocketData)
-	BroadcastCardLimitTimestampChange(cardLimitTimestamp int64)
 	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
 	BroadcastCategoryReorder(teamID, userID string, categoryOrder []string)
 	BroadcastCategoryBoardsReorder(teamID, userID, categoryID string, boardsOrder []string)

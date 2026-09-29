@@ -398,11 +398,6 @@ func (s *SQLStore) GetBoardsInTeamByIds(boardIDs []string, teamID string) ([]*mo
 
 }
 
-func (s *SQLStore) GetCardLimitTimestamp() (int64, error) {
-	return s.getCardLimitTimestamp(s.db)
-
-}
-
 func (s *SQLStore) GetCardsCount() (int64, error) {
 	return s.getCardsCount(s.db)
 
@@ -885,11 +880,6 @@ func (s *SQLStore) UndeleteBoard(boardID string, modifiedBy string) error {
 	}
 
 	return nil
-
-}
-
-func (s *SQLStore) UpdateCardLimitTimestamp(cardLimit int) (int64, error) {
-	return s.updateCardLimitTimestamp(s.db, cardLimit)
 
 }
 

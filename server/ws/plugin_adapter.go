@@ -39,7 +39,6 @@ type PluginAdapterInterface interface {
 	BroadcastBlockChange(teamID string, block *model.Block)
 	BroadcastBlockDelete(teamID, blockID, parentID string)
 	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
-	BroadcastCardLimitTimestampChange(cardLimitTimestamp int64)
 	HandleClusterEvent(ev mmModel.PluginClusterEvent)
 }
 
@@ -700,17 +699,4 @@ func (pa *PluginAdapter) BroadcastSubscriptionChange(teamID string, subscription
 	}
 
 	pa.sendTeamMessage(websocketActionUpdateSubscription, teamID, utils.StructToMap(message))
-}
-
-func (pa *PluginAdapter) BroadcastCardLimitTimestampChange(cardLimitTimestamp int64) {
-	pa.logger.Debug("BroadcastCardLimitTimestampChange",
-		mlog.Int("cardLimitTimestamp", cardLimitTimestamp),
-	)
-
-	message := UpdateCardLimitTimestamp{
-		Action:    websocketActionUpdateCardLimitTimestamp,
-		Timestamp: cardLimitTimestamp,
-	}
-
-	pa.sendMessageToAll(websocketActionUpdateCardLimitTimestamp, utils.StructToMap(message))
 }
