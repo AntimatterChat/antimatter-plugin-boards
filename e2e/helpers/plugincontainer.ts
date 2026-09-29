@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import MattermostContainer from './mmcontainer';
+import AntimatterContainer from './amcontainer';
 
-const RunContainer = async (): Promise<MattermostContainer> => {
+const RunContainer = async (): Promise<AntimatterContainer> => {
   const distPath = path.join(__dirname, "../../dist/");
   const matches = fs.readdirSync(distPath).filter(f => f.endsWith(".tar.gz"));
   if (matches.length > 1) {
@@ -17,16 +17,16 @@ const RunContainer = async (): Promise<MattermostContainer> => {
   }
   const filename = path.join(distPath, matches[0]);
 
-  const mattermost = await new MattermostContainer()
+  const antimatter = await new AntimatterContainer()
     .withPlugin(filename, "focalboard")
     .start();
 
-  await mattermost.createUser("regularuser@sample.com", "regularuser", "regularuser");
-  await mattermost.addUserToTeam("regularuser", "test");
-  await mattermost.createUser("seconduser@sample.com", "seconduser", "seconduser");
-  await mattermost.addUserToTeam("seconduser", "test");
+  await antimatter.createUser("regularuser@sample.com", "regularuser", "regularuser");
+  await antimatter.addUserToTeam("regularuser", "test");
+  await antimatter.createUser("seconduser@sample.com", "seconduser", "seconduser");
+  await antimatter.addUserToTeam("seconduser", "test");
 
-  const userClient = await mattermost.getClient("regularuser", "regularuser")
+  const userClient = await antimatter.getClient("regularuser", "regularuser")
   const user = await userClient.getMe()
   await userClient.savePreferences(user.id, [
     {user_id: user.id, category: 'tutorial_step', name: user.id, value: '999'},
@@ -41,7 +41,7 @@ const RunContainer = async (): Promise<MattermostContainer> => {
     {user_id: user.id, category: 'crt_thread_pane_step', name: user.id, value: '999'},
   ]);
 
-  const adminClient = await mattermost.getAdminClient()
+  const adminClient = await antimatter.getAdminClient()
   const admin = await adminClient.getMe()
   await adminClient.savePreferences(admin.id, [
     {user_id: admin.id, category: 'tutorial_step', name: admin.id, value: '999'},
@@ -60,7 +60,7 @@ const RunContainer = async (): Promise<MattermostContainer> => {
     install_plugins: [],
   });
 
-  return mattermost;
+  return antimatter;
 }
 
 export default RunContainer

@@ -1,6 +1,6 @@
 import { Page, Locator } from '@playwright/test';
 
-export class MattermostPage {
+export class AntimatterPage {
     readonly page: Page;
     readonly postTextbox: Locator;
     readonly sendButton: Locator;
@@ -21,7 +21,7 @@ export class MattermostPage {
         await this.page.addInitScript(() => { localStorage.setItem('__landingPageSeen__', 'true'); });
 
         // Polyfill crypto.randomUUID for insecure contexts (e.g., Docker test environments
-        // where the Mattermost URL uses a non-localhost IP like http://172.17.0.1:PORT).
+        // where the Antimatter URL uses a non-localhost IP like http://172.17.0.1:PORT).
         await this.page.addInitScript(() => {
             if (typeof crypto !== 'undefined' && typeof crypto.randomUUID !== 'function') {
                 crypto.randomUUID = function randomUUID() {
@@ -61,10 +61,10 @@ export class MattermostPage {
         await this.page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: channelTimeout });
     }
 
-    static async loginAndWait(page: Page, url: string, username: string, password: string): Promise<MattermostPage> {
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(url, username, password);
-        return mmPage;
+    static async loginAndWait(page: Page, url: string, username: string, password: string): Promise<AntimatterPage> {
+        const amPage = new AntimatterPage(page);
+        await amPage.login(url, username, password);
+        return amPage;
     }
 
     async navigateToBoardsFromUrl(baseUrl: string) {
@@ -96,6 +96,6 @@ export class MattermostPage {
 
 // Legacy function for backward compatibility
 export const login = async (page: Page, url: string, username: string, password: string) => {
-    const mmPage = new MattermostPage(page);
-    await mmPage.login(url, username, password);
+    const amPage = new AntimatterPage(page);
+    await amPage.login(url, username, password);
 };

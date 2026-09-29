@@ -4,22 +4,22 @@
 import { test, expect } from '@playwright/test';
 
 import RunContainer from 'helpers/plugincontainer';
-import MattermostContainer from 'helpers/mmcontainer';
-import { MattermostPage } from 'helpers/mm';
+import AntimatterContainer from 'helpers/amcontainer';
+import { AntimatterPage } from 'helpers/am';
 import { createBoardViaApi } from 'helpers/boards';
 
 const adminUser = 'admin';
 const adminPass = 'admin';
 
-let mattermost: MattermostContainer;
+let antimatter: AntimatterContainer;
 
 test.beforeAll(async () => {
     test.setTimeout(300000);
-    mattermost = await RunContainer();
+    antimatter = await RunContainer();
 });
 
 test.afterAll(async () => {
-    await mattermost?.stop();
+    await antimatter?.stop();
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -28,7 +28,7 @@ test.afterAll(async () => {
 
 /** Open the Boards RHS panel via the App Bar button. */
 async function openBoardsRHS(page: import('@playwright/test').Page): Promise<void> {
-    // In Mattermost 9+, plugin RHS buttons live in the App Bar (far-right icon strip),
+    // In Antimatter 9+, plugin RHS buttons live in the App Bar (far-right icon strip),
     // not the channel header. The button's accessible name is "focalboard" (img alt text).
     await page.getByRole('button', { name: 'focalboard' }).click();
     // Wait for the RHS panel to render
@@ -45,8 +45,8 @@ test.describe('Channel-Board Linking', () => {
     test.describe.configure({ timeout: 300000 });
 
     test('RHS shows empty state when no boards are linked', async ({ page }) => {
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), adminUser, adminPass);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
         await openBoardsRHS(page);
@@ -56,15 +56,15 @@ test.describe('Channel-Board Linking', () => {
     });
 
     test('can link a board to a channel via RHS and see it listed', async ({ page }) => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const token = adminClient.getToken();
         const boardTitle = `RHS Link Test ${Date.now()}`;
 
         // Create a board to link
-        await createBoardViaApi(mattermost, boardTitle, token);
+        await createBoardViaApi(antimatter, boardTitle, token);
 
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), adminUser, adminPass);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
         // Open the Boards RHS panel
@@ -100,15 +100,15 @@ test.describe('Channel-Board Linking', () => {
     });
 
     test('can unlink a board from a channel via RHS options menu', async ({ page }) => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const token = adminClient.getToken();
         const boardTitle = `RHS Unlink Test ${Date.now()}`;
 
         // Create a board to link
-        await createBoardViaApi(mattermost, boardTitle, token);
+        await createBoardViaApi(antimatter, boardTitle, token);
 
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), adminUser, adminPass);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
         // Open the Boards RHS panel

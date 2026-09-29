@@ -4,8 +4,8 @@
 import { test, expect } from '@playwright/test';
 
 import RunContainer from 'helpers/plugincontainer';
-import MattermostContainer from 'helpers/mmcontainer';
-import { MattermostPage } from 'helpers/mm';
+import AntimatterContainer from 'helpers/amcontainer';
+import { AntimatterPage } from 'helpers/am';
 import { createBoardViaApi, getBoardMeta, seedWelcomePageViewed, addBoardMember } from 'helpers/boards';
 
 const adminUser = 'admin';
@@ -15,15 +15,15 @@ const regularPass = 'regularuser';
 const secondUser = 'seconduser';
 const secondPass = 'seconduser';
 
-let mattermost: MattermostContainer;
+let antimatter: AntimatterContainer;
 
 test.beforeAll(async () => {
     test.setTimeout(300000);
-    mattermost = await RunContainer();
+    antimatter = await RunContainer();
 });
 
 test.afterAll(async () => {
-    await mattermost?.stop();
+    await antimatter?.stop();
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -35,7 +35,7 @@ async function createCardViaApi(boardId: string, title: string, token: string): 
     const now = Date.now();
     const cardId = `card${boardId.substring(0, 8)}${now}`.replace(/[^a-z0-9]/gi, '').substring(0, 26);
 
-    const resp = await fetch(`${mattermost.url()}/plugins/focalboard/api/v2/boards/${boardId}/blocks`, {
+    const resp = await fetch(`${antimatter.url()}/plugins/focalboard/api/v2/boards/${boardId}/blocks`, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${token}`,
@@ -71,7 +71,7 @@ async function createCommentViaApi(boardId: string, cardId: string, text: string
     const now = Date.now();
     const commentId = `cmt${cardId.substring(0, 8)}${now}`.replace(/[^a-z0-9]/gi, '').substring(0, 26);
 
-    const resp = await fetch(`${mattermost.url()}/plugins/focalboard/api/v2/boards/${boardId}/blocks`, {
+    const resp = await fetch(`${antimatter.url()}/plugins/focalboard/api/v2/boards/${boardId}/blocks`, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${token}`,
@@ -119,12 +119,12 @@ async function openCardAsUser(
         localStorage.setItem('lastTeamId', tid);
     }, teamId);
 
-    const mmPage = new MattermostPage(page);
-    await mmPage.login(mattermost.url(), username, password);
+    const amPage = new AntimatterPage(page);
+    await amPage.login(antimatter.url(), username, password);
     await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
     // Navigate directly to the card URL — the router renders the card dialog on top of the board.
-    const cardUrl = `${mattermost.url()}/boards/team/${teamId}/${boardId}/${viewId}/${cardId}`;
+    const cardUrl = `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}/${cardId}`;
     await page.goto(cardUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
     await expect(page.locator('.Dialog.cardDialog')).toBeVisible({ timeout: 20000 });
@@ -144,18 +144,18 @@ test.describe('Comment Permissions', () => {
     // ─────────────────────────────────────────────────────────────────────────
 
     test('Viewer cannot see the comment input', async ({ browser }) => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
 
-        const boardId = await createBoardViaApi(mattermost, 'Viewer Comment Board', token);
-        const { teamId, viewId } = await getBoardMeta(mattermost, boardId, token);
+        const boardId = await createBoardViaApi(antimatter, 'Viewer Comment Board', token);
+        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
         const cardId = await createCardViaApi(boardId, 'Viewer Card', token);
 
-        const viewerClient = await mattermost.getClient(regularUser, regularPass);
+        const viewerClient = await antimatter.getClient(regularUser, regularPass);
         const viewerProfile = await viewerClient.getMe();
         const viewerToken = (viewerClient as any).token as string;
-        await addBoardMember(mattermost, boardId, viewerProfile.id, 'viewer', token);
-        await seedWelcomePageViewed(mattermost, viewerProfile.id, viewerToken);
+        await addBoardMember(antimatter, boardId, viewerProfile.id, 'viewer', token);
+        await seedWelcomePageViewed(antimatter, viewerProfile.id, viewerToken);
 
         const { ctx, page } = await openCardAsUser(browser, regularUser, regularPass, teamId, boardId, viewId, cardId);
 
@@ -166,18 +166,18 @@ test.describe('Comment Permissions', () => {
     });
 
     test('Commenter can add a comment', async ({ browser }) => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
 
-        const boardId = await createBoardViaApi(mattermost, 'Commenter Add Comment Board', token);
-        const { teamId, viewId } = await getBoardMeta(mattermost, boardId, token);
+        const boardId = await createBoardViaApi(antimatter, 'Commenter Add Comment Board', token);
+        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
         const cardId = await createCardViaApi(boardId, 'Commenter Card', token);
 
-        const commenterClient = await mattermost.getClient(regularUser, regularPass);
+        const commenterClient = await antimatter.getClient(regularUser, regularPass);
         const commenterProfile = await commenterClient.getMe();
         const commenterToken = (commenterClient as any).token as string;
-        await addBoardMember(mattermost, boardId, commenterProfile.id, 'commenter', token);
-        await seedWelcomePageViewed(mattermost, commenterProfile.id, commenterToken);
+        await addBoardMember(antimatter, boardId, commenterProfile.id, 'commenter', token);
+        await seedWelcomePageViewed(antimatter, commenterProfile.id, commenterToken);
 
         const { ctx, page } = await openCardAsUser(browser, regularUser, regularPass, teamId, boardId, viewId, cardId);
 
@@ -203,18 +203,18 @@ test.describe('Comment Permissions', () => {
     });
 
     test('Editor can add a comment', async ({ browser }) => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
 
-        const boardId = await createBoardViaApi(mattermost, 'Editor Add Comment Board', token);
-        const { teamId, viewId } = await getBoardMeta(mattermost, boardId, token);
+        const boardId = await createBoardViaApi(antimatter, 'Editor Add Comment Board', token);
+        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
         const cardId = await createCardViaApi(boardId, 'Editor Card', token);
 
-        const editorClient = await mattermost.getClient(regularUser, regularPass);
+        const editorClient = await antimatter.getClient(regularUser, regularPass);
         const editorProfile = await editorClient.getMe();
         const editorToken = (editorClient as any).token as string;
-        await addBoardMember(mattermost, boardId, editorProfile.id, 'editor', token);
-        await seedWelcomePageViewed(mattermost, editorProfile.id, editorToken);
+        await addBoardMember(antimatter, boardId, editorProfile.id, 'editor', token);
+        await seedWelcomePageViewed(antimatter, editorProfile.id, editorToken);
 
         const { ctx, page } = await openCardAsUser(browser, regularUser, regularPass, teamId, boardId, viewId, cardId);
 
@@ -236,17 +236,17 @@ test.describe('Comment Permissions', () => {
     });
 
     test('Admin can add a comment', async ({ browser }) => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
 
-        const boardId = await createBoardViaApi(mattermost, 'Admin Add Comment Board', token);
-        const { teamId, viewId } = await getBoardMeta(mattermost, boardId, token);
+        const boardId = await createBoardViaApi(antimatter, 'Admin Add Comment Board', token);
+        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
         const cardId = await createCardViaApi(boardId, 'Admin Card', token);
 
         // Admin is the board creator — no need to addBoardMember.
         // Seed welcomePageViewed for the admin user as well.
         const adminProfile = await adminClient.getMe();
-        await seedWelcomePageViewed(mattermost, adminProfile.id, token);
+        await seedWelcomePageViewed(antimatter, adminProfile.id, token);
 
         const { ctx, page } = await openCardAsUser(browser, adminUser, adminPass, teamId, boardId, viewId, cardId);
 
@@ -272,23 +272,23 @@ test.describe('Comment Permissions', () => {
     // ─────────────────────────────────────────────────────────────────────────
 
     test('Admin can delete another user\'s comment', async ({ browser }) => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const adminToken = (adminClient as any).token as string;
 
-        const boardId = await createBoardViaApi(mattermost, 'Admin Delete Comment Board', adminToken);
-        const { teamId, viewId } = await getBoardMeta(mattermost, boardId, adminToken);
+        const boardId = await createBoardViaApi(antimatter, 'Admin Delete Comment Board', adminToken);
+        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, adminToken);
         const cardId = await createCardViaApi(boardId, 'Delete Test Card', adminToken);
 
         // Create a comment as regularuser so the admin can attempt to delete it.
-        const regularClient = await mattermost.getClient(regularUser, regularPass);
+        const regularClient = await antimatter.getClient(regularUser, regularPass);
         const regularProfile = await regularClient.getMe();
         const regularToken = (regularClient as any).token as string;
-        await addBoardMember(mattermost, boardId, regularProfile.id, 'commenter', adminToken);
+        await addBoardMember(antimatter, boardId, regularProfile.id, 'commenter', adminToken);
         await createCommentViaApi(boardId, cardId, 'Commenter comment to delete', regularToken);
 
         // Seed welcomePageViewed for admin.
         const adminProfile = await adminClient.getMe();
-        await seedWelcomePageViewed(mattermost, adminProfile.id, adminToken);
+        await seedWelcomePageViewed(antimatter, adminProfile.id, adminToken);
 
         const { ctx, page } = await openCardAsUser(browser, adminUser, adminPass, teamId, boardId, viewId, cardId);
 
@@ -316,21 +316,21 @@ test.describe('Comment Permissions', () => {
     });
 
     test('Commenter sees delete option on own comment but not on another user\'s comment', async ({ browser }) => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const adminToken = (adminClient as any).token as string;
 
-        const boardId = await createBoardViaApi(mattermost, 'Commenter Delete Board', adminToken);
-        const { teamId, viewId } = await getBoardMeta(mattermost, boardId, adminToken);
+        const boardId = await createBoardViaApi(antimatter, 'Commenter Delete Board', adminToken);
+        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, adminToken);
         const cardId = await createCardViaApi(boardId, 'Commenter Delete Card', adminToken);
 
         // Create a comment as admin (the "other" user's comment).
         await createCommentViaApi(boardId, cardId, 'Admin comment (not deletable by commenter)', adminToken);
 
-        const regularClient = await mattermost.getClient(regularUser, regularPass);
+        const regularClient = await antimatter.getClient(regularUser, regularPass);
         const regularProfile = await regularClient.getMe();
         const regularToken = (regularClient as any).token as string;
-        await addBoardMember(mattermost, boardId, regularProfile.id, 'commenter', adminToken);
-        await seedWelcomePageViewed(mattermost, regularProfile.id, regularToken);
+        await addBoardMember(antimatter, boardId, regularProfile.id, 'commenter', adminToken);
+        await seedWelcomePageViewed(antimatter, regularProfile.id, regularToken);
 
         // Create a comment as the commenter (their own comment).
         const ownCommentId = await createCommentViaApi(boardId, cardId, 'Commenter own comment', regularToken);
@@ -346,7 +346,7 @@ test.describe('Comment Permissions', () => {
         // Commenter role only has CommentBoardCards permission, not delete. Verify the server
         // rejects the DELETE request with 403 even for their own comment.
         const deleteResp = await fetch(
-            `${mattermost.url()}/plugins/focalboard/api/v2/boards/${boardId}/blocks/${ownCommentId}`,
+            `${antimatter.url()}/plugins/focalboard/api/v2/boards/${boardId}/blocks/${ownCommentId}`,
             {
                 method: 'DELETE',
                 headers: {
@@ -368,21 +368,21 @@ test.describe('Comment Permissions', () => {
     });
 
     test('Viewer cannot delete any comment', async ({ browser }) => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const adminToken = (adminClient as any).token as string;
 
-        const boardId = await createBoardViaApi(mattermost, 'Viewer Delete Board', adminToken);
-        const { teamId, viewId } = await getBoardMeta(mattermost, boardId, adminToken);
+        const boardId = await createBoardViaApi(antimatter, 'Viewer Delete Board', adminToken);
+        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, adminToken);
         const cardId = await createCardViaApi(boardId, 'Viewer Delete Card', adminToken);
 
         // Create a comment as admin.
         await createCommentViaApi(boardId, cardId, 'Admin comment visible to viewer', adminToken);
 
-        const viewerClient = await mattermost.getClient(regularUser, regularPass);
+        const viewerClient = await antimatter.getClient(regularUser, regularPass);
         const viewerProfile = await viewerClient.getMe();
         const viewerToken = (viewerClient as any).token as string;
-        await addBoardMember(mattermost, boardId, viewerProfile.id, 'viewer', adminToken);
-        await seedWelcomePageViewed(mattermost, viewerProfile.id, viewerToken);
+        await addBoardMember(antimatter, boardId, viewerProfile.id, 'viewer', adminToken);
+        await seedWelcomePageViewed(antimatter, viewerProfile.id, viewerToken);
 
         const { ctx, page } = await openCardAsUser(browser, regularUser, regularPass, teamId, boardId, viewId, cardId);
 

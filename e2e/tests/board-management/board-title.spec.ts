@@ -1,32 +1,32 @@
 import { test, expect, type Page } from '@playwright/test';
 
 import RunContainer from 'helpers/plugincontainer';
-import MattermostContainer from 'helpers/mmcontainer';
-import { MattermostPage } from 'helpers/mm';
+import AntimatterContainer from 'helpers/amcontainer';
+import { AntimatterPage } from 'helpers/am';
 import { createBoardViaApi, getBoardMeta } from 'helpers/boards';
 
 const username = 'regularuser';
 const password = 'regularuser';
 
-let mattermost: MattermostContainer;
+let antimatter: AntimatterContainer;
 
 test.beforeAll(async () => {
     test.setTimeout(300000);
-    mattermost = await RunContainer();
+    antimatter = await RunContainer();
 });
 
 test.afterAll(async () => {
-    await mattermost?.stop();
+    await antimatter?.stop();
 });
 
 test.describe('Board Management', () => {
     test.describe.configure({ timeout: 300000 });
 
     async function setupBoard(page: Page, username: string, password: string, boardTitle: string): Promise<void> {
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), username, password);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), username, password);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await mmPage.navigateToBoardsFromUrl(mattermost.url());
+        await amPage.navigateToBoardsFromUrl(antimatter.url());
 
         const boardComponent = page.locator('.BoardComponent');
         const sidebarItem = page.locator('.octo-sidebar-list .octo-sidebar-item').filter({ hasText: boardTitle });
@@ -37,12 +37,12 @@ test.describe('Board Management', () => {
         } else {
             // Create via API and navigate directly — the template selector only
             // appears for users with no boards, so UI creation is unreliable here.
-            const userClient = await mattermost.getClient(username, password);
+            const userClient = await antimatter.getClient(username, password);
             const userToken = (userClient as any).token as string;
-            const boardId = await createBoardViaApi(mattermost, boardTitle, userToken);
-            const { teamId, viewId } = await getBoardMeta(mattermost, boardId, userToken);
+            const boardId = await createBoardViaApi(antimatter, boardTitle, userToken);
+            const { teamId, viewId } = await getBoardMeta(antimatter, boardId, userToken);
             await page.goto(
-                `${mattermost.url()}/boards/team/${teamId}/${boardId}/${viewId}`,
+                `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}`,
                 { waitUntil: 'domcontentloaded', timeout: 30000 },
             );
         }
@@ -51,10 +51,10 @@ test.describe('Board Management', () => {
     }
 
     test('new board has default title placeholder', async ({ page }) => {
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), username, password);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), username, password);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await mmPage.navigateToBoardsFromUrl(mattermost.url());
+        await amPage.navigateToBoardsFromUrl(antimatter.url());
 
         await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 15000 });
         await page.locator('.templates-sidebar__footer button').click();
@@ -90,20 +90,20 @@ test.describe('Board Management', () => {
 
         await expect(page.locator('.octo-sidebar-list')).toContainText('Persistent Board', { timeout: 10000 });
 
-        // Navigate away by going to the main Mattermost channel, then back
-        await page.goto(mattermost.url());
+        // Navigate away by going to the main Antimatter channel, then back
+        await page.goto(antimatter.url());
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await new MattermostPage(page).navigateToBoardsFromUrl(mattermost.url());
+        await new AntimatterPage(page).navigateToBoardsFromUrl(antimatter.url());
 
         // The renamed board should still appear in the sidebar
         await expect(page.locator('.octo-sidebar-list')).toContainText('Persistent Board', { timeout: 15000 });
     });
 
     test('multiple boards appear in sidebar', async ({ page }) => {
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), 'admin', 'admin');
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), 'admin', 'admin');
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await mmPage.navigateToBoardsFromUrl(mattermost.url());
+        await amPage.navigateToBoardsFromUrl(antimatter.url());
 
         // Create first board and name it
         await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 15000 });
@@ -117,9 +117,9 @@ test.describe('Board Management', () => {
         await expect(page.locator('.octo-sidebar-list')).toContainText('First Board', { timeout: 10000 });
 
         // Create second board via API (the Add Board Dropdown is unreliable due to React event timing)
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
-        await createBoardViaApi(mattermost, 'Second Board', token);
+        await createBoardViaApi(antimatter, 'Second Board', token);
 
         // WebSocket push updates the sidebar automatically; both boards should be listed
         const sidebarList = page.locator('.octo-sidebar-list');

@@ -1,31 +1,31 @@
 import { test, expect, type Page, type Locator } from '@playwright/test';
 
 import RunContainer from 'helpers/plugincontainer';
-import MattermostContainer from 'helpers/mmcontainer';
-import { MattermostPage } from 'helpers/mm';
+import AntimatterContainer from 'helpers/amcontainer';
+import { AntimatterPage } from 'helpers/am';
 
 const username = 'regularuser';
 const password = 'regularuser';
 
-let mattermost: MattermostContainer;
+let antimatter: AntimatterContainer;
 
 test.beforeAll(async () => {
     test.setTimeout(300000);
-    mattermost = await RunContainer();
+    antimatter = await RunContainer();
 });
 
 test.afterAll(async () => {
-    await mattermost?.stop();
+    await antimatter?.stop();
 });
 
 test.describe('Card Properties', () => {
     test.describe.configure({ timeout: 300000 });
 
     async function createBoard(page: Page): Promise<void> {
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), username, password);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), username, password);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await mmPage.navigateToBoardsFromUrl(mattermost.url());
+        await amPage.navigateToBoardsFromUrl(antimatter.url());
 
         const boardComponent = page.locator('.BoardComponent');
         const boardAlreadyLoaded = await boardComponent
@@ -364,7 +364,7 @@ test.describe('Card Properties', () => {
         await propRow.locator('.octo-propertyvalue').click();
 
         const input = propRow.locator('input, [contenteditable="true"]').last();
-        await input.fill('https://mattermost.com');
+        await input.fill('https://docs.antimatter.example');
         await input.press('Enter');
 
         await dialog.locator('.dialog__close').click();

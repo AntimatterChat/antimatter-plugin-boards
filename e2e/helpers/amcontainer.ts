@@ -19,13 +19,13 @@ const defaultTeamName        = "test";
 const defaultTeamDisplayName = "Test";
 // The plugin's min_server_version is 12.0.0, so it cannot activate on older
 // images. Switch to release-12 once that tag is published.
-const defaultMattermostImage = "mattermostdevelopment/mattermost-enterprise-edition:master";
+const defaultAntimatterImage = "mattermostdevelopment/mattermost-enterprise-edition:master";
 
 type PluginConfig = Record<string, unknown>;
 type PluginConfigInput = PluginConfig | {config: PluginConfig};
 
-// MattermostContainer represents the mattermost container type used in the module
-export default class MattermostContainer {
+// AntimatterContainer represents the antimatter container type used in the module
+export default class AntimatterContainer {
     container: StartedTestContainer;
     pgContainer: StartedPostgreSqlContainer;
     network:     StartedNetwork;
@@ -168,25 +168,25 @@ export default class MattermostContainer {
         await api.put(config as Record<string, unknown>, { settleMs: 2000 });
     }
 
-    withEnv = (env: string, value: string): MattermostContainer => {
+    withEnv = (env: string, value: string): AntimatterContainer => {
         this.envs[env] = value
         return this
     }
 
-    withAdmin = (email: string, username: string, password: string): MattermostContainer => {
+    withAdmin = (email: string, username: string, password: string): AntimatterContainer => {
         this.email = email;
         this.username = username;
         this.password = password;
         return this;
     }
 
-    withTeam = (teamName: string, teamDisplayName: string): MattermostContainer => {
+    withTeam = (teamName: string, teamDisplayName: string): AntimatterContainer => {
         this.teamName = teamName;
         this.teamDisplayName = teamDisplayName;
         return this;
     }
 
-    withConfigFile = (cfg: string): MattermostContainer => {
+    withConfigFile = (cfg: string): AntimatterContainer => {
         const target = "/etc/mattermost.json";
         this.configFile = this.configFile.filter(f => f.target !== target);
         this.configFile.push({ source: cfg, target });
@@ -200,7 +200,7 @@ export default class MattermostContainer {
         return this
     }
 
-    withPlugin = (pluginPath: string, pluginID: string, pluginConfig?: PluginConfigInput): MattermostContainer => {
+    withPlugin = (pluginPath: string, pluginID: string, pluginConfig?: PluginConfigInput): AntimatterContainer => {
         this.plugins.push({id: pluginID, path: pluginPath, config: pluginConfig})
         return this
     }
@@ -231,14 +231,15 @@ export default class MattermostContainer {
         this.isLogStreamClosed = false;
     }
 
-    start = async (): Promise<MattermostContainer> => {
-        let image = defaultMattermostImage;
-        const isCustomImage = !!process.env.MM_IMAGE;
+    start = async (): Promise<AntimatterContainer> => {
+        let image = defaultAntimatterImage;
+        const customImage = process.env.AM_IMAGE || process.env.MM_IMAGE;
+        const isCustomImage = !!customImage;
         if (isCustomImage) {
-            image = process.env.MM_IMAGE;
+            image = customImage as string;
         }
-        console.log(`\n🚀 Starting Mattermost container`);
-        console.log(`   Image: ${image}${isCustomImage ? ' (custom via MM_IMAGE)' : ' (default)'}`);
+        console.log(`\n🚀 Starting Antimatter container`);
+        console.log(`   Image: ${image}${isCustomImage ? ' (custom via AM_IMAGE)' : ' (default)'}`);
 
         try {
             this.network = await new Network().start()
@@ -258,7 +259,7 @@ export default class MattermostContainer {
                 .withEnvironment(this.envs)
                 .withExposedPorts(8065)
                 .withNetwork(this.network)
-                .withNetworkAliases("mattermost")
+                .withNetworkAliases("antimatter")
                 .withCommand(this.command)
                 .withStartupTimeout(120000)
                 .withWaitStrategy(Wait.forLogMessage("Server is listening on"))

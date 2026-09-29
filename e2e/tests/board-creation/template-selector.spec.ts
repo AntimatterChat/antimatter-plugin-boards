@@ -4,22 +4,22 @@
 import { test, expect, type Browser, type Page } from '@playwright/test';
 
 import RunContainer from 'helpers/plugincontainer';
-import MattermostContainer from 'helpers/mmcontainer';
-import { MattermostPage } from 'helpers/mm';
+import AntimatterContainer from 'helpers/amcontainer';
+import { AntimatterPage } from 'helpers/am';
 import { getTeamId, createBoardViaApi, getBoardMeta, seedWelcomePageViewed } from 'helpers/boards';
 
 const adminUser = 'admin';
 const adminPass = 'admin';
 
-let mattermost: MattermostContainer;
+let antimatter: AntimatterContainer;
 
 test.beforeAll(async () => {
     test.setTimeout(300000);
-    mattermost = await RunContainer();
+    antimatter = await RunContainer();
 });
 
 test.afterAll(async () => {
-    await mattermost?.stop();
+    await antimatter?.stop();
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -31,8 +31,8 @@ test.afterAll(async () => {
  * Templates belong to the team and appear in the template selector for all team members.
  */
 async function createTemplateViaApi(title: string, token: string): Promise<string> {
-    const teamId = await getTeamId(mattermost);
-    const resp = await fetch(`${mattermost.url()}/plugins/focalboard/api/v2/boards`, {
+    const teamId = await getTeamId(antimatter);
+    const resp = await fetch(`${antimatter.url()}/plugins/focalboard/api/v2/boards`, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${token}`,
@@ -50,18 +50,18 @@ async function createTemplateViaApi(title: string, token: string): Promise<strin
     // teamToBoardAndViewRedirect's `boardViews.length > 0` guard is never satisfied,
     // setCurrentView is never dispatched, and workspace.tsx renders null instead of
     // <CenterPanel> — so .BoardComponent never appears.
-    await getBoardMeta(mattermost, templateId, token);
+    await getBoardMeta(antimatter, templateId, token);
 
     return templateId;
 }
 
 /** Fetch the admin token + team id, and seed welcomePageViewed for the admin user. */
 async function setupAdmin(): Promise<{ token: string; teamId: string }> {
-    const adminClient = await mattermost.getAdminClient();
+    const adminClient = await antimatter.getAdminClient();
     const token = (adminClient as any).token as string;
     const adminProfile = await adminClient.getMe();
-    const teamId = await getTeamId(mattermost);
-    await seedWelcomePageViewed(mattermost, adminProfile.id, token);
+    const teamId = await getTeamId(antimatter);
+    await seedWelcomePageViewed(antimatter, adminProfile.id, token);
     return { token, teamId };
 }
 
@@ -88,7 +88,7 @@ async function openTemplateSelectorViaTeamUrl(page: Page, teamId: string): Promi
     });
 
     await page.goto(
-        `${mattermost.url()}/boards/team/${teamId}`,
+        `${antimatter.url()}/boards/team/${teamId}`,
         { waitUntil: 'domcontentloaded', timeout: 60000 },
     );
     await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 15000 });
@@ -115,12 +115,12 @@ async function loginAndOpenBoard(
         localStorage.setItem('lastTeamId', tid);
     }, teamId);
 
-    const mmPage = new MattermostPage(page);
-    await mmPage.login(mattermost.url(), username, password);
+    const amPage = new AntimatterPage(page);
+    await amPage.login(antimatter.url(), username, password);
     await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
     await page.goto(
-        `${mattermost.url()}/boards/team/${teamId}/${boardId}/${viewId}`,
+        `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}`,
         { waitUntil: 'domcontentloaded', timeout: 60000 },
     );
     await expect(page.locator('.BoardComponent')).toBeVisible({ timeout: 20000 });
@@ -142,8 +142,8 @@ test.describe('Template Selector', () => {
     test('template list is populated with global templates', async ({ page }) => {
         const { teamId } = await setupAdmin();
 
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), adminUser, adminPass);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
         await openTemplateSelectorViaTeamUrl(page, teamId);
 
@@ -157,8 +157,8 @@ test.describe('Template Selector', () => {
     test('first template is selected by default', async ({ page }) => {
         const { teamId } = await setupAdmin();
 
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), adminUser, adminPass);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
         await openTemplateSelectorViaTeamUrl(page, teamId);
 
@@ -170,8 +170,8 @@ test.describe('Template Selector', () => {
     test('clicking a different template makes it active', async ({ page }) => {
         const { teamId } = await setupAdmin();
 
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), adminUser, adminPass);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
         await openTemplateSelectorViaTeamUrl(page, teamId);
 
@@ -201,8 +201,8 @@ test.describe('Template Selector', () => {
     test('"Use this template" creates a board and opens it in the editor', async ({ page }) => {
         const { teamId } = await setupAdmin();
 
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), adminUser, adminPass);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
         await openTemplateSelectorViaTeamUrl(page, teamId);
 
@@ -226,8 +226,8 @@ test.describe('Template Selector', () => {
 
     test('template selector opens via the sidebar add-board button', async ({ browser }) => {
         const { token } = await setupAdmin();
-        const boardId = await createBoardViaApi(mattermost, 'Sidebar Trigger Board', token);
-        const { teamId, viewId } = await getBoardMeta(mattermost, boardId, token);
+        const boardId = await createBoardViaApi(antimatter, 'Sidebar Trigger Board', token);
+        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
 
         const { ctx, page } = await loginAndOpenBoard(browser, adminUser, adminPass, teamId, boardId, viewId);
 
@@ -261,8 +261,8 @@ test.describe('Template Selector', () => {
 
         const ctx = await browser.newContext();
         const page = await ctx.newPage();
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), adminUser, adminPass);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
         await openTemplateSelectorViaTeamUrl(page, teamId);
 
@@ -281,8 +281,8 @@ test.describe('Template Selector', () => {
 
         const ctx = await browser.newContext();
         const page = await ctx.newPage();
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), adminUser, adminPass);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
         await openTemplateSelectorViaTeamUrl(page, teamId);
 
@@ -305,8 +305,8 @@ test.describe('Template Selector', () => {
 
         const ctx = await browser.newContext();
         const page = await ctx.newPage();
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), adminUser, adminPass);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
         await openTemplateSelectorViaTeamUrl(page, teamId);
 
@@ -341,8 +341,8 @@ test.describe('Template Selector', () => {
     test('"Create new template" opens a blank template board for editing', async ({ page }) => {
         const { teamId } = await setupAdmin();
 
-        const mmPage = new MattermostPage(page);
-        await mmPage.login(mattermost.url(), adminUser, adminPass);
+        const amPage = new AntimatterPage(page);
+        await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
         await openTemplateSelectorViaTeamUrl(page, teamId);
 

@@ -1,11 +1,11 @@
 // Copyright (c) 2023-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import MattermostContainer from './mmcontainer';
+import AntimatterContainer from './amcontainer';
 
 /** Return the first team's id for the default test team. */
-export async function getTeamId(mattermost: MattermostContainer): Promise<string> {
-    const adminClient = await mattermost.getAdminClient();
+export async function getTeamId(antimatter: AntimatterContainer): Promise<string> {
+    const adminClient = await antimatter.getAdminClient();
     const teams = await adminClient.getMyTeams();
     if (!teams[0]?.id) throw new Error('No team found');
     return teams[0].id;
@@ -17,13 +17,13 @@ export async function getTeamId(mattermost: MattermostContainer): Promise<string
  * getCurrentViewGroupBy when it calls null.find().
  */
 export async function createBoardViaApi(
-    mattermost: MattermostContainer,
+    antimatter: AntimatterContainer,
     title: string,
     token: string,
     type: 'O' | 'P' = 'O',
 ): Promise<string> {
-    const teamId = await getTeamId(mattermost);
-    const resp = await fetch(`${mattermost.url()}/plugins/focalboard/api/v2/boards`, {
+    const teamId = await getTeamId(antimatter);
+    const resp = await fetch(`${antimatter.url()}/plugins/focalboard/api/v2/boards`, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${token}`,
@@ -42,16 +42,16 @@ export async function createBoardViaApi(
  * Boards created via API have no views — this creates one first.
  */
 export async function getBoardMeta(
-    mattermost: MattermostContainer,
+    antimatter: AntimatterContainer,
     boardId: string,
     token: string,
 ): Promise<{ teamId: string; viewId: string }> {
-    const teamId = await getTeamId(mattermost);
+    const teamId = await getTeamId(antimatter);
 
     const now = Date.now();
     const viewBlockId = `view${boardId.substring(0, 8)}${now}`.replace(/[^a-z0-9]/gi, '').substring(0, 26);
     const resp = await fetch(
-        `${mattermost.url()}/plugins/focalboard/api/v2/boards/${boardId}/blocks`,
+        `${antimatter.url()}/plugins/focalboard/api/v2/boards/${boardId}/blocks`,
         {
             method: 'POST',
             headers: {
@@ -97,12 +97,12 @@ export async function getBoardMeta(
  * rendering error caught by the ErrorBoundary.
  */
 export async function seedWelcomePageViewed(
-    mattermost: MattermostContainer,
+    antimatter: AntimatterContainer,
     userId: string,
     token: string,
 ): Promise<void> {
     const resp = await fetch(
-        `${mattermost.url()}/plugins/focalboard/api/v2/users/${userId}/config`,
+        `${antimatter.url()}/plugins/focalboard/api/v2/users/${userId}/config`,
         {
             method: 'PUT',
             headers: {
@@ -118,14 +118,14 @@ export async function seedWelcomePageViewed(
 
 /** Add a user to a board with the given role. */
 export async function addBoardMember(
-    mattermost: MattermostContainer,
+    antimatter: AntimatterContainer,
     boardId: string,
     userId: string,
     role: 'admin' | 'editor' | 'commenter' | 'viewer',
     token: string,
 ): Promise<void> {
     const resp = await fetch(
-        `${mattermost.url()}/plugins/focalboard/api/v2/boards/${boardId}/members`,
+        `${antimatter.url()}/plugins/focalboard/api/v2/boards/${boardId}/members`,
         {
             method: 'POST',
             headers: {

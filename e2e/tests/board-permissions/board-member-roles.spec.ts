@@ -1,8 +1,8 @@
 import { test, expect, type Page } from '@playwright/test';
 
 import RunContainer from 'helpers/plugincontainer';
-import MattermostContainer from 'helpers/mmcontainer';
-import { MattermostPage } from 'helpers/mm';
+import AntimatterContainer from 'helpers/amcontainer';
+import { AntimatterPage } from 'helpers/am';
 import { createBoardViaApi, getBoardMeta, seedWelcomePageViewed, addBoardMember } from 'helpers/boards';
 
 const adminUser = 'admin';
@@ -12,15 +12,15 @@ const regularPass = 'regularuser';
 const secondUser = 'seconduser';
 const secondPass = 'seconduser';
 
-let mattermost: MattermostContainer;
+let antimatter: AntimatterContainer;
 
 test.beforeAll(async () => {
     test.setTimeout(300000);
-    mattermost = await RunContainer();
+    antimatter = await RunContainer();
 });
 
 test.afterAll(async () => {
-    await mattermost?.stop();
+    await antimatter?.stop();
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -32,10 +32,10 @@ test.afterAll(async () => {
  * the user has none yet.
  */
 async function setupBoard(page: Page, username: string, password: string, boardTitle: string): Promise<void> {
-    const mmPage = new MattermostPage(page);
-    await mmPage.login(mattermost.url(), username, password);
+    const amPage = new AntimatterPage(page);
+    await amPage.login(antimatter.url(), username, password);
     await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-    await mmPage.navigateToBoardsFromUrl(mattermost.url());
+    await amPage.navigateToBoardsFromUrl(antimatter.url());
 
     const boardComponent = page.locator('.BoardComponent');
     const sidebarList = page.locator('.octo-sidebar-list');
@@ -48,12 +48,12 @@ async function setupBoard(page: Page, username: string, password: string, boardT
         // Create the board via API and navigate to it directly.
         // UI-based creation (BoardTemplateSelector / Add Board Dropdown) is unreliable
         // when the user already has boards, so we avoid it entirely.
-        const userClient = await mattermost.getClient(username, password);
+        const userClient = await antimatter.getClient(username, password);
         const userToken = (userClient as any).token as string;
-        const boardId = await createBoardViaApi(mattermost, boardTitle, userToken);
-        const { teamId, viewId } = await getBoardMeta(mattermost, boardId, userToken);
+        const boardId = await createBoardViaApi(antimatter, boardTitle, userToken);
+        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, userToken);
         await page.goto(
-            `${mattermost.url()}/boards/team/${teamId}/${boardId}/${viewId}`,
+            `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}`,
             { waitUntil: 'domcontentloaded', timeout: 30000 },
         );
     }
@@ -212,26 +212,26 @@ test.describe('Board Member Roles', () => {
     // ─────────────────────────────────────────────────────────────────────────
 
     test('private board is not visible to non-members in the sidebar', async ({ browser }) => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
 
         // Create a private board (type 'P') via API.
-        const boardId = await createBoardViaApi(mattermost, 'Hidden Private Board', token, 'P');
+        const boardId = await createBoardViaApi(antimatter, 'Hidden Private Board', token, 'P');
         expect(boardId).toBeTruthy();
 
         // Pre-seed welcomePageViewed so navigateToBoardsFromUrl never hits the welcome redirect.
-        const secondClient = await mattermost.getClient(secondUser, secondPass);
+        const secondClient = await antimatter.getClient(secondUser, secondPass);
         const secondProfile = await secondClient.getMe();
         const secondToken = (secondClient as any).token as string;
-        await seedWelcomePageViewed(mattermost, secondProfile.id, secondToken);
+        await seedWelcomePageViewed(antimatter, secondProfile.id, secondToken);
 
         // Log in as seconduser and verify the board does NOT appear in the sidebar.
         const ctx = await browser.newContext();
         const secondPage = await ctx.newPage();
-        const mmPage = new MattermostPage(secondPage);
-        await mmPage.login(mattermost.url(), secondUser, secondPass);
+        const amPage = new AntimatterPage(secondPage);
+        await amPage.login(antimatter.url(), secondUser, secondPass);
         await secondPage.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await mmPage.navigateToBoardsFromUrl(mattermost.url());
+        await amPage.navigateToBoardsFromUrl(antimatter.url());
 
         // Fail fast if the Boards sidebar never becomes visible.
         await expect(secondPage.locator('.Sidebar.octo-sidebar')).toBeVisible({ timeout: 15000 });
@@ -246,27 +246,27 @@ test.describe('Board Member Roles', () => {
     // ─────────────────────────────────────────────────────────────────────────
 
     test('member with Viewer role cannot see the New card button', async ({ browser }) => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
 
         // Create an open board so seconduser can access it.
-        const boardId = await createBoardViaApi(mattermost, 'Viewer Role Board', token);
+        const boardId = await createBoardViaApi(antimatter, 'Viewer Role Board', token);
         expect(boardId).toBeTruthy();
 
         // Look up seconduser's MM id so we can add them as Viewer.
-        const secondClient = await mattermost.getClient(secondUser, secondPass);
+        const secondClient = await antimatter.getClient(secondUser, secondPass);
         const secondProfile = await secondClient.getMe();
         const secondToken = (secondClient as any).token as string;
-        await addBoardMember(mattermost, boardId, secondProfile.id, 'viewer', token);
+        await addBoardMember(antimatter, boardId, secondProfile.id, 'viewer', token);
 
         // Create a default view and get team/view IDs for the direct board URL.
-        const { teamId, viewId } = await getBoardMeta(mattermost, boardId, token);
+        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
 
         // Pre-seed welcomePageViewed so FBRoute never redirects to /welcome.
         // Without this, the welcome page's goForward() call during a render cycle
         // (triggered by patchProps after skip) mounts BoardPage mid-render and
         // causes a React rendering error caught by the ErrorBoundary.
-        await seedWelcomePageViewed(mattermost, secondProfile.id, secondToken);
+        await seedWelcomePageViewed(antimatter, secondProfile.id, secondToken);
 
         const ctx = await browser.newContext();
         const secondPage = await ctx.newPage();
@@ -277,12 +277,12 @@ test.describe('Board Member Roles', () => {
             localStorage.setItem('lastTeamId', tid);
         }, teamId);
 
-        const mmPage = new MattermostPage(secondPage);
-        await mmPage.login(mattermost.url(), secondUser, secondPass);
+        const amPage = new AntimatterPage(secondPage);
+        await amPage.login(antimatter.url(), secondUser, secondPass);
         await secondPage.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
         // Navigate directly to the full board URL, bypassing HomeToCurrentTeam.
-        const boardUrl = `${mattermost.url()}/boards/team/${teamId}/${boardId}/${viewId}`;
+        const boardUrl = `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}`;
         await secondPage.goto(boardUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
         await expect(secondPage.locator('.BoardComponent')).toBeVisible({ timeout: 20000 });
@@ -300,21 +300,21 @@ test.describe('Board Member Roles', () => {
     // ─────────────────────────────────────────────────────────────────────────
 
     test('member with Editor role can create new cards', async ({ browser }) => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
 
-        const boardId = await createBoardViaApi(mattermost, 'Editor Role Board', token);
+        const boardId = await createBoardViaApi(antimatter, 'Editor Role Board', token);
         expect(boardId).toBeTruthy();
 
-        const secondClient = await mattermost.getClient(secondUser, secondPass);
+        const secondClient = await antimatter.getClient(secondUser, secondPass);
         const secondProfile = await secondClient.getMe();
         const secondToken = (secondClient as any).token as string;
-        await addBoardMember(mattermost, boardId, secondProfile.id, 'editor', token);
+        await addBoardMember(antimatter, boardId, secondProfile.id, 'editor', token);
 
-        const { teamId, viewId } = await getBoardMeta(mattermost, boardId, token);
+        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
 
         // Pre-seed welcomePageViewed to prevent the welcome page render-cycle error.
-        await seedWelcomePageViewed(mattermost, secondProfile.id, secondToken);
+        await seedWelcomePageViewed(antimatter, secondProfile.id, secondToken);
 
         const ctx = await browser.newContext();
         const secondPage = await ctx.newPage();
@@ -324,12 +324,12 @@ test.describe('Board Member Roles', () => {
             localStorage.setItem('lastTeamId', tid);
         }, teamId);
 
-        const mmPage = new MattermostPage(secondPage);
-        await mmPage.login(mattermost.url(), secondUser, secondPass);
+        const amPage = new AntimatterPage(secondPage);
+        await amPage.login(antimatter.url(), secondUser, secondPass);
         await secondPage.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
         // Navigate directly to the full board URL, bypassing HomeToCurrentTeam.
-        const boardUrl = `${mattermost.url()}/boards/team/${teamId}/${boardId}/${viewId}`;
+        const boardUrl = `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}`;
         await secondPage.goto(boardUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
         await expect(secondPage.locator('.BoardComponent')).toBeVisible({ timeout: 20000 });

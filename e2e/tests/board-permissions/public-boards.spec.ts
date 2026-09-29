@@ -1,26 +1,26 @@
 import { test, expect } from '@playwright/test';
 
 import RunContainer from 'helpers/plugincontainer';
-import MattermostContainer from 'helpers/mmcontainer';
-import { MattermostPage } from 'helpers/mm';
+import AntimatterContainer from 'helpers/amcontainer';
+import { AntimatterPage } from 'helpers/am';
 import { Users } from 'helpers/users';
 
-let mattermost: MattermostContainer;
+let antimatter: AntimatterContainer;
 
 test.beforeAll(async () => {
     test.setTimeout(300000);
-    mattermost = await RunContainer();
+    antimatter = await RunContainer();
 });
 
 test.afterAll(async () => {
-    await mattermost.stop();
+    await antimatter.stop();
 });
 
 test.describe('Board Permissions', () => {
     test('regular user can only see their own boards', async ({ page }) => {
-        const mmPage = await MattermostPage.loginAndWait(page, mattermost.url(), Users.regularUser.username, Users.regularUser.password);
+        const amPage = await AntimatterPage.loginAndWait(page, antimatter.url(), Users.regularUser.username, Users.regularUser.password);
 
-        await mmPage.navigateToBoardsFromUrl(mattermost.url());
+        await amPage.navigateToBoardsFromUrl(antimatter.url());
 
         // Boards should load without errors
         const boardsLoaded = page.locator('.Sidebar.octo-sidebar').or(page.getByText('Create a board'));
@@ -32,9 +32,9 @@ test.describe('Board Permissions', () => {
     });
 
     test('second user has an independent board workspace', async ({ page }) => {
-        const mmPage = await MattermostPage.loginAndWait(page, mattermost.url(), Users.secondUser.username, Users.secondUser.password);
+        const amPage = await AntimatterPage.loginAndWait(page, antimatter.url(), Users.secondUser.username, Users.secondUser.password);
 
-        await mmPage.navigateToBoardsFromUrl(mattermost.url());
+        await amPage.navigateToBoardsFromUrl(antimatter.url());
 
         // Boards should load for the second user as well
         const boardsLoaded = page.locator('.Sidebar.octo-sidebar').or(page.getByText('Create a board'));
@@ -42,7 +42,7 @@ test.describe('Board Permissions', () => {
     });
 
     test('admin can enable public board sharing via system config', async () => {
-        const adminClient = await mattermost.getAdminClient();
+        const adminClient = await antimatter.getAdminClient();
         const config = await adminClient.getConfig();
 
         // Enable public shared boards in plugin settings
