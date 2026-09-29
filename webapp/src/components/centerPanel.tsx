@@ -16,8 +16,7 @@ import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
-import {getCurrentCard, addCard as addCardAction, addTemplate as addTemplateAction, showCardHiddenWarning} from '../store/cards'
-import {getCardLimitTimestamp} from '../store/limits'
+import {getCurrentCard, addCard as addCardAction, addTemplate as addTemplateAction} from '../store/cards'
 import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
@@ -55,7 +54,6 @@ import Table from './table/table'
 
 import CalendarFullView from './calendar/fullCalendar'
 
-import CardLimitNotification from './cardLimitNotification'
 
 import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
@@ -72,19 +70,16 @@ type Props = {
     readonly: boolean
     shownCardId?: string
     showCard: (cardId?: string) => void
-    hiddenCardsCount: number
 }
 
 const CenterPanel = (props: Props) => {
     const intl = useIntl()
     const [selectedCardIds, setSelectedCardIds] = useState<string[]>([])
     const [cardIdToFocusOnRender, setCardIdToFocusOnRender] = useState('')
-    const [showHiddenCardCountNotification, setShowHiddenCardCountNotification] = useState(false)
 
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
-    const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const me = useAppSelector(getMe)
     const currentCard = useAppSelector(getCurrentCard)
     const boardUsers = useAppSelector(getBoardUsers)
@@ -212,7 +207,6 @@ const CenterPanel = (props: Props) => {
                     showCard(undefined)
                 },
             )
-            dispatch(showCardHiddenWarning(cardLimitTimestamp > 0))
             await mutator.changeViewCardOrder(board.id, activeView.id, activeView.fields.cardOrder, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }, [props.activeView, props.board.id, props.board.cardProperties, props.groupByProperty, showCard])
@@ -359,10 +353,6 @@ const CenterPanel = (props: Props) => {
         e.stopPropagation()
     }, [selectedCardIds, props.activeView, props.cards, showCard])
 
-    const hiddenCardCountNotifyHandler = useCallback((show: boolean) => {
-        setShowHiddenCardCountNotification(show)
-    }, [showHiddenCardCountNotification])
-
     const showShareButton = !props.readonly && me?.id !== 'single-user'
     const showShareLoginButton = props.readonly && me?.id !== 'single-user'
 
@@ -465,8 +455,6 @@ const CenterPanel = (props: Props) => {
                 addCard={addCard}
                 addCardFromTemplate={addCardFromTemplate}
                 showCard={showCard}
-                hiddenCardsCount={props.hiddenCardsCount}
-                showHiddenCardCountNotification={hiddenCardCountNotifyHandler}
             />}
             {activeView.fields.viewType === 'table' &&
                 <Table
@@ -482,8 +470,6 @@ const CenterPanel = (props: Props) => {
                     showCard={showCard}
                     addCard={addCard}
                     onCardClicked={cardClicked}
-                    hiddenCardsCount={props.hiddenCardsCount}
-                    showHiddenCardCountNotification={hiddenCardCountNotifyHandler}
                 />}
             {activeView.fields.viewType === 'calendar' &&
                 <CalendarFullView
@@ -507,13 +493,7 @@ const CenterPanel = (props: Props) => {
                     onCardClicked={cardClicked}
                     selectedCardIds={selectedCardIds}
                     addCard={(show) => addCard('', show)}
-                    hiddenCardsCount={props.hiddenCardsCount}
-                    showHiddenCardCountNotification={hiddenCardCountNotifyHandler}
                 />}
-            <CardLimitNotification
-                showHiddenCardNotification={showHiddenCardCountNotification}
-                hiddenCardCountNotificationHandler={hiddenCardCountNotifyHandler}
-            />
         </div>
     )
 }

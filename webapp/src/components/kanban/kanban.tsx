@@ -22,7 +22,6 @@ import {dragAndDropRearrange} from '../cardDetail/cardDetailContentsUtility'
 
 import {getCurrentBoardTemplates} from '../../store/cards'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
-import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
 
 import KanbanCard from './kanbanCard'
 import KanbanColumn from './kanbanColumn'
@@ -45,8 +44,6 @@ type Props = {
     addCard: (groupByOptionId?: string, show?: boolean) => Promise<void>
     addCardFromTemplate: (cardTemplateId: string, groupByOptionId?: string) => void
     showCard: (cardId?: string) => void
-    hiddenCardsCount: number
-    showHiddenCardCountNotification: (show: boolean) => void
 }
 
 const ScrollingComponent = withScrolling('div')
@@ -55,7 +52,7 @@ const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
 
 const Kanban = (props: Props) => {
     const cardTemplates: Card[] = useAppSelector(getCurrentBoardTemplates)
-    const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups, hiddenCardsCount} = props
+    const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups} = props
     const [defaultTemplateID, setDefaultTemplateID] = useState<string>()
 
     useEffect(() => {
@@ -249,7 +246,7 @@ const Kanban = (props: Props) => {
 
                 {/* Hidden column header */}
 
-                {(hiddenGroups.length > 0 || hiddenCardsCount > 0) &&
+                {hiddenGroups.length > 0 &&
                     <div className='octo-board-header-cell narrow'>
                         <FormattedMessage
                             id='BoardComponent.hidden-columns'
@@ -325,7 +322,7 @@ const Kanban = (props: Props) => {
 
                 {/* Hidden columns */}
 
-                {(hiddenGroups.length > 0 || hiddenCardsCount > 0) &&
+                {hiddenGroups.length > 0 &&
                     <div className='octo-board-column narrow'>
                         {hiddenGroups.map((group) => (
                             <KanbanHiddenColumnItem
@@ -337,13 +334,6 @@ const Kanban = (props: Props) => {
                                 onDrop={(card: Card) => onDropToColumn(group.option, card)}
                             />
                         ))}
-                        {hiddenCardsCount > 0 &&
-                        <div className='ml-1'>
-                            <HiddenCardCount
-                                hiddenCardsCount={hiddenCardsCount}
-                                showHiddenCardNotification={props.showHiddenCardCountNotification}
-                            />
-                        </div>}
                     </div>}
             </div>
         </ScrollingComponent>

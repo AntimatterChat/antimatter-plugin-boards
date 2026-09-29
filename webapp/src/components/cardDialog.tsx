@@ -264,7 +264,7 @@ const CardDialog = (props: Props): React.JSX.Element => {
             </>
         )
 
-        if (!isTemplate && Utils.isFocalboardPlugin() && !card?.limited) {
+        if (!isTemplate && Utils.isFocalboardPlugin()) {
             return (<>{attachBtn()}{following ? unfollowBtn : followBtn}</>)
         }
         return (<>{attachBtn()}</>)
@@ -280,7 +280,7 @@ const CardDialog = (props: Props): React.JSX.Element => {
                 title={<div/>}
                 className='cardDialog'
                 onClose={props.onClose}
-                toolsMenu={!props.readonly && !card?.limited && menu}
+                toolsMenu={!props.readonly && menu}
                 toolbar={toolbar}
             >
                 {isTemplate &&

@@ -136,8 +136,6 @@ describe('src/component/kanban/kanban', () => {
                     addCard={jest.fn()}
                     addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
-                    hiddenCardsCount={0}
-                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -173,8 +171,6 @@ describe('src/component/kanban/kanban', () => {
                     addCard={jest.fn()}
                     addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
-                    hiddenCardsCount={0}
-                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -209,8 +205,6 @@ describe('src/component/kanban/kanban', () => {
                     addCard={jest.fn()}
                     addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
-                    hiddenCardsCount={0}
-                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -247,8 +241,6 @@ describe('src/component/kanban/kanban', () => {
                     addCard={jest.fn()}
                     addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
-                    hiddenCardsCount={0}
-                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -295,8 +287,6 @@ describe('src/component/kanban/kanban', () => {
                     addCard={jest.fn()}
                     addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
-                    hiddenCardsCount={0}
-                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -343,8 +333,6 @@ describe('src/component/kanban/kanban', () => {
                     addCard={jest.fn()}
                     addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
-                    hiddenCardsCount={0}
-                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -392,8 +380,6 @@ describe('src/component/kanban/kanban', () => {
                     addCard={mockedAddCard}
                     addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
-                    hiddenCardsCount={0}
-                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -432,8 +418,6 @@ describe('src/component/kanban/kanban', () => {
                     addCard={jest.fn()}
                     addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
-                    hiddenCardsCount={0}
-                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -472,8 +456,6 @@ describe('src/component/kanban/kanban', () => {
                     addCard={jest.fn()}
                     addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
-                    hiddenCardsCount={0}
-                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -519,8 +501,6 @@ describe('src/component/kanban/kanban', () => {
                     addCard={jest.fn()}
                     addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
-                    hiddenCardsCount={0}
-                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -647,8 +627,6 @@ describe('src/component/kanban/kanban', () => {
                     addCard={jest.fn()}
                     addCardFromTemplate={mockedAddCard}
                     showCard={jest.fn()}
-                    hiddenCardsCount={0}
-                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})

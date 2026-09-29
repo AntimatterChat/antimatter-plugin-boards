@@ -33,7 +33,6 @@ import {BlockData} from '../blocksEditor/blocks/types'
 import {ClientConfig} from '../../config/clientConfig'
 import {getClientConfig} from '../../store/clientConfig'
 
-import CardSkeleton from '../../svg/card-skeleton'
 
 import CommentsList from './commentsList'
 import {CardDetailProvider} from './cardDetailContext'
@@ -101,7 +100,6 @@ async function addBlockNewEditor(card: Card, intl: IntlShape, title: string, fie
 
 const CardDetail = (props: Props): React.JSX.Element|null => {
     const {card, comments, attachments, onDelete, addAttachment} = props
-    const {limited} = card
     const [title, setTitle] = useState(card.title)
     const [serverTitle, setServerTitle] = useState(card.title)
     const titleRef = useRef<Focusable>(null)
@@ -196,11 +194,11 @@ const CardDetail = (props: Props): React.JSX.Element|null => {
 
     return (
         <>
-            <div className={`CardDetail ${limited ? ' CardDetail--is-limited' : ''}`}>
+            <div className='CardDetail'>
                 <BlockIconSelector
                     block={card}
                     size='l'
-                    readonly={props.readonly || !canEditBoardCards || limited}
+                    readonly={props.readonly || !canEditBoardCards}
                 />
                 {!props.readonly && canEditBoardCards && !card.fields.icon &&
                     <div className='add-buttons'>
@@ -230,58 +228,12 @@ const CardDetail = (props: Props): React.JSX.Element|null => {
                     saveOnEsc={true}
                     onSave={saveTitle}
                     onCancel={() => setTitle(props.card.title)}
-                    readonly={props.readonly || !canEditBoardCards || limited}
+                    readonly={props.readonly || !canEditBoardCards}
                     spellCheck={true}
                 />
 
-                {/* Hidden (limited) card copy + CTA */}
-
-                {limited && <div className='CardDetail__limited-wrapper'>
-                    <CardSkeleton
-                        className='CardDetail__limited-bg'
-                    />
-                    <p className='CardDetail__limited-title'>
-                        <FormattedMessage
-                            id='CardDetail.limited-title'
-                            defaultMessage='This card is hidden'
-                        />
-                    </p>
-                    <p className='CardDetail__limited-body'>
-                        <FormattedMessage
-                            id='CardDetail.limited-body'
-                            defaultMessage='Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards and more.'
-                        />
-                        <br/>
-                        <a
-                            className='CardDetail__limited-link'
-                            role='button'
-                            onClick={() => {
-                                props.onClose();
-                                (window as any).openPricingModal()({trackingLocation: 'boards > learn_more_about_our_plans_click'})
-                            }}
-                        >
-                            <FormattedMessage
-                                id='CardDetial.limited-link'
-                                defaultMessage='Learn more about our plans.'
-                            />
-                        </a>
-                    </p>
-                    <Button
-                        className='CardDetail__limited-button'
-                        onClick={() => {
-                            props.onClose();
-                            (window as any).openPricingModal()({trackingLocation: 'boards > upgrade_click'})
-                        }}
-                        emphasis='primary'
-                        size='large'
-                    >
-                        {intl.formatMessage({id: 'CardDetail.limited-button', defaultMessage: 'Upgrade'})}
-                    </Button>
-                </div>}
-
                 {/* Property list */}
 
-                {!limited &&
                 <CardDetailProperties
                     board={props.board}
                     card={props.card}
@@ -289,7 +241,7 @@ const CardDetail = (props: Props): React.JSX.Element|null => {
                     activeView={props.activeView}
                     views={props.views}
                     readonly={props.readonly}
-                />}
+                />
 
                 {attachments.length !== 0 && <Fragment>
                     <hr/>
@@ -302,20 +254,18 @@ const CardDetail = (props: Props): React.JSX.Element|null => {
 
                 {/* Comments */}
 
-                {!limited && <Fragment>
-                    <hr/>
-                    <CommentsList
-                        comments={comments}
-                        boardId={card.boardId}
-                        cardId={card.id}
-                        readonly={props.readonly || !canCommentBoardCards}
-                    />
-                </Fragment>}
+                <hr/>
+                <CommentsList
+                    comments={comments}
+                    boardId={card.boardId}
+                    cardId={card.id}
+                    readonly={props.readonly || !canCommentBoardCards}
+                />
             </div>
 
             {/* Content blocks */}
 
-            {!limited && <div className='CardDetail CardDetail--fullwidth content-blocks'>
+            <div className='CardDetail CardDetail--fullwidth content-blocks'>
                 {newBoardsEditor && (
                     <BlocksEditor
                         boardId={card.boardId}
@@ -394,7 +344,7 @@ const CardDetail = (props: Props): React.JSX.Element|null => {
                         />
                         {!props.readonly && canEditBoardCards && <CardDetailContentsMenu/>}
                     </CardDetailProvider>)}
-            </div>}
+            </div>
         </>
     )
 }

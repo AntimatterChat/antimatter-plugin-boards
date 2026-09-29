@@ -203,7 +203,7 @@ export const BoardsUnfurl = (props: Props): React.JSX.Element => {
                     </div>
 
                     {/* Body of the Card*/}
-                    {!card.limited && html !== '' &&
+                    {html !== '' &&
                         <div className='body'>
                             <div
                                 dangerouslySetInnerHTML={{__html: html}}
@@ -211,59 +211,50 @@ export const BoardsUnfurl = (props: Props): React.JSX.Element => {
                         </div>
                     }
 
-                    {card.limited &&
-                        <p className='limited'>
-                            <FormattedMessage
-                                id='BoardsUnfurl.Limited'
-                                defaultMessage={'Additional details are hidden due to the card being archived'}
-                            />
-                        </p>}
-
                     {/* Footer of the Card*/}
-                    {!card.limited &&
-                        <div className='footer'>
-                            <div className='avatar'>
-                                <Avatar
-                                    size={'md'}
-                                    url={imageURLForUser(card.createdBy)}
-                                    className={'avatar-post-preview'}
+                    <div className='footer'>
+                        <div className='avatar'>
+                            <Avatar
+                                size={'md'}
+                                url={imageURLForUser(card.createdBy)}
+                                className={'avatar-post-preview'}
+                            />
+                        </div>
+                        <div className='timestamp_properties'>
+                            <div className='properties'>
+                                {propertiesToDisplay.map((property) => (
+                                    <div
+                                        key={property.optionValue}
+                                        className={`property ${property.optionValueColour}`}
+                                        title={`${property.optionName}`}
+                                        style={{maxWidth: `${(1 / propertiesToDisplay.length) * 100}%`}}
+                                    >
+                                        {property.optionValue}
+                                    </div>
+                                ))}
+                                {remainder > 0 &&
+                                    <span className='remainder'>
+                                        <FormattedMessage
+                                            id='BoardsUnfurl.Remainder'
+                                            defaultMessage='+{remainder} more'
+                                            values={{
+                                                remainder,
+                                            }}
+                                        />
+                                    </span>
+                                }
+                            </div>
+                            <span className='post-preview__time'>
+                                <FormattedMessage
+                                    id='BoardsUnfurl.Updated'
+                                    defaultMessage='Updated {time}'
+                                    values={{
+                                        time: Utils.displayDateTime(new Date(card.updateAt), intl)
+                                    }}
                                 />
-                            </div>
-                            <div className='timestamp_properties'>
-                                <div className='properties'>
-                                    {propertiesToDisplay.map((property) => (
-                                        <div
-                                            key={property.optionValue}
-                                            className={`property ${property.optionValueColour}`}
-                                            title={`${property.optionName}`}
-                                            style={{maxWidth: `${(1 / propertiesToDisplay.length) * 100}%`}}
-                                        >
-                                            {property.optionValue}
-                                        </div>
-                                    ))}
-                                    {remainder > 0 &&
-                                        <span className='remainder'>
-                                            <FormattedMessage
-                                                id='BoardsUnfurl.Remainder'
-                                                defaultMessage='+{remainder} more'
-                                                values={{
-                                                    remainder,
-                                                }}
-                                            />
-                                        </span>
-                                    }
-                                </div>
-                                <span className='post-preview__time'>
-                                    <FormattedMessage
-                                        id='BoardsUnfurl.Updated'
-                                        defaultMessage='Updated {time}'
-                                        values={{
-                                            time: Utils.displayDateTime(new Date(card.updateAt), intl)
-                                        }}
-                                    />
-                                </span>
-                            </div>
-                        </div>}
+                            </span>
+                        </div>
+                    </div>
                 </a>
             }
             {loading &&

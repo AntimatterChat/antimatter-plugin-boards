@@ -37,7 +37,6 @@ describe('components/content/ImageElement', () => {
         createAt: 0,
         updateAt: 0,
         deleteAt: 0,
-        limited: false,
     }
 
     test('should match snapshot', async () => {

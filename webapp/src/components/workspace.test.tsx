@@ -131,14 +131,6 @@ describe('src/components/workspace', () => {
                 [board.id]: {userId: 'user_id_1', schemeAdmin: true},
             },
         },
-        limits: {
-            limits: {
-                cards: 0,
-                used_cards: 0,
-                card_limit_timestamp: 0,
-                views: 0,
-            },
-        },
         globalTemplates: {
             value: [],
         },
@@ -355,14 +347,6 @@ describe('src/components/workspace', () => {
                     [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
                 },
             },
-            limits: {
-                limits: {
-                    cards: 0,
-                    used_cards: 0,
-                    card_limit_timestamp: 0,
-                    views: 0,
-                },
-            },
             globalTemplates: {
                 value: [],
             },
@@ -457,14 +441,6 @@ describe('src/components/workspace', () => {
                 templates: [],
                 myBoardMemberships: {
                     [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
-                },
-            },
-            limits: {
-                limits: {
-                    cards: 0,
-                    used_cards: 0,
-                    card_limit_timestamp: 0,
-                    views: 0,
                 },
             },
             globalTemplates: {
@@ -566,14 +542,6 @@ describe('src/components/workspace', () => {
                 templates: [],
                 myBoardMemberships: {
                     [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
-                },
-            },
-            limits: {
-                limits: {
-                    cards: 0,
-                    used_cards: 0,
-                    card_limit_timestamp: 0,
-                    views: 0,
                 },
             },
             globalTemplates: {

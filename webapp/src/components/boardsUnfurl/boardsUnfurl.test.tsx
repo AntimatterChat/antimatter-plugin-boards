@@ -92,44 +92,6 @@ describe('components/boardsUnfurl/BoardsUnfurl', () => {
         expect(container).toMatchSnapshot()
     })
 
-    it('renders when limited', async () => {
-        const mockStore = configureStore([])
-        const store = mockStore({
-            language: {
-                value: 'en',
-            },
-            teams: {
-                allTeams: [team],
-                current: team,
-            },
-        })
-
-        const cards = [{...createCard(), title: 'test card', limited: true, updateAt: 12345}]
-        const board = {...createBoard(), title: 'test board'}
-
-        mockedOctoClient.getBlocksWithBlockID.mockResolvedValueOnce(cards)
-        mockedOctoClient.getBoard.mockResolvedValueOnce(board)
-
-        const component = (
-            <ReduxProvider store={store}>
-                {wrapIntl(
-                    <BoardsUnfurl
-                        embed={{data: JSON.stringify({workspaceID: "foo", cardID: cards[0].id, boardID: board.id, readToken: "abc", originalPath: "/test"})}}
-                    />,
-                )}
-            </ReduxProvider>
-        )
-
-        let container: Element | DocumentFragment | null = null
-
-        await act(async () => {
-            const result = render(component)
-            container = result.container
-        })
-
-        expect(container).toMatchSnapshot()
-    })
-
     it('test no card', async () => {
         const mockStore = configureStore([])
         const store = mockStore({
