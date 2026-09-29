@@ -9,17 +9,17 @@ ARG DOCKER_VERSION=28.5.2
 ARG DOCKER_COMPOSE_VERSION=v5.1.3
 ARG AGENT_BROWSER_VERSION=0.27.0
 ARG AWS_CLI_VERSION=2.34.50
-ARG MATTERMOST_IMAGE=mattermostdevelopment/mattermost-enterprise-edition
-ARG MATTERMOST_IMAGE_TAG=master
-ARG MATTERMOST_IMAGE_ARCH=amd64
+ARG ANTIMATTER_IMAGE=mattermostdevelopment/mattermost-enterprise-edition
+ARG ANTIMATTER_IMAGE_TAG=master
+ARG ANTIMATTER_IMAGE_ARCH=amd64
 ARG POSTGRES_IMAGE=postgres
 ARG POSTGRES_IMAGE_TAG=16-alpine
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    MATTERMOST_IMAGE=${MATTERMOST_IMAGE} \
-    MATTERMOST_IMAGE_TAG=${MATTERMOST_IMAGE_TAG} \
-    MATTERMOST_IMAGE_ARCH=${MATTERMOST_IMAGE_ARCH} \
-    MATTERMOST_PLATFORM=linux/${MATTERMOST_IMAGE_ARCH} \
+    ANTIMATTER_IMAGE=${ANTIMATTER_IMAGE} \
+    ANTIMATTER_IMAGE_TAG=${ANTIMATTER_IMAGE_TAG} \
+    ANTIMATTER_IMAGE_ARCH=${ANTIMATTER_IMAGE_ARCH} \
+    ANTIMATTER_PLATFORM=linux/${ANTIMATTER_IMAGE_ARCH} \
     POSTGRES_IMAGE=${POSTGRES_IMAGE} \
     POSTGRES_IMAGE_TAG=${POSTGRES_IMAGE_TAG} \
     PATH=/usr/local/go/bin:/usr/local/node/bin:/home/ubuntu/go/bin:/workspace/bin:$PATH
@@ -98,7 +98,7 @@ RUN set -eux; \
     ln -sf /usr/local/go/bin/gofmt /usr/local/bin/gofmt; \
     npm install -g "agent-browser@${AGENT_BROWSER_VERSION}"; \
     mkdir -p /opt/cursor-prepulled; \
-    skopeo copy --retry-times 3 --override-os linux --override-arch "${MATTERMOST_IMAGE_ARCH}" "docker://${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}" "docker-archive:/opt/cursor-prepulled/mattermost-enterprise-edition.tar:${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}"; \
+    skopeo copy --retry-times 3 --override-os linux --override-arch "${ANTIMATTER_IMAGE_ARCH}" "docker://${ANTIMATTER_IMAGE}:${ANTIMATTER_IMAGE_TAG}" "docker-archive:/opt/cursor-prepulled/mattermost-enterprise-edition.tar:${ANTIMATTER_IMAGE}:${ANTIMATTER_IMAGE_TAG}"; \
     skopeo copy --retry-times 3 --override-os linux --override-arch "${postgres_image_arch}" "docker://${POSTGRES_IMAGE}:${POSTGRES_IMAGE_TAG}" "docker-archive:/opt/cursor-prepulled/postgres.tar:${POSTGRES_IMAGE}:${POSTGRES_IMAGE_TAG}"; \
     rm -rf /tmp/aws /tmp/awscliv2.zip /tmp/docker /tmp/docker.tgz /tmp/node.tar.xz /tmp/go.tar.gz
 

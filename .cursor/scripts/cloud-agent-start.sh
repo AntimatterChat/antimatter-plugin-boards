@@ -83,7 +83,7 @@ load_image_archive() {
 }
 
 if [[ "${CLOUD_AGENT_SKIP_IMAGE_LOAD:-}" != "1" ]]; then
-    load_image_archive "${MATTERMOST_IMAGE:-mattermostdevelopment/mattermost-enterprise-edition}:${MATTERMOST_IMAGE_TAG:-master}" /opt/cursor-prepulled/mattermost-enterprise-edition.tar
+    load_image_archive "${ANTIMATTER_IMAGE:-mattermostdevelopment/mattermost-enterprise-edition}:${ANTIMATTER_IMAGE_TAG:-master}" /opt/cursor-prepulled/mattermost-enterprise-edition.tar
     load_image_archive "${POSTGRES_IMAGE:-postgres}:${POSTGRES_IMAGE_TAG:-16-alpine}" /opt/cursor-prepulled/postgres.tar
 fi
 
