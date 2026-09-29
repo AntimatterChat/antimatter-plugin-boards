@@ -177,7 +177,7 @@
   "Mutator.new-board-from-template": "从模板创建板块",
   "Mutator.new-card-from-template": "使用模板新增卡片",
   "Mutator.new-template-from-card": "从卡片新增模板",
-  "OnboardingTour.AddComments.Body": "你可以对问题进行评论，甚至可以@提及你的Mattermost同伴，以引起他们的注意。",
+  "OnboardingTour.AddComments.Body": "你可以对问题进行评论，甚至可以@提及你的Antimatter同伴，以引起他们的注意。",
   "OnboardingTour.AddComments.Title": "添加评论",
   "OnboardingTour.AddDescription.Body": "在你的卡片上添加描述，以便其他人了解卡片的内容。",
   "OnboardingTour.AddDescription.Title": "添加描述",

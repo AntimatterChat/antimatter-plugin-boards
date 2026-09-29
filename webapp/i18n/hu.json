@@ -173,7 +173,7 @@
   "Mutator.new-board-from-template": "új tábla sablon alapján",
   "Mutator.new-card-from-template": "új kártya sablonból",
   "Mutator.new-template-from-card": "új sablon kártyából",
-  "OnboardingTour.AddComments.Body": "Hozzászólhat a témákhoz, sőt, más Mattermost felhasználó társát is @megemlítheti, hogy felhívja a figyelmüket.",
+  "OnboardingTour.AddComments.Body": "Hozzászólhat a témákhoz, sőt, más Antimatter felhasználó társát is @megemlítheti, hogy felhívja a figyelmüket.",
   "OnboardingTour.AddComments.Title": "Megjegyzés hozzáadása",
   "OnboardingTour.AddDescription.Body": "Adjon leírást a kártyájához, hogy csapattársai tudják, miről szól a kártya.",
   "OnboardingTour.AddDescription.Title": "Leírás hozzáadása",

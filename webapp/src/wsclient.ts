@@ -63,7 +63,7 @@ export interface Subscription {
     deleteAt?: number
 }
 
-// The Mattermost websocket client interface
+// The Antimatter websocket client interface
 export interface AMWebSocketClient {
     conn: WebSocket | null
     sendMessage(action: string, data: any, responseCallback?: () => void): void /* eslint-disable-line @typescript-eslint/no-explicit-any */
@@ -314,9 +314,9 @@ class WSClient {
 
     open(): void {
         if (this.client !== null) {
-            // configure the Mattermost websocket client callbacks
+            // configure the Antimatter websocket client callbacks
             const onConnect = () => {
-                Utils.log('WSClient in plugin mode, reusing Mattermost WS connection')
+                Utils.log('WSClient in plugin mode, reusing Antimatter WS connection')
 
                 // if there are any subscriptions set by the
                 // components, send their subscribe messages
@@ -346,7 +346,7 @@ class WSClient {
                 }
                 this.state = 'close'
 
-                // Note: Reconnection is now handled by Mattermost's registry-based
+                // Note: Reconnection is now handled by Antimatter's registry-based
                 // reconnection handler instead of polling
             }
 

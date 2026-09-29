@@ -177,7 +177,7 @@
   "Mutator.new-board-from-template": "新的面板模組",
   "Mutator.new-card-from-template": "使用範本新增卡片",
   "Mutator.new-template-from-card": "從卡片新增範本",
-  "OnboardingTour.AddComments.Body": "你可以對問題進行評論,甚至標記提到你的Mattermost夥伴,引起他們的注意。",
+  "OnboardingTour.AddComments.Body": "你可以對問題進行評論,甚至標記提到你的Antimatter夥伴,引起他們的注意。",
   "OnboardingTour.AddComments.Title": "新增評論",
   "OnboardingTour.AddDescription.Body": "在卡片上新增描述讓其他成員知道此卡片內容.",
   "OnboardingTour.AddDescription.Title": "新增敘述",

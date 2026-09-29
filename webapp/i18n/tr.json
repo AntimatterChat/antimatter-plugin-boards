@@ -184,7 +184,7 @@
   "Mutator.new-board-from-template": "kalıptan yeni pano",
   "Mutator.new-card-from-template": "kalıptan yeni kart oluştur",
   "Mutator.new-template-from-card": "karttan yeni kalıp oluştur",
-  "OnboardingTour.AddComments.Body": "Sorunlar hakkında yorum yapabilir ve Mattermost kullanıcılarının dikkatini çekmek için @anabilirsiniz.",
+  "OnboardingTour.AddComments.Body": "Sorunlar hakkında yorum yapabilir ve Antimatter kullanıcılarının dikkatini çekmek için @anabilirsiniz.",
   "OnboardingTour.AddComments.Title": "Yorum yap",
   "OnboardingTour.AddDescription.Body": "Takım arkadaşlarınızın kartın ne ile ilgili olduğunu anlaması için kartınıza bir açıklama ekleyin.",
   "OnboardingTour.AddDescription.Title": "Açıklama ekle",

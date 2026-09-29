@@ -55,7 +55,7 @@ describe('properties/link', () => {
         const {container} = render(wrapIntl((
             <Url
                 {...baseData}
-                propertyValue='https://github.com/mattermost/focalboard'
+                propertyValue='https://github.com/antimatterchat/antimatter-plugin-boards'
             />
         )))
         expect(container).toMatchSnapshot()
@@ -65,7 +65,7 @@ describe('properties/link', () => {
         const {container} = render(wrapIntl((
             <Url
                 {...baseData}
-                propertyValue='https://github.com/mattermost/focalboard'
+                propertyValue='https://github.com/antimatterchat/antimatter-plugin-boards'
                 readOnly={true}
             />
         )))
@@ -82,7 +82,7 @@ describe('properties/link', () => {
             ),
         )
 
-        const url = 'https://mattermost.com'
+        const url = 'https://docs.antimatter.example'
         const input = screen.getByRole('textbox')
         userEvent.type(input, `${url}{enter}`)
 
@@ -94,13 +94,13 @@ describe('properties/link', () => {
             wrapIntl(
                 <Url
                     {...baseData}
-                    propertyValue='https://mattermost.com'
+                    propertyValue='https://docs.antimatter.example'
                 />,
             ),
         )
 
         fireEvent.click(screen.getByRole('button', {name: 'Edit'}))
-        const newURL = 'https://github.com/mattermost'
+        const newURL = 'https://github.com/antimatterchat'
         const input = screen.getByRole('textbox')
         userEvent.clear(input)
         userEvent.type(input, `${newURL}{enter}`)
@@ -108,7 +108,7 @@ describe('properties/link', () => {
     })
 
     it('should allow to copy url', () => {
-        const url = 'https://mattermost.com'
+        const url = 'https://docs.antimatter.example'
         render(
             wrapIntl(
                 <Url

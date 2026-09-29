@@ -184,7 +184,7 @@
   "Mutator.new-board-from-template": "new board from template",
   "Mutator.new-card-from-template": "new card from template",
   "Mutator.new-template-from-card": "new template from card",
-  "OnboardingTour.AddComments.Body": "You can comment on issues, and even @mention your fellow Mattermost users to get their attention.",
+  "OnboardingTour.AddComments.Body": "You can comment on issues, and even @mention your fellow Antimatter users to get their attention.",
   "OnboardingTour.AddComments.Title": "Add comments",
   "OnboardingTour.AddDescription.Body": "Add a description to your card so your teammates know what the card is about.",
   "OnboardingTour.AddDescription.Title": "Add description",

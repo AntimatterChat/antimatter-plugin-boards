@@ -159,7 +159,7 @@
   "Mutator.new-board-from-template": "nouveau tableau à partir du modèle",
   "Mutator.new-card-from-template": "nouvelle carte depuis un modèle",
   "Mutator.new-template-from-card": "nouveau modèle depuis une carte",
-  "OnboardingTour.AddComments.Body": "Vous pouvez commenter les bugs et même @mentionner les utilisateurs de Mattermost pour attirer leur attention.",
+  "OnboardingTour.AddComments.Body": "Vous pouvez commenter les bugs et même @mentionner les utilisateurs de Antimatter pour attirer leur attention.",
   "OnboardingTour.AddComments.Title": "Ajouter des commentaires",
   "OnboardingTour.AddDescription.Body": "Ajouter une description à votre carte pour que votre équipe sachent de quoi il s'agit.",
   "OnboardingTour.AddDescription.Title": "Ajouter une description",

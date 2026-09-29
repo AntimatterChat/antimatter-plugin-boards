@@ -42,7 +42,7 @@ class Constants {
 
     static readonly versionString = version
 
-    static readonly archiveHelpPage = 'https://docs.mattermost.com/boards/migrate-to-boards.html'
+    static readonly archiveHelpPage = 'https://docs.antimatter.example/boards/migrate-to-boards.html'
     static readonly imports = [
         {
             id: 'trello',

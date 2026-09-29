@@ -24,7 +24,7 @@ const AddCommentTourStep = (): React.JSX.Element | null => {
     const screen = (
         <FormattedMessage
             id='OnboardingTour.AddComments.Body'
-            defaultMessage='You can comment on issues, and even @mention your fellow Mattermost users to get their attention.'
+            defaultMessage='You can comment on issues, and even @mention your fellow Antimatter users to get their attention.'
         />
     )
 

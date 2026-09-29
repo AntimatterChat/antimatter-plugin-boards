@@ -39,7 +39,7 @@ exports[`components/cardDetail/CardDetail should show add comments tour tip 1`] 
         <div
           class="tutorial-tour-tip__body"
         >
-          You can comment on issues, and even @mention your fellow Mattermost users to get their attention.
+          You can comment on issues, and even @mention your fellow Antimatter users to get their attention.
         </div>
         <div
           class="tutorial-tour-tip__image"

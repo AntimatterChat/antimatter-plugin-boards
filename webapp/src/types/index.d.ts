@@ -16,7 +16,7 @@ export interface IAppWindow extends Window {
 // SuiteWindow documents all custom properties
 // which may be defined on global
 // window object when operating in
-// the Mattermost suite environment
+// the Antimatter suite environment
 export type SuiteWindow = Window & {
     getCurrentTeamId?: () => string
     baseURL?: string

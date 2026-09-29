@@ -177,7 +177,7 @@
   "Mutator.new-board-from-template": "テンプレートからの新しいBoard",
   "Mutator.new-card-from-template": "テンプレートから新しいカードを作成",
   "Mutator.new-template-from-card": "カードから新しいテンプレートを作成",
-  "OnboardingTour.AddComments.Body": "問題にコメントしたり、仲間のMattermostユーザーの注意を引くために@メンションすることもできます。",
+  "OnboardingTour.AddComments.Body": "問題にコメントしたり、仲間のAntimatterユーザーの注意を引くために@メンションすることもできます。",
   "OnboardingTour.AddComments.Title": "コメントを追加する",
   "OnboardingTour.AddDescription.Body": "カードに説明を追加し、チームメイトに何のカードかわかるようにしましょう。",
   "OnboardingTour.AddDescription.Title": "説明を追加する",

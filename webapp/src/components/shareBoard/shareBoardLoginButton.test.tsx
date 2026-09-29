@@ -40,7 +40,7 @@ describe('src/components/shareBoard/shareBoardLoginButton', () => {
 
     test('should match snapshot', async () => {
         // delete window.location
-        window.location = Object.assign(new URL('https://example.org/mattermost'))
+        window.location = Object.assign(new URL('https://example.org/antimatter'))
         const result = render(
             wrapDNDIntl(
                 <ShareBoardLoginButton/>,

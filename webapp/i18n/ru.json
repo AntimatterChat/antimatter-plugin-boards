@@ -177,7 +177,7 @@
   "Mutator.new-board-from-template": "новая доска из шаблона",
   "Mutator.new-card-from-template": "новая карточка из шаблона",
   "Mutator.new-template-from-card": "новый шаблон из карточки",
-  "OnboardingTour.AddComments.Body": "Вы можете комментировать проблемы и даже @упоминать своих коллег-пользователей Mattermost, чтобы привлечь их внимание.",
+  "OnboardingTour.AddComments.Body": "Вы можете комментировать проблемы и даже @упоминать своих коллег-пользователей Antimatter, чтобы привлечь их внимание.",
   "OnboardingTour.AddComments.Title": "Добавить комментарии",
   "OnboardingTour.AddDescription.Body": "Добавьте описание к своей карточке, чтобы Ваши коллеги по команде знали, о чем эта карточка.",
   "OnboardingTour.AddDescription.Title": "Добавить описание",
