@@ -152,14 +152,6 @@ func (a *pluginAPIAdapter) EnsureBot(bot *mm_model.Bot) (string, error) {
 }
 
 //
-// License service.
-//
-
-func (a *pluginAPIAdapter) GetLicense() *mm_model.License {
-	return a.api.GetLicense()
-}
-
-//
 // FileInfoStore service.
 //
 

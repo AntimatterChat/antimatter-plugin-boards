@@ -57,9 +57,6 @@ type ServicesAPI interface {
 	// Bot service
 	EnsureBot(bot *mm_model.Bot) (string, error)
 
-	// License service
-	GetLicense() *mm_model.License
-
 	// FileInfoStore service
 	GetFileInfo(fileID string) (*mm_model.FileInfo, error)
 

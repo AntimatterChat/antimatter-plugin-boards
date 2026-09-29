@@ -199,10 +199,6 @@ func (t *testServicesAPIForUnitTests) GetChannelsForTeamForUser(teamID string, u
 	return mmModel.ChannelList{}, nil
 }
 
-func (t *testServicesAPIForUnitTests) GetLicense() *mmModel.License {
-	return nil
-}
-
 func (t *testServicesAPIForUnitTests) GetFileInfo(fileID string) (*mmModel.FileInfo, error) {
 	// Query the FileInfo table (Mattermost's table) to retrieve saved file info
 	// This matches what the real Mattermost servicesAPI would do

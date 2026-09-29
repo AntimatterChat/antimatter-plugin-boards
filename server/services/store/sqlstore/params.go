@@ -23,7 +23,6 @@ type servicesAPI interface {
 	UpdateUser(user *mmModel.User) (*mmModel.User, error)
 	GetUserByEmail(email string) (*mmModel.User, error)
 	GetUserByUsername(username string) (*mmModel.User, error)
-	GetLicense() *mmModel.License
 	GetFileInfo(fileID string) (*mmModel.FileInfo, error)
 	EnsureBot(bot *mmModel.Bot) (string, error)
 	CreatePost(post *mmModel.Post) (*mmModel.Post, error)

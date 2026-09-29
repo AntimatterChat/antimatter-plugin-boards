@@ -102,13 +102,6 @@ func Intersection(x ...[]interface{}) []interface{} {
 	return result
 }
 
-func IsCloudLicense(license *mmModel.License) bool {
-	return license != nil &&
-		license.Features != nil &&
-		license.Features.Cloud != nil &&
-		*license.Features.Cloud
-}
-
 func DedupeStringArr(arr []string) []string {
 	hashMap := map[string]bool{}
 

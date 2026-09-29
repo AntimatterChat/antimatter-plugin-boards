@@ -103,14 +103,6 @@ func setupClients(th *TestHelper) Clients {
 	return clients
 }
 
-type LicenseType int
-
-const (
-	LicenseNone         LicenseType = iota // 0
-	LicenseProfessional                    // 1
-	LicenseEnterprise                      // 2
-)
-
 type TestHelper struct {
 	T             *testing.T
 	Server        *server.Server
@@ -350,10 +342,6 @@ func (t *testServicesAPI) GetChannelMember(channelID string, userID string) (*mm
 func (t *testServicesAPI) GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (mmModel.ChannelList, error) {
 	// Return empty list for tests - this is used for channel search
 	return mmModel.ChannelList{}, nil
-}
-
-func (t *testServicesAPI) GetLicense() *mmModel.License {
-	return nil
 }
 
 func (t *testServicesAPI) GetFileInfo(fileID string) (*mmModel.FileInfo, error) {

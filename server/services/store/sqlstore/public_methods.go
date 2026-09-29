@@ -418,11 +418,6 @@ func (s *SQLStore) GetFileInfo(id string) (*mmModel.FileInfo, error) {
 
 }
 
-func (s *SQLStore) GetLicense() *mmModel.License {
-	return s.getLicense(s.db)
-
-}
-
 func (s *SQLStore) GetMemberForBoard(boardID string, userID string) (*model.BoardMember, error) {
 	return s.getMemberForBoard(s.db, boardID, userID)
 
@@ -761,6 +756,11 @@ func (s *SQLStore) ReorderCategoryBoards(categoryID string, newBoardsOrder []str
 
 }
 
+func (s *SQLStore) RestoreFiles(fileIDs []string) error {
+	return s.restoreFiles(s.db, fileIDs)
+
+}
+
 func (s *SQLStore) RunDataRetention(globalRetentionDate int64, batchSize int64) (int64, error) {
 	if s.dbType == model.SqliteDBType {
 		return s.runDataRetention(s.db, globalRetentionDate, batchSize)
@@ -787,11 +787,6 @@ func (s *SQLStore) RunDataRetention(globalRetentionDate int64, batchSize int64) 
 
 func (s *SQLStore) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
 	return s.saveFileInfo(s.db, fileInfo)
-
-}
-
-func (s *SQLStore) RestoreFiles(fileIDs []string) error {
-	return s.restoreFiles(s.db, fileIDs)
 
 }
 

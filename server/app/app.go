@@ -97,7 +97,3 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 	app.initialize(services.SkipTemplateInit)
 	return app
 }
-
-func (a *App) GetLicense() *mm_model.License {
-	return a.store.GetLicense()
-}

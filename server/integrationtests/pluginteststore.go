@@ -5,8 +5,6 @@ package integrationtests
 
 import (
 	"errors"
-	"os"
-	"strconv"
 	"strings"
 
 	"github.com/mattermost/mattermost-plugin-boards/server/model"
@@ -331,30 +329,6 @@ func (s *PluginTestStore) SearchBoardsForUser(term string, field model.BoardSear
 		}
 	}
 	return resultBoards, nil
-}
-
-func (s *PluginTestStore) GetLicense() *mmModel.License {
-	license := s.Store.GetLicense()
-
-	if license == nil {
-		license = &mmModel.License{
-			Id:        mmModel.NewId(),
-			StartsAt:  mmModel.GetMillis() - 2629746000, // 1 month
-			ExpiresAt: mmModel.GetMillis() + 2629746000, //
-			IssuedAt:  mmModel.GetMillis() - 2629746000,
-			Features:  &mmModel.Features{},
-		}
-		license.Features.SetDefaults()
-	}
-
-	complianceLicense := os.Getenv("FOCALBOARD_UNIT_TESTING_COMPLIANCE")
-	if complianceLicense != "" {
-		if val, err := strconv.ParseBool(complianceLicense); err == nil {
-			license.Features.Compliance = mmModel.NewPointer(val)
-		}
-	}
-
-	return license
 }
 
 // PostMessage is a no-op for tests - we don't actually need to post messages.

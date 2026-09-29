@@ -736,20 +736,6 @@ func (mr *MockStoreMockRecorder) GetFileInfo(id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFileInfo", reflect.TypeOf((*MockStore)(nil).GetFileInfo), id)
 }
 
-// GetLicense mocks base method.
-func (m *MockStore) GetLicense() *model0.License {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetLicense")
-	ret0, _ := ret[0].(*model0.License)
-	return ret0
-}
-
-// GetLicense indicates an expected call of GetLicense.
-func (mr *MockStoreMockRecorder) GetLicense() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLicense", reflect.TypeOf((*MockStore)(nil).GetLicense))
-}
-
 // GetMemberForBoard mocks base method.
 func (m *MockStore) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
 	m.ctrl.T.Helper()
