@@ -70,7 +70,7 @@ definitions:
         x-go-package: github.com/antimatterchat/antimatter-plugin-boards/server/model
     FileUploadResponse:
         description: FileUploadResponse is the response to a file upload
-        x-go-package: github.com/mattermost/focalboard/server/api
+        x-go-package: github.com/antimatterchat/antimatter-plugin-boards/server/api
     LoginRequest:
         description: LoginRequest is a login request
         x-go-package: github.com/antimatterchat/antimatter-plugin-boards/server/model
@@ -117,7 +117,7 @@ info:
     description: Focalboard Server
     license:
         name: Custom
-        url: https://github.com/mattermost/focalboard/blob/main/LICENSE.txt
+        url: https://github.com/antimatterchat/antimatter-plugin-boards/blob/main/LICENSE.txt
     title: Focalboard Server
     version: 2.0.0
 paths:
