@@ -47,7 +47,6 @@ jest.mock('./undoRedoHotKeys', () => ({__esModule: true, default: () => null}))
 jest.mock('./backwardCompatibilityQueryParamsRedirect', () => ({__esModule: true, default: () => null}))
 jest.mock('./websocketConnection', () => ({__esModule: true, default: () => null}))
 jest.mock('../../components/workspace', () => ({__esModule: true, default: () => null}))
-jest.mock('../../components/messages/versionMessage', () => ({__esModule: true, default: () => null}))
 
 // Stub fetchBoardMembers so it doesn't fire real API calls
 jest.mock('../../store/boards', () => {

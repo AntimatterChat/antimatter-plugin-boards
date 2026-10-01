@@ -26,8 +26,6 @@ export const fetchMe = createAsyncThunk(
     },
 )
 
-export const versionProperty = 'version72MessageCanceled'
-
 type UsersStatus = {
     me: IUser|null
     boardUsers: {[key: string]: IUser}
@@ -164,18 +162,4 @@ export const getOnboardingTourStep = createSelector(
 export const getOnboardingTourCategory = createSelector(
     getMyConfig,
     (myConfig): string => (myConfig.tourCategory ? myConfig.tourCategory.value : ''),
-)
-
-export const getVersionMessageCanceled = createSelector(
-    getMe,
-    getMyConfig,
-    (me, myConfig): boolean => {
-        if (versionProperty && me) {
-            if (me.id === 'single-user') {
-                return true
-            }
-            return Boolean(myConfig[versionProperty]?.value)
-        }
-        return true
-    },
 )
