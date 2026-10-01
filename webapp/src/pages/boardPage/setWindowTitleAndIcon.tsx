@@ -26,7 +26,7 @@ const SetWindowTitleAndIcon = (): null => {
         } else if (Utils.isFocalboardPlugin()) {
             document.title = 'Boards - Antimatter'
         } else {
-            document.title = 'Focalboard'
+            document.title = 'Boards'
         }
     }, [board?.title, activeView?.title])
 
