@@ -21,16 +21,6 @@ exports[`pages/welcome Welcome Page shows Explore Page 1`] = `
       <div
         class="WelcomePage__content"
       >
-        <img
-          alt="Boards Welcome Image"
-          class="WelcomePage__image WelcomePage__image--large"
-          src="test-file-stub"
-        />
-        <img
-          alt="Boards Welcome Image"
-          class="WelcomePage__image WelcomePage__image--small"
-          src="test-file-stub"
-        />
         <div
           class="WelcomePage__buttons"
         >
@@ -78,16 +68,6 @@ exports[`pages/welcome Welcome Page shows Explore Page with subpath 1`] = `
       <div
         class="WelcomePage__content"
       >
-        <img
-          alt="Boards Welcome Image"
-          class="WelcomePage__image WelcomePage__image--large"
-          src="test-file-stub"
-        />
-        <img
-          alt="Boards Welcome Image"
-          class="WelcomePage__image WelcomePage__image--small"
-          src="test-file-stub"
-        />
         <div
           class="WelcomePage__buttons"
         >

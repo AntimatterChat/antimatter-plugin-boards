@@ -6,12 +6,8 @@ import {FormattedMessage} from 'react-intl'
 
 import {useLocation, useHistory} from 'react-router-dom'
 
-import BoardWelcomePNG from '../../../static/boards-welcome.png'
-import BoardWelcomeSmallPNG from '../../../static/boards-welcome-small.png'
-
 import Button from '../../widgets/buttons/button'
 import CompassIcon from '../../widgets/icons/compassIcon'
-import {Utils} from '../../utils'
 
 import './welcomePage.scss'
 import mutator from '../../mutator'
@@ -129,20 +125,6 @@ const WelcomePage = () => {
                 </div>
 
                 <div className='WelcomePage__content'>
-                    {/* This image will be rendered on large screens over 2000px */}
-                    <img
-                        src={Utils.buildURL(BoardWelcomePNG, true)}
-                        className='WelcomePage__image WelcomePage__image--large'
-                        alt='Boards Welcome Image'
-                    />
-
-                    {/* This image will be rendered on small screens below 2000px */}
-                    <img
-                        src={Utils.buildURL(BoardWelcomeSmallPNG, true)}
-                        className='WelcomePage__image WelcomePage__image--small'
-                        alt='Boards Welcome Image'
-                    />
-
                     <div className='WelcomePage__buttons'>
                         {me?.is_guest !== true &&
                         <Button
