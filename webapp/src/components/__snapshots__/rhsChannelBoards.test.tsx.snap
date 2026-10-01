@@ -219,13 +219,6 @@ exports[`components/rhsChannelBoards renders with empty list of boards 1`] = `
       >
         Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view.
       </div>
-      <div
-        class="boards-screenshots"
-      >
-        <img
-          src="test-file-stub"
-        />
-      </div>
       <button
         class="Button emphasis--primary size--medium"
         type="button"
@@ -254,13 +247,6 @@ exports[`components/rhsChannelBoards renders with empty list of boards, cannot a
         class="empty-paragraph"
       >
         Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view.
-      </div>
-      <div
-        class="boards-screenshots"
-      >
-        <img
-          src="test-file-stub"
-        />
       </div>
     </div>
   </div>

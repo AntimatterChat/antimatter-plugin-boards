@@ -9,6 +9,7 @@
         display: flex;
         justify-content: flex-start;
         flex-direction: column;
+        align-items: center;
         height: 100%;
         width: 100%;
         overflow: auto;
@@ -32,10 +33,6 @@
 
     .empty-paragraph {
         text-align: center;
-    }
-
-    .boards-screenshots {
-        margin: 24px 0;
     }
 
     .linked-boards {

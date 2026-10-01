@@ -25,10 +25,7 @@ import {useAppSelector, useAppDispatch} from '../store/hooks'
 import AddIcon from '../widgets/icons/add'
 import Button from '../widgets/buttons/button'
 
-import {Utils} from '../utils'
 import {WSClient} from '../wsclient'
-
-import boardsScreenshots from '../../static/boards-screenshots.png'
 
 import {getMessages} from '../i18n'
 
@@ -119,7 +116,6 @@ const RHSChannelBoards = () => {
                             defaultMessage='Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view.'
                         />
                     </div>
-                    <div className='boards-screenshots'><img src={Utils.buildURL(boardsScreenshots, true)}/></div>
                     {me?.permissions?.find((s: string) => s === 'create_post') &&
                         <Button
                             onClick={() => dispatch(setLinkToChannel(currentChannel.id))}
