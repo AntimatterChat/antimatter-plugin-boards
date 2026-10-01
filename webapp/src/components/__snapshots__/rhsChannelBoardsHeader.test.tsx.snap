@@ -3,10 +3,44 @@
 exports[`components/rhsChannelBoardsHeader renders the header 1`] = `
 <div>
   <div>
-    <img
+    <span
       class="boards-rhs-header-logo"
-      src="test-file-stub"
-    />
+    >
+      <svg
+        aria-hidden="true"
+        class="BoardsAppIcon"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.8"
+        style="fill: none; flex: 0 0 auto; color: rgb(244, 114, 182);"
+        viewBox="0 0 24 24"
+        width="24"
+      >
+        <rect
+          height="11"
+          rx="1.5"
+          width="5"
+          x="3"
+          y="4"
+        />
+        <rect
+          height="7"
+          rx="1.5"
+          width="5"
+          x="9.5"
+          y="4"
+        />
+        <rect
+          height="15"
+          rx="1.5"
+          width="5"
+          x="16"
+          y="4"
+        />
+      </svg>
+    </span>
     <span>
       Boards
     </span>

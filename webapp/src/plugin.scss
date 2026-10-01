@@ -1,7 +1,3 @@
-.boards-rhs-icon {
-    font-size: 20px;
-}
-
 .focalboard-body .RightControlsContainer-eacbOh {
     flex-basis: auto;
 }
@@ -27,11 +23,8 @@
     }
 }
 
-img.boards-rhs-header-logo {
-    color: #fff;
-    background: var(--button-bg);
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
+.boards-rhs-header-logo {
+    display: inline-flex;
     margin-right: 8px;
+    vertical-align: middle;
 }

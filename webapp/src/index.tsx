@@ -9,10 +9,9 @@ import {History} from 'history'
 import {GlobalState} from '@mattermost/types/store'
 import {selectTeam} from 'mattermost-redux/actions/teams'
 
-import appBarIcon from '../static/app-bar-icon.png'
 
 import {setAntimatterTheme} from './theme'
-import FocalboardIcon from './widgets/icons/logo'
+import BoardsAppIcon, {boardsAppIconURL} from './widgets/icons/boardsAppIcon'
 import GlobalHeader from './components/globalHeader/globalHeader'
 import App from './app'
 import store from './store'
@@ -249,11 +248,14 @@ export default class Plugin {
             )
             this.rhsId = rhsId
 
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon />, () => amStore.dispatch(toggleRHSPlugin), 'Boards', 'Boards')
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<BoardsAppIcon colored={true}/>, () => amStore.dispatch(toggleRHSPlugin), 'Boards', 'Boards')
 
             this.registry.registerProduct(
                 '/boards',
-                'product-boards',
+                <BoardsAppIcon
+                    size={24}
+                    colored={true}
+                />,
                 'Boards',
                 '/boards',
                 MainApp,
@@ -263,7 +265,7 @@ export default class Plugin {
             )
 
             if (this.registry.registerAppBarComponent) {
-                this.registry.registerAppBarComponent(Utils.buildURL(appBarIcon, true), () => amStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
+                this.registry.registerAppBarComponent(boardsAppIconURL, () => amStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
             }
 
             if (this.registry.registerActionAfterChannelCreation) {

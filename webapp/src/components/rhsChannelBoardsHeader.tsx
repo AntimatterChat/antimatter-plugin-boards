@@ -8,9 +8,7 @@ import {getMessages} from '../i18n'
 import {getLanguage} from '../store/language'
 import {getCurrentChannel} from '../store/channels'
 import {useAppSelector} from '../store/hooks'
-import {Utils} from '../utils'
-
-import appBarIcon from '../../static/app-bar-icon.png'
+import BoardsAppIcon from '../widgets/icons/boardsAppIcon'
 
 const RHSChannelBoardsHeader = () => {
     const currentChannel = useAppSelector(getCurrentChannel)
@@ -26,10 +24,12 @@ const RHSChannelBoardsHeader = () => {
             messages={getMessages(language)}
         >
             <div>
-                <img
-                    className='boards-rhs-header-logo'
-                    src={Utils.buildURL(appBarIcon, true)}
-                />
+                <span className='boards-rhs-header-logo'>
+                    <BoardsAppIcon
+                        size={24}
+                        colored={true}
+                    />
+                </span>
                 <span>
                     <FormattedMessage
                         id='rhs-channel-boards-header.title'
