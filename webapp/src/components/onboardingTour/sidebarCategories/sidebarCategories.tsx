@@ -34,18 +34,8 @@ const SidebarCategoriesTourStep = (): React.JSX.Element | null => {
         <div>
             <FormattedMessage
                 id='SidebarTour.SidebarCategories.Body'
-                defaultMessage='All your boards are now organized under your new sidebar. No more switching between workspaces. One-time custom categories based on your prior workspaces may have automatically been created for you as part of your v7.2 upgrade. These can be removed or edited to your preference. '
+                defaultMessage='All your boards are now organized under your new sidebar. No more switching between workspaces. One-time custom categories based on your prior workspaces may have automatically been created for you as part of your v7.2 upgrade. These can be removed or edited to your preference.'
             />
-            <a
-                href='https://docs.antimatter.example/welcome/whats-new-in-v72.html'
-                target='_blank'
-                rel='noopener noreferrer'
-            >
-                <FormattedMessage
-                    id='SidebarTour.SidebarCategories.Link'
-                    defaultMessage='Learn more'
-                />
-            </a>
         </div>
     )
 
