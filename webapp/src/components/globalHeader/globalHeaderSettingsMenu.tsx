@@ -46,33 +46,14 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                     <SettingsIcon/>
                 </div>
                 <Menu position='left'>
-                    <Menu.SubMenu
-                        id='import'
-                        name={intl.formatMessage({id: 'Sidebar.import', defaultMessage: 'Import'})}
-                        position='left-bottom'
-                    >
-                        <Menu.Text
-                            id='import_archive'
-                            name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
-                            onClick={async () => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ImportArchive)
-                                Archiver.importFullArchive()
-                            }}
-                        />
-                        {
-                            Constants.imports.map((i) => (
-                                <Menu.Text
-                                    key={`${i.id}-import`}
-                                    id={`${i.id}-import`}
-                                    name={i.displayName}
-                                    onClick={() => {
-                                        TelemetryClient.trackEvent(TelemetryCategory, i.telemetryName)
-                                        window.open(i.href)
-                                    }}
-                                />
-                            ))
-                        }
-                    </Menu.SubMenu>
+                    <Menu.Text
+                        id='import_archive'
+                        name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
+                        onClick={async () => {
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ImportArchive)
+                            Archiver.importFullArchive()
+                        }}
+                    />
                     <Menu.SubMenu
                         id='lang'
                         name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}

@@ -16,6 +16,7 @@ import {wrapIntl} from '../../testUtils'
 
 import {defaultThemeName} from '../../theme'
 
+import {Archiver} from '../../archiver'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
 
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -100,8 +101,8 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('imports menu open should match snapshot', () => {
-        window.open = jest.fn()
+    test('import archive item starts an archive import', () => {
+        const importFullArchive = jest.spyOn(Archiver, 'importFullArchive').mockImplementation(() => {})
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <SidebarSettingsMenu activeTheme={defaultThemeName}/>
@@ -112,12 +113,9 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
         act(() => {
             userEvent.click(container.querySelector('.menu-entry') as Element)
         })
-        act(() => {
-            userEvent.hover(container.querySelector('#import') as Element)
-        })
-        expect(container).toMatchSnapshot()
-
-        userEvent.click(container.querySelector('[aria-label="Asana"]') as Element)
-        expect(mockedTelemetry.trackEvent).toHaveBeenCalledWith(TelemetryCategory, TelemetryActions.ImportAsana)
+        userEvent.click(container.querySelector('[aria-label="Import archive"]') as Element)
+        expect(mockedTelemetry.trackEvent).toHaveBeenCalledWith(TelemetryCategory, TelemetryActions.ImportArchive)
+        expect(importFullArchive).toHaveBeenCalled()
+        importFullArchive.mockRestore()
     })
 })

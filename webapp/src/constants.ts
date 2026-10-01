@@ -4,8 +4,6 @@
 
 import {version} from './manifest'
 
-import {TelemetryActions} from './telemetry/telemetryClient'
-
 enum Permission {
     ManageBoardType = 'manage_board_type',
     DeleteBoard = 'delete_board',
@@ -41,40 +39,6 @@ class Constants {
     static readonly badgesColumnId = '__badges'
 
     static readonly versionString = version
-
-    static readonly archiveHelpPage = 'https://docs.antimatter.example/boards/migrate-to-boards.html'
-    static readonly imports = [
-        {
-            id: 'trello',
-            displayName: 'Trello',
-            telemetryName: TelemetryActions.ImportTrello,
-            href: Constants.archiveHelpPage + '#import-from-trello',
-        },
-        {
-            id: 'asana',
-            displayName: 'Asana',
-            telemetryName: TelemetryActions.ImportAsana,
-            href: Constants.archiveHelpPage + '#import-from-asana',
-        },
-        {
-            id: 'notion',
-            displayName: 'Notion',
-            telemetryName: TelemetryActions.ImportNotion,
-            href: Constants.archiveHelpPage + '#import-from-notion',
-        },
-        {
-            id: 'jira',
-            displayName: 'Jira',
-            telemetryName: TelemetryActions.ImportJira,
-            href: Constants.archiveHelpPage + '#import-from-jira',
-        },
-        {
-            id: 'todoist',
-            displayName: 'Todoist',
-            telemetryName: TelemetryActions.ImportTodoist,
-            href: Constants.archiveHelpPage + '#import-from-todoist',
-        },
-    ]
 
     static readonly languages = [
         {
