@@ -18,13 +18,9 @@ import {Utils} from '../../utils'
 
 import ModalWrapper from '../modalWrapper'
 
-import {IAppWindow} from '../../types'
-
 import RegistrationLink from './registrationLink'
 
 import './sidebarUserMenu.scss'
-
-declare let window: IAppWindow
 
 const SidebarUserMenu = () => {
     const dispatch = useAppDispatch()
@@ -80,22 +76,7 @@ const SidebarUserMenu = () => {
                                     setShowRegistrationLinkDialog(true)
                                 }}
                             />
-
-                            <Menu.Separator/>
                         </>}
-
-                        <Menu.Text
-                            id='about'
-                            name={intl.formatMessage({id: 'Sidebar.about', defaultMessage: 'About Focalboard'})}
-                            onClick={async () => {
-                                window.open('https://www.focalboard.com?utm_source=webapp', '_blank')
-
-                                // TODO: Review if this is needed in the future, this is to fix the problem with linux webview links
-                                if (window.openInNewBrowser) {
-                                    window.openInNewBrowser('https://www.focalboard.com?utm_source=webapp')
-                                }
-                            }}
-                        />
                     </Menu>
                 </MenuWrapper>
 
