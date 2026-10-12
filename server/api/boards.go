@@ -657,8 +657,6 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/BoardMetadata"
 	//   '404':
 	//     description: board not found
-	//   '501':
-	//     description: required license not found
 	//   default:
 	//     description: internal error
 	//     schema:

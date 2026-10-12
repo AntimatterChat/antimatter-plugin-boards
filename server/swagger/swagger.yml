@@ -34,11 +34,6 @@ definitions:
             BoardsAndBlocks is used to operate over boards and blocks at the
             same time
         x-go-package: github.com/antimatterchat/antimatter-plugin-boards/server/model
-    BoardsCloudLimits:
-        description: |-
-            BoardsCloudLimits is the representation of the limits for the
-            Boards server
-        x-go-package: github.com/antimatterchat/antimatter-plugin-boards/server/model
     BoardsStatistics:
         description: BoardsStatistics is the representation of the statistics for the Boards server
         x-go-package: github.com/antimatterchat/antimatter-plugin-boards/server/model
@@ -121,27 +116,6 @@ info:
     title: Focalboard Server
     version: 2.0.0
 paths:
-    /api/v2/teams/{teamID}/notifyadminupgrade:
-        get:
-            operationId: handleNotifyAdminUpgrade
-            parameters:
-                - description: Team ID
-                  in: path
-                  name: teamID
-                  required: true
-                  type: string
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: success
-                default:
-                    description: internal error
-                    schema:
-                        $ref: '#/definitions/ErrorResponse'
-            security:
-                - BearerAuth: []
-            summary: Notifies admins for upgrade request.
     /boards:
         post:
             description: Creates a new board
@@ -845,8 +819,6 @@ paths:
                         $ref: '#/definitions/BoardMetadata'
                 "404":
                     description: board not found
-                "501":
-                    description: required license not found
                 default:
                     description: internal error
                     schema:
@@ -1066,23 +1038,6 @@ paths:
                 "200":
                     description: success
             summary: Responds with `Hello` if the web service is running.
-    /limits:
-        get:
-            operationId: cloudLimits
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: success
-                    schema:
-                        $ref: '#/definitions/BoardsCloudLimits'
-                default:
-                    description: internal error
-                    schema:
-                        $ref: '#/definitions/ErrorResponse'
-            security:
-                - BearerAuth: []
-            summary: Fetches the cloud limits of the server.
     /login:
         post:
             description: Login user
