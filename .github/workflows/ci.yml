@@ -68,6 +68,8 @@ jobs:
       run: cd focalboard; make server-ci
       
   dist:
+    # Uploads the build to a shared S3 bucket: runs only once PLUGIN_DIST_S3_BUCKET is set for the repository.
+    if: vars.PLUGIN_DIST_S3_BUCKET != ''
     permissions:
       contents: read
       id-token: write
@@ -78,8 +80,8 @@ jobs:
       s3-prefix: "antimatter-plugin-boards"
 
   dist-fips:
-    # Skip FIPS testing for forks, which won't have the chainguard identity.
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    # The FIPS build image is Mattermost's private Chainguard image: only their repository can pull it.
+    if: github.repository_owner == 'mattermost' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-22.04
     needs:
       - server-test

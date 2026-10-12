@@ -13,6 +13,8 @@ permissions: read-all
 jobs:
   analysis:
     name: Scorecards analysis
+    # The pinned scorecard action image (gcr.io) can't be pulled any more; kept for Mattermost's repository only.
+    if: github.repository_owner == 'mattermost'
     runs-on: ubuntu-24.04
     permissions:
       # Needed to upload the results to code-scanning dashboard.
