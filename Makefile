@@ -37,7 +37,8 @@ GO_BUILD_FLAGS ?= -ldflags '$(LDFLAGS)'
 MM_UTILITIES_DIR ?= ../mattermost-utilities
 DLV_DEBUG_PORT := 2346
 ANTIMATTER_PLUGINS_PATH=$(AM_SERVER_PATH)/plugins
-BOARD_PLUGIN_PATH=$(ANTIMATTER_PLUGINS_PATH)/boards
+# The server serves the webapp from plugins/<plugin id>/pack, so deploy under the plugin id.
+BOARD_PLUGIN_PATH=$(ANTIMATTER_PLUGINS_PATH)/focalboard
 PLUGIN_NAME=boards
 
 export GO111MODULE=on
@@ -381,7 +382,7 @@ live-watch:
 ## Watch server changes and redeploy locally using local filesystem (AM_SERVER_PATH)
 .PHONY: live-watch-server
 live-watch-server: apply
-	cd ../ && modd -f antimatter-plugin/modd.conf
+	modd -f modd.conf
 
 ## Watch webapp changes and redeploy locally using local filesystem (AM_SERVER_PATH)
 .PHONY: live-watch-webapp
@@ -391,17 +392,17 @@ live-watch-webapp: apply
 .PHONY: deploy-to-antimatter-directory
 deploy-to-antimatter-directory:
 	./build/bin/pluginctl disable $(PLUGIN_ID)
-	mkdir -p $(FOCALBOARD_PLUGIN_PATH)
-	cp $(MANIFEST_FILE) $(FOCALBOARD_PLUGIN_PATH)/
-	cp -r webapp/pack $(FOCALBOARD_PLUGIN_PATH)/
-	cp -r $(ASSETS_DIR) $(FOCALBOARD_PLUGIN_PATH)/
-	cp -r public $(FOCALBOARD_PLUGIN_PATH)/
-	mkdir -p $(FOCALBOARD_PLUGIN_PATH)/server
-	cp -r server/dist $(FOCALBOARD_PLUGIN_PATH)/server/
-	mkdir -p $(FOCALBOARD_PLUGIN_PATH)/webapp
-	cp -r webapp/dist $(FOCALBOARD_PLUGIN_PATH)/webapp/
+	mkdir -p $(BOARD_PLUGIN_PATH)
+	cp $(MANIFEST_FILE) $(BOARD_PLUGIN_PATH)/
+	cp -r webapp/pack $(BOARD_PLUGIN_PATH)/
+	cp -r $(ASSETS_DIR) $(BOARD_PLUGIN_PATH)/
+	cp -r public $(BOARD_PLUGIN_PATH)/
+	mkdir -p $(BOARD_PLUGIN_PATH)/server
+	cp -r server/dist $(BOARD_PLUGIN_PATH)/server/
+	mkdir -p $(BOARD_PLUGIN_PATH)/webapp
+	cp -r webapp/dist $(BOARD_PLUGIN_PATH)/webapp/
 	./build/bin/pluginctl enable $(PLUGIN_ID)
-	@echo plugin built at: $(FOCALBOARD_PLUGIN_PATH)
+	@echo plugin built at: $(BOARD_PLUGIN_PATH)
 
 # Help documentation à la https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:
