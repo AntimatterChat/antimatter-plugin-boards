@@ -120,3 +120,13 @@ Before checking in commits, run `make ci`, which is similar to the `.gitlab-ci.y
 * **Server unit tests**: `make server-test`
 * **Web app ESLint**: `cd webapp; npm run check`
 * **Web app unit tests**: `cd webapp; npm run test`
+
+## Feedback and support
+
+Found a bug in the Boards plugin, or missing a feature? Please [open an
+issue](https://github.com/AntimatterChat/community/issues/new/choose) in the [Antimatter community
+repository](https://github.com/AntimatterChat/community), where the feedback for every part of
+Antimatter is gathered. Questions and ideas are welcome in its
+[Discussions](https://github.com/AntimatterChat/community/discussions). Please report security
+problems privately, as explained in the [security
+policy](https://github.com/AntimatterChat/.github/blob/main/SECURITY.md).
