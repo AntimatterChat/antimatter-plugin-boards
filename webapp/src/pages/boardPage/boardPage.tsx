@@ -93,7 +93,7 @@ const BoardPage = (props: Props): React.JSX.Element => {
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
     if (Utils.isFocalboardLegacy() && !props.readonly) {
-        window.location.href = window.location.href.replace('/plugins/focalboard', '/boards')
+        window.location.href = window.location.href.replace('/plugins/focalboard', '/kanban')
     }
 
     // Load user's block subscriptions when workspace changes

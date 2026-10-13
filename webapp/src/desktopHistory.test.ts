@@ -17,7 +17,7 @@ describe('desktopHistory', () => {
         jest.restoreAllMocks()
         jest.spyOn(Utils, 'log').mockImplementation(() => {})
         delete windowAny.desktopAPI
-        windowAny.frontendBaseURL = '/boards'
+        windowAny.frontendBaseURL = '/kanban'
     })
 
     afterAll(() => {
@@ -55,6 +55,12 @@ describe('desktopHistory', () => {
             const history = makeHistory()
             handleBrowserHistoryPush('/boards-legacy/team/team-id', history)
             expect(history.replace).not.toHaveBeenCalled()
+        })
+
+        test('opens a path of the route it had as Boards under /kanban', () => {
+            const history = makeHistory()
+            handleBrowserHistoryPush('/boards/team/team-id', history)
+            expect(history.replace).toHaveBeenCalledWith('/team/team-id')
         })
 
         test('rejects path traversal that escapes the boards route', () => {
@@ -138,13 +144,13 @@ describe('desktopHistory', () => {
             windowAny.desktopAPI = {sendBrowserHistoryPush}
 
             // Simulate a subpath deployment: the frontend base URL includes the subpath.
-            windowAny.frontendBaseURL = '/company/boards'
+            windowAny.frontendBaseURL = '/company/kanban'
 
             const history = customHistory()
             history.push('/team/team-id')
 
-            expect(sendBrowserHistoryPush).toHaveBeenCalledWith('/boards/team/team-id')
-            expect(sendBrowserHistoryPush).not.toHaveBeenCalledWith('/company/boards/team/team-id')
+            expect(sendBrowserHistoryPush).toHaveBeenCalledWith('/kanban/team/team-id')
+            expect(sendBrowserHistoryPush).not.toHaveBeenCalledWith('/company/kanban/team/team-id')
         })
 
         test('does not notify the desktop app when not running in desktop', () => {

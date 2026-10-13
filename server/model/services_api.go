@@ -16,8 +16,8 @@ import (
 
 const (
 	botUsername    = "boards"
-	botDisplayname = "Boards"
-	botDescription = "Created by Boards plugin."
+	botDisplayname = "Kanban"
+	botDescription = "Created by the Kanban plugin."
 )
 
 var FocalboardBot = &am_model.Bot{

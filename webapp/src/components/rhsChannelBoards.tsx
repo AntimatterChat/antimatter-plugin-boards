@@ -113,7 +113,7 @@ const RHSChannelBoards = () => {
                     <div className='empty-paragraph'>
                         <FormattedMessage
                             id='rhs-boards.no-boards-linked-to-channel-description'
-                            defaultMessage='Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view.'
+                            defaultMessage='Kanban is a project management tool that helps define, organize, track and manage work across teams, with boards of cards and columns.'
                         />
                     </div>
                     {me?.permissions?.find((s: string) => s === 'create_post') &&

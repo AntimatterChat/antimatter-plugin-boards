@@ -101,7 +101,7 @@ func NewBoardsApp(api model.ServicesAPI, manifest *am_model.Manifest) (*BoardsAp
 		servicesAPI: api,
 		appAPI:      &appAPI{store: db},
 		permissions: permissionsService,
-		serverRoot:  baseURL + "/boards",
+		serverRoot:  baseURL + "/kanban",
 		logger:      logger,
 	}
 

@@ -24,9 +24,9 @@ const SetWindowTitleAndIcon = (): null => {
             }
             document.title = title
         } else if (Utils.isFocalboardPlugin()) {
-            document.title = 'Boards - Antimatter'
+            document.title = 'Kanban - Antimatter'
         } else {
-            document.title = 'Boards'
+            document.title = 'Kanban'
         }
     }, [board?.title, activeView?.title])
 

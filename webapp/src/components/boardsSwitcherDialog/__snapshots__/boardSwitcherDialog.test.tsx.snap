@@ -23,7 +23,7 @@ exports[`component/BoardSwitcherDialog base case 1`] = `
               class="dialog-title"
             >
               <div>
-                Find Boards
+                Find boards
               </div>
             </h1>
             <h5

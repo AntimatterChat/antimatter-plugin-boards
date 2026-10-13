@@ -165,7 +165,7 @@ const SidebarCategory = (props: Props) => {
         subText: intl.formatMessage(
             {
                 id: 'SidebarCategories.CategoryMenu.DeleteModal.Body',
-                defaultMessage: 'Boards in <b>{categoryName}</b> will move back to the Boards categories. You\'re not removed from any boards.',
+                defaultMessage: 'Boards in <b>{categoryName}</b> will move back to the default categories. You\'re not removed from any boards.',
             },
             {
                 categoryName: props.categoryBoards.name,

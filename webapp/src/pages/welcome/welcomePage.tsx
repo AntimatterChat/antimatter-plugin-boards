@@ -114,13 +114,13 @@ const WelcomePage = () => {
                 <h1 className='text-heading9'>
                     <FormattedMessage
                         id='WelcomePage.Heading'
-                        defaultMessage='Welcome To Boards'
+                        defaultMessage='Welcome to Kanban'
                     />
                 </h1>
                 <div className='WelcomePage__subtitle'>
                     <FormattedMessage
                         id='WelcomePage.Description'
-                        defaultMessage='Boards is a project management tool that helps define, organize, track, and manage work across teams using a familiar Kanban board view.'
+                        defaultMessage='Kanban is a project management tool that helps define, organize, track, and manage work across teams, with boards of cards and columns.'
                     />
                 </div>
 

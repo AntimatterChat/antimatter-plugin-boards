@@ -19,7 +19,7 @@ func TestDistManifest(t *testing.T) {
 
 		manifest := &model.Manifest{
 			Id:              "focalboard",
-			Name:            "Antimatter Boards",
+			Name:            "Antimatter Kanban",
 			Version:         "9.3.0",
 			ReleaseNotesURL: "https://github.com/antimatterchat/antimatter-plugin-boards/releases/tag/v9.3.0",
 		}

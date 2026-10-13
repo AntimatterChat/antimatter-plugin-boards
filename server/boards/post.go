@@ -103,7 +103,7 @@ func returnBoardsParams(pathArray []string) (teamID, boardID, viewID, cardID str
 	// The reason we are doing this search for the first instance of boards or plugins is to take into account URL subpaths
 	index := -1
 	for i := 0; i < len(pathArray); i++ {
-		if pathArray[i] == "boards" || pathArray[i] == "plugins" {
+		if pathArray[i] == "kanban" || pathArray[i] == "boards" || pathArray[i] == "plugins" {
 			index = i
 			break
 		}
@@ -119,13 +119,14 @@ func returnBoardsParams(pathArray []string) (teamID, boardID, viewID, cardID str
 	// If at index, the parameter in the path is plugins,
 	// then we've copied this from a shared board
 
-	// For card links copied on a non-shared board, the path looks like {...Antimatter Url}.../boards/team/teamID/boardID/viewID/cardID
+	// For card links copied on a non-shared board, the path looks like {...Antimatter Url}.../kanban/team/teamID/boardID/viewID/cardID
+	// (or .../boards/team/..., the path it had as Boards)
 
 	// For card links copied on a shared board, the path looks like
 	// {...Antimatter Url}.../plugins/focalboard/team/teamID/shared/boardID/viewID/cardID?r=read_token
 
 	// This is a non-shared board card link
-	if len(pathArray)-index == 6 && pathArray[index] == "boards" && pathArray[index+1] == "team" {
+	if len(pathArray)-index == 6 && (pathArray[index] == "kanban" || pathArray[index] == "boards") && pathArray[index+1] == "team" {
 		teamID = pathArray[index+2]
 		boardID = pathArray[index+3]
 		viewID = pathArray[index+4]

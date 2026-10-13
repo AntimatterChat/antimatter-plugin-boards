@@ -103,7 +103,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
           />
           <div>
             <span>
-              Find Boards
+              Find boards
             </span>
           </div>
         </div>
@@ -1181,7 +1181,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
           />
           <div>
             <span>
-              Find Boards
+              Find boards
             </span>
           </div>
         </div>
@@ -2399,7 +2399,7 @@ exports[`src/components/workspace show open card tooltip 1`] = `
         <div
           class="tutorial-tour-tip__body"
         >
-          Open a card to explore the powerful ways that Boards can help you organize your work.
+          Open a card to explore the powerful ways that Kanban can help you organize your work.
         </div>
         <div
           class="tutorial-tour-tip__footer"

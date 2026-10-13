@@ -33,7 +33,7 @@ const RHSChannelBoardsHeader = () => {
                 <span>
                     <FormattedMessage
                         id='rhs-channel-boards-header.title'
-                        defaultMessage='Boards'
+                        defaultMessage='Kanban'
                     />
                 </span>
                 <span className='style--none sidebar--right__title__subtitle'>{currentChannel.display_name}</span>

@@ -25,7 +25,7 @@ const OpenCardTourStep = (): React.JSX.Element | null => {
     const screen = (
         <FormattedMessage
             id='OnboardingTour.OpenACard.Body'
-            defaultMessage='Open a card to explore the powerful ways that Boards can help you organize your work.'
+            defaultMessage='Open a card to explore the powerful ways that Kanban can help you organize your work.'
         />
     )
 

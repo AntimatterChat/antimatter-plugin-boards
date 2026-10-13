@@ -8,11 +8,14 @@ import {SuiteWindow} from './types/index'
 
 const windowAny = (window as SuiteWindow)
 
-// Boards is always mounted at this in-app route. Paths exchanged with the
+// Kanban is always mounted at this in-app route. Paths exchanged with the
 // Desktop App must be relative to the server subpath (the history basename),
 // exactly like the core web app. Prefixing the full frontendBaseURL here would
 // leak the subpath and force the Desktop App to strip it (see MM-67542).
-export const boardsRouteBase = '/boards'
+export const boardsRouteBase = '/kanban'
+
+// The route it had as Boards, which older links and notifications still use.
+const legacyRouteBase = '/boards'
 
 export const doBrowserHistoryPush = (path: string): void => {
     if (windowAny.desktopAPI?.sendBrowserHistoryPush) {
@@ -28,7 +31,9 @@ export const doBrowserHistoryPush = (path: string): void => {
     }
 }
 
-export const handleBrowserHistoryPush = (pathName: string, history: History): void => {
+export const handleBrowserHistoryPush = (path: string, history: History): void => {
+    const pathName = path === legacyRouteBase || path?.startsWith(`${legacyRouteBase}/`) ? boardsRouteBase + path.slice(legacyRouteBase.length) : path
+
     // Only navigate for the boards root or a path under it, so a route like
     // `/boards-legacy/...` is not mistaken for a boards path.
     if (!pathName || (pathName !== boardsRouteBase && !pathName.startsWith(`${boardsRouteBase}/`))) {

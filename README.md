@@ -1,12 +1,12 @@
-# Antimatter Boards
+# Antimatter Kanban
 
-### A self-hosted plugin for managing boards within an Antimatter installation
+### A self-hosted plugin for managing kanban boards within an Antimatter installation
 
-Antimatter boards plugins is an open source, multilingual, self-hosted project management tool that's an alternative to Trello, Notion, and Asana.
+Antimatter Kanban (formerly Antimatter Boards, a fork of Mattermost Boards / Focalboard) is an open source, multilingual, self-hosted project management tool that's an alternative to Trello, Notion, and Asana. It's called Kanban in Antimatter so it isn't confused with the Whiteboard's boards; its plugin id is still `focalboard`, and its pages still live under `/boards`.
 
-## Try Antimatter Boards Plugin 
+## Try the Antimatter Kanban plugin
 
-Access the latest releases of the antimatter boards plugin by downloading the `antimatter-plugin-focalboard.tar.gz` file from the releases in this repository: <https://github.com/antimatterchat/antimatter-plugin-boards/releases>. After downloading and installing the plugin in the System Console, select the menu in the top left corner and select **Boards**. 
+Access the latest releases of the antimatter boards plugin by downloading the `antimatter-plugin-focalboard.tar.gz` file from the releases in this repository: <https://github.com/antimatterchat/antimatter-plugin-boards/releases>. After downloading and installing the plugin in the System Console, select the menu in the top left corner and select **Kanban**. 
 
 ### Getting started
 

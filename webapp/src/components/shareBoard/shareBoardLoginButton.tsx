@@ -18,7 +18,7 @@ const ShareBoardLoginButton = () => {
 
     let redirectQueryParam = 'r=' + encodeURIComponent(generatePath('/:boardId?/:viewId?/:cardId?', match.params))
     if (Utils.isFocalboardLegacy()) {
-        redirectQueryParam = 'redirect_to=' + encodeURIComponent(generatePath('/boards/team/:teamId/:boardId?/:viewId?/:cardId?', match.params))
+        redirectQueryParam = 'redirect_to=' + encodeURIComponent(generatePath('/kanban/team/:teamId/:boardId?/:viewId?/:cardId?', match.params))
     }
     const loginPath = '/login?' + redirectQueryParam
 

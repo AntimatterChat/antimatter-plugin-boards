@@ -1,7 +1,7 @@
 {
     "id": "focalboard",
-    "name": "Antimatter Boards",
-    "description": "The Antimatter Boards plugin",
+    "name": "Antimatter Kanban",
+    "description": "Kanban boards: cards in columns, linked to channels, with templates, views and attributes",
     "homepage_url": "https://github.com/antimatterchat/antimatter-plugin-boards",
     "support_url": "https://github.com/antimatterchat/antimatter-plugin-boards/issues",
     "icon_path": "assets/antimatter-icon.svg",

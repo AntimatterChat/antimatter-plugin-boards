@@ -32,7 +32,7 @@ const BoardSwitcherDialog = (props: Props): React.JSX.Element => {
     const intl = useIntl()
     const team = useAppSelector(getCurrentTeam)
     const me = useAppSelector(getMe)
-    const title = intl.formatMessage({id: 'FindBoardsDialog.Title', defaultMessage: 'Find Boards'})
+    const title = intl.formatMessage({id: 'FindBoardsDialog.Title', defaultMessage: 'Find boards'})
     const subTitle = intl.formatMessage(
         {
             id: 'FindBoardsDialog.SubTitle',

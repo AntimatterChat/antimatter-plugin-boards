@@ -52,7 +52,7 @@ import CreateBoardFromTemplate from './components/createBoardFromTemplate'
 
 const windowAny = (window as SuiteWindow)
 windowAny.baseURL = process.env.TARGET_IS_PRODUCT ? '/plugins/boards' : '/plugins/focalboard'
-windowAny.frontendBaseURL = '/boards'
+windowAny.frontendBaseURL = '/kanban'
 windowAny.isFocalboardPlugin = true
 
 function getSubpath(siteURL: string): string {
@@ -229,7 +229,7 @@ export default class Plugin {
         })
 
         if (this.registry.registerProduct) {
-            windowAny.frontendBaseURL = subpath + '/boards'
+            windowAny.frontendBaseURL = subpath + '/kanban'
 
             const {rhsId, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
                 (props: {webSocketClient: AMWebSocketClient}) => (
@@ -248,16 +248,16 @@ export default class Plugin {
             )
             this.rhsId = rhsId
 
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<BoardsAppIcon colored={true}/>, () => amStore.dispatch(toggleRHSPlugin), 'Boards', 'Boards')
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<BoardsAppIcon colored={true}/>, () => amStore.dispatch(toggleRHSPlugin), 'Kanban', 'Kanban')
 
             this.registry.registerProduct(
-                '/boards',
+                '/kanban',
                 <BoardsAppIcon
                     size={24}
                     colored={true}
                 />,
-                'Boards',
-                '/boards',
+                'Kanban',
+                '/kanban',
                 MainApp,
                 HeaderComponent,
                 () => null,
@@ -265,7 +265,7 @@ export default class Plugin {
             )
 
             if (this.registry.registerAppBarComponent) {
-                this.registry.registerAppBarComponent(boardsAppIconURL, () => amStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
+                this.registry.registerAppBarComponent(boardsAppIconURL, () => amStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Kanban'}))
             }
 
             if (this.registry.registerActionAfterChannelCreation) {
