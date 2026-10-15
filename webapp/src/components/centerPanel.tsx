@@ -214,7 +214,7 @@ const CenterPanel = (props: Props) => {
     const addEmptyCardAndShow = useCallback(() => addCard('', true), [addCard])
 
     const shouldStartBoardsTour = useCallback((): boolean => {
-        const isOnboardingBoard = props.board.title === 'Welcome to Boards!'
+        const isOnboardingBoard = props.board.title === 'Welcome to Kanban!'
         const isTourStarted = onboardingTourStarted
         const completedCardsTour = onboardingTourCategory === TOUR_CARD && onboardingTourStep === FINISHED.toString()
         const noCardOpen = !currentCard

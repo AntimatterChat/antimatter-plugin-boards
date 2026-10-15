@@ -29,7 +29,7 @@ describe('components/onboardingTour/addComments/OpenCardTourStep', () => {
         },
         boards: {
             boards: {
-                board_id_1: {title: 'Welcome to Boards!'},
+                board_id_1: {title: 'Welcome to Kanban!'},
             },
             current: 'board_id_1',
         },

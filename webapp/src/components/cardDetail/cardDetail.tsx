@@ -44,7 +44,7 @@ import AttachmentList from './attachment'
 
 import './cardDetail.scss'
 
-export const OnboardingBoardTitle = 'Welcome to Boards!'
+export const OnboardingBoardTitle = 'Welcome to Kanban!'
 export const OnboardingCardTitle = 'Create a new card'
 
 type Props = {

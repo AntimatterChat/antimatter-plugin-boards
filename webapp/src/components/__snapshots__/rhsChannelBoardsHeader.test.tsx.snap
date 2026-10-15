@@ -42,7 +42,7 @@ exports[`components/rhsChannelBoardsHeader renders the header 1`] = `
       </svg>
     </span>
     <span>
-      Boards
+      Kanban
     </span>
     <span
       class="style--none sidebar--right__title__subtitle"

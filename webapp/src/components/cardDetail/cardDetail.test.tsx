@@ -206,7 +206,7 @@ describe('components/cardDetail/CardDetail', () => {
         const mockStore = configureStore([])
 
         const welcomeBoard = TestBlockFactory.createBoard()
-        welcomeBoard.title = 'Welcome to Boards!'
+        welcomeBoard.title = 'Welcome to Kanban!'
 
         const welcomeCard = TestBlockFactory.createCard(welcomeBoard)
         welcomeCard.title = 'Create a new card'
@@ -250,7 +250,7 @@ describe('components/cardDetail/CardDetail', () => {
         })
 
         const onboardingBoard = TestBlockFactory.createBoard()
-        onboardingBoard.title = 'Welcome to Boards!'
+        onboardingBoard.title = 'Welcome to Kanban!'
 
         const onboardingCard = TestBlockFactory.createCard(board)
         onboardingCard.title = 'Create a new card'
@@ -313,7 +313,7 @@ describe('components/cardDetail/CardDetail', () => {
         const mockStore = configureStore([])
 
         const welcomeBoard = TestBlockFactory.createBoard()
-        welcomeBoard.title = 'Welcome to Boards!'
+        welcomeBoard.title = 'Welcome to Kanban!'
 
         const welcomeCard = TestBlockFactory.createCard(welcomeBoard)
         welcomeCard.title = 'Create a new card'
@@ -357,7 +357,7 @@ describe('components/cardDetail/CardDetail', () => {
         })
 
         const onboardingBoard = TestBlockFactory.createBoard()
-        onboardingBoard.title = 'Welcome to Boards!'
+        onboardingBoard.title = 'Welcome to Kanban!'
 
         const onboardingCard = TestBlockFactory.createCard(board)
         onboardingCard.title = 'Create a new card'
@@ -419,7 +419,7 @@ describe('components/cardDetail/CardDetail', () => {
     test('should show add description tour tip', async () => {
         const mockStore = configureStore([])
         const welcomeBoard = TestBlockFactory.createBoard()
-        welcomeBoard.title = 'Welcome to Boards!'
+        welcomeBoard.title = 'Welcome to Kanban!'
 
         const welcomeCard = TestBlockFactory.createCard(welcomeBoard)
         welcomeCard.title = 'Create a new card'
@@ -463,7 +463,7 @@ describe('components/cardDetail/CardDetail', () => {
         const store = mockStore(state)
 
         const onboardingBoard = TestBlockFactory.createBoard()
-        onboardingBoard.title = 'Welcome to Boards!'
+        onboardingBoard.title = 'Welcome to Kanban!'
 
         const onboardingCard = TestBlockFactory.createCard(board)
         onboardingCard.title = 'Create a new card'

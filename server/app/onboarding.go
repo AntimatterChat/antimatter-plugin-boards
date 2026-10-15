@@ -17,7 +17,7 @@ const (
 	ValueOnboardingFirstStep    = "0"
 	ValueTourCategoryOnboarding = "onboarding"
 
-	WelcomeBoardTitle = "Welcome to Boards!"
+	WelcomeBoardTitle = "Welcome to Kanban!"
 )
 
 var (

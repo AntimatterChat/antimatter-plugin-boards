@@ -304,7 +304,7 @@ describe('src/components/workspace', () => {
         mockedUtils.isFocalboardPlugin.mockReturnValue(true)
 
         const welcomeBoard = TestBlockFactory.createBoard()
-        welcomeBoard.title = 'Welcome to Boards!'
+        welcomeBoard.title = 'Welcome to Kanban!'
 
         const onboardingCard = TestBlockFactory.createCard(welcomeBoard)
         onboardingCard.id = 'card1'
@@ -400,7 +400,7 @@ describe('src/components/workspace', () => {
 
     test('show add new view tooltip', async () => {
         const welcomeBoard = TestBlockFactory.createBoard()
-        welcomeBoard.title = 'Welcome to Boards!'
+        welcomeBoard.title = 'Welcome to Kanban!'
 
         const onboardingCard = TestBlockFactory.createCard(welcomeBoard)
         onboardingCard.id = 'card1'
@@ -501,7 +501,7 @@ describe('src/components/workspace', () => {
         mockedUtils.isFocalboardPlugin.mockReturnValue(true)
 
         const welcomeBoard = TestBlockFactory.createBoard()
-        welcomeBoard.title = 'Welcome to Boards!'
+        welcomeBoard.title = 'Welcome to Kanban!'
 
         const onboardingCard = TestBlockFactory.createCard(welcomeBoard)
         onboardingCard.id = 'card1'
