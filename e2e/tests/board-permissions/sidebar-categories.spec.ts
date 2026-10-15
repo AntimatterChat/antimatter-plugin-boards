@@ -87,13 +87,13 @@ async function loginAndOpenBoard(
 
     // Navigate to the boards root URL first so the app fully initialises —
     // welcome-page check, user-config fetch, Redux store hydration — before
-    // going to a specific board URL. Jumping straight to /boards/team/…/boardId/viewId
+    // going to a specific board URL. Jumping straight to /kanban/team/…/boardId/viewId
     // on a fresh context can race against the welcomePageViewed redirect and
     // trigger the React ErrorBoundary ("Sorry, something went wrong").
     await amPage.navigateToBoardsFromUrl(antimatter.url());
 
     await page.goto(
-        `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}`,
+        `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}`,
         { waitUntil: 'domcontentloaded', timeout: 60000 },
     );
     await expect(page.locator('.BoardComponent')).toBeVisible({ timeout: 20000 });

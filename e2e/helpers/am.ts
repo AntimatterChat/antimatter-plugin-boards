@@ -68,7 +68,7 @@ export class AntimatterPage {
     }
 
     async navigateToBoardsFromUrl(baseUrl: string) {
-        await this.page.goto(`${baseUrl}/boards`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+        await this.page.goto(`${baseUrl}/kanban`, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
         // On first visit, boards shows a welcome page. Dismiss it if present.
         const skipLink = this.page.locator('.WelcomePage .skip');

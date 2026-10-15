@@ -124,7 +124,7 @@ async function openCardAsUser(
     await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
     // Navigate directly to the card URL — the router renders the card dialog on top of the board.
-    const cardUrl = `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}/${cardId}`;
+    const cardUrl = `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}/${cardId}`;
     await page.goto(cardUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
     await expect(page.locator('.Dialog.cardDialog')).toBeVisible({ timeout: 20000 });

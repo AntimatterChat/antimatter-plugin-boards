@@ -53,7 +53,7 @@ async function setupBoard(page: Page, username: string, password: string, boardT
         const boardId = await createBoardViaApi(antimatter, boardTitle, userToken);
         const { teamId, viewId } = await getBoardMeta(antimatter, boardId, userToken);
         await page.goto(
-            `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}`,
+            `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}`,
             { waitUntil: 'domcontentloaded', timeout: 30000 },
         );
     }
@@ -282,7 +282,7 @@ test.describe('Board Member Roles', () => {
         await secondPage.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
         // Navigate directly to the full board URL, bypassing HomeToCurrentTeam.
-        const boardUrl = `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}`;
+        const boardUrl = `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}`;
         await secondPage.goto(boardUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
         await expect(secondPage.locator('.BoardComponent')).toBeVisible({ timeout: 20000 });
@@ -329,7 +329,7 @@ test.describe('Board Member Roles', () => {
         await secondPage.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
         // Navigate directly to the full board URL, bypassing HomeToCurrentTeam.
-        const boardUrl = `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}`;
+        const boardUrl = `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}`;
         await secondPage.goto(boardUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
         await expect(secondPage.locator('.BoardComponent')).toBeVisible({ timeout: 20000 });

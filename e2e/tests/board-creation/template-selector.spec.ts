@@ -66,7 +66,7 @@ async function setupAdmin(): Promise<{ token: string; teamId: string }> {
 }
 
 /**
- * Navigate to /boards/team/{teamId} (no boardId in the URL) so the template
+ * Navigate to /kanban/team/{teamId} (no boardId in the URL) so the template
  * selector renders as the center content.
  *
  * Without the sessionStorage guard, teamToBoardAndViewRedirect immediately
@@ -88,7 +88,7 @@ async function openTemplateSelectorViaTeamUrl(page: Page, teamId: string): Promi
     });
 
     await page.goto(
-        `${antimatter.url()}/boards/team/${teamId}`,
+        `${antimatter.url()}/kanban/team/${teamId}`,
         { waitUntil: 'domcontentloaded', timeout: 60000 },
     );
     await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 15000 });
@@ -120,7 +120,7 @@ async function loginAndOpenBoard(
     await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
     await page.goto(
-        `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}`,
+        `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}`,
         { waitUntil: 'domcontentloaded', timeout: 60000 },
     );
     await expect(page.locator('.BoardComponent')).toBeVisible({ timeout: 20000 });

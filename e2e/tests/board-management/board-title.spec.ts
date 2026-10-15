@@ -42,7 +42,7 @@ test.describe('Board Management', () => {
             const boardId = await createBoardViaApi(antimatter, boardTitle, userToken);
             const { teamId, viewId } = await getBoardMeta(antimatter, boardId, userToken);
             await page.goto(
-                `${antimatter.url()}/boards/team/${teamId}/${boardId}/${viewId}`,
+                `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}`,
                 { waitUntil: 'domcontentloaded', timeout: 30000 },
             );
         }
