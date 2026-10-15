@@ -1,5 +1,4 @@
 {
-  "AppBar.Tooltip": "Veksle lenkede tavler",
   "Attachment.Attachment-title": "Vedlegg",
   "AttachmentBlock.DeleteAction": "slett",
   "AttachmentBlock.addElement": "legg til {type}",
@@ -24,7 +23,6 @@
   "BoardMember.schemeNone": "Ingen",
   "BoardMember.schemeViewer": "Viser",
   "BoardMember.unlinkChannel": "Fjern lenke",
-  "BoardPage.newVersion": "En ny versjon av Boards er tilgjengelig, klikk her for å laste inn på nytt.",
   "BoardPage.syncFailed": "Tavle kan slettes eller adgangen trekkes tilbake.",
   "BoardTemplateSelector.add-template": "Lag ny mal",
   "BoardTemplateSelector.create-empty-board": "Opprett tom tavle",
@@ -167,7 +165,6 @@
   "FindBoardsDialog.NoResultsFor": "Ingen resultat for \"{searchQuery}\"",
   "FindBoardsDialog.NoResultsSubtext": "Sjekk stavingen eller søk på noe annet.",
   "FindBoardsDialog.SubTitle": "Skriv for å finne en tavle. Bruk <b>opp/ned</b> for å navigere. <b>Enter</b> for å velge, eller <b>Esc</b> for å avbryte",
-  "FindBoardsDialog.Title": "Finn tavle",
   "GroupBy.hideEmptyGroups": "Skjul {count} tomme grupper",
   "GroupBy.showHiddenGroups": "Vis {count} tomme grupper",
   "GroupBy.ungroup": "Fjern fra gruppe",
