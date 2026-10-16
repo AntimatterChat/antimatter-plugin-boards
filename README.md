@@ -4,6 +4,12 @@
 
 Antimatter Kanban (formerly Antimatter Boards, a fork of Mattermost Boards / Focalboard) is an open source, multilingual, self-hosted project management tool that's an alternative to Trello, Notion, and Asana. It's called Kanban in Antimatter so it isn't confused with the Whiteboard's boards; its plugin id is still `focalboard`, and its pages still live under `/boards`.
 
+## Documentation
+
+See the [user guide](https://antimatter.chat/docs/users/apps.html#kanban) and the
+[admin guide](https://antimatter.chat/docs/admins/apps.html#kanban-notes) on
+[antimatter.chat/docs](https://antimatter.chat/docs/).
+
 ## Try the Antimatter Kanban plugin
 
 Access the latest releases of the antimatter boards plugin by downloading the `antimatter-plugin-focalboard.tar.gz` file from the releases in this repository: <https://github.com/antimatterchat/antimatter-plugin-boards/releases>. After downloading and installing the plugin in the System Console, select the menu in the top left corner and select **Kanban**. 
@@ -46,7 +52,7 @@ Set the following environment variables to true before running `make dist`-
 ### Deploying with Local Mode
 
 If your Antimatter server is running locally, you can
-enable [local mode](https://docs.antimatter.example/manage/mmctl-command-line-tool.html) to streamline deploying
+enable [local mode](https://antimatter.chat/docs/admins/configuration.html#amctl) to streamline deploying
 your plugin. Edit your server configuration as follows:
 
 ```

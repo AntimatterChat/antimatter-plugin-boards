@@ -56,16 +56,16 @@ The auto-generated Swagger API documentation is for Focalboard Personal Server. 
 
 ### API URLs endpoint
 
-The API endpoint is at `https://SERVERNAME/plugins/focalboard/api/`, e.g. `https://docs.antimatter.example/plugins/focalboard/api/`.
+The API endpoint is at `https://SERVERNAME/plugins/focalboard/api/`, e.g. `https://chat.example.com/plugins/focalboard/api/`.
 
 ### Use the Antimatter auth token
 
-Refer to the [Antimatter API documentation here](https://docs.antimatter.example/#tag/authentication) on how to obtain the auth token.
+Refer to the [Antimatter API documentation here](https://antimatter.chat/docs/developers/api.html#auth) on how to obtain the auth token.
 
 Pass this token as a bearer token to the Boards APIs, e.g.
 
 ```
-curl -i -H "X-Requested-With: XMLHttpRequest" -H 'Authorization: Bearer abcdefghijklmnopqrstuvwxyz' https://docs.antimatter.example/plugins/focalboard/api/v2/workspaces
+curl -i -H "X-Requested-With: XMLHttpRequest" -H 'Authorization: Bearer abcdefghijklmnopqrstuvwxyz' https://chat.example.com/plugins/focalboard/api/v2/workspaces
 ```
 
 Note that the `X-Requested-With: XMLHttpRequest` header is required to pass the CSRF check.
