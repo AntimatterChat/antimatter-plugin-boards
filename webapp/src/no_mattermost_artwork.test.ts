@@ -38,15 +38,24 @@ const sourceFiles = (dir: string): string[] => fs.readdirSync(dir, {withFileType
     return (/\.(tsx?|jsx?|s?css)$/).test(entry.name) && !(/\.test\.(tsx?|jsx?)$/).test(entry.name) ? [full] : []
 })
 
+// The first group of every match of a global pattern (String.matchAll is ES2020, the plugin builds for ES2019).
+const captures = (code: string, pattern: RegExp): string[] => {
+    const found: string[] = []
+    for (let m = pattern.exec(code); m; m = pattern.exec(code)) {
+        found.push(m[1])
+    }
+    return found
+}
+
 // The modules a file imports (import ... from, import '...', require(), import(), @import, url()), as paths from the
 // web app's root when they're relative.
 const importsOf = (file: string): string[] => {
     const code = fs.readFileSync(file, 'utf8')
     const specs = [
-        ...Array.from(code.matchAll(/(?:from\s+|import\s+|require\(\s*|import\(\s*)['"]([^'"]+)['"]/g)),
-        ...Array.from(code.matchAll(/@import\s+['"]([^'"]+)['"]/g)),
-        ...Array.from(code.matchAll(/url\(\s*['"]?([^'")]+)['"]?\s*\)/g)),
-    ].map((m) => m[1])
+        ...captures(code, /(?:from\s+|import\s+|require\(\s*|import\(\s*)['"]([^'"]+)['"]/g),
+        ...captures(code, /@import\s+['"]([^'"]+)['"]/g),
+        ...captures(code, /url\(\s*['"]?([^'")]+)['"]?\s*\)/g),
+    ]
     return specs.map((spec) => (spec.startsWith('.') ? path.relative(WEBAPP, path.resolve(path.dirname(file), spec)).split(path.sep).join('/') : spec))
 }
 

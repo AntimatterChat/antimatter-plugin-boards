@@ -27,7 +27,6 @@ type Props = {
     telemetryTag: string
     placement: Placement | undefined
     hideBackdrop: boolean
-    imageURL?: string
     singleTip?: boolean
     hideNavButtons?: boolean
     showForce?: boolean
@@ -72,7 +71,6 @@ const TourTipRenderer = (props: Props): React.JSX.Element | null => {
             tutorialCategory={props.category}
             placement={props.placement}
             className={props.classname}
-            imageURL={props.imageURL}
             telemetryTag={props.telemetryTag}
             skipCategoryFromBackdrop={true}
             autoTour={true}

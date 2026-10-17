@@ -16,7 +16,12 @@ const declarations = (selector: string): Record<string, string> => {
     const start = css.indexOf(selector + ' {')
     expect(start).toBeGreaterThanOrEqual(0)
     const body = css.slice(start + selector.length + 2, css.indexOf('}', start))
-    return Object.fromEntries(Array.from(body.matchAll(/(--[\w-]+):\s*([^;]+);/g)).map((m) => [m[1], m[2].trim()]))
+    const found: Record<string, string> = {}
+    const pattern = /(--[\w-]+):\s*([^;]+);/g
+    for (let m = pattern.exec(body); m; m = pattern.exec(body)) {
+        found[m[1]] = m[2].trim()
+    }
+    return found
 }
 
 const THEMES = {

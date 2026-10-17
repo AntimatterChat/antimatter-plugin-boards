@@ -48,12 +48,11 @@ import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import {useHasPermissions} from '../../hooks/permissions'
 import {useInPanel} from '../../panel/context'
+import {confirmDialog} from '../fusion/confirm_dialog'
 
 import TeamPermissionsRow from './teamPermissionsRow'
 import ChannelPermissionsRow from './channelPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
-
-import {confirmDialog} from '../fusion/confirm_dialog'
 
 import './shareBoard.scss'
 
