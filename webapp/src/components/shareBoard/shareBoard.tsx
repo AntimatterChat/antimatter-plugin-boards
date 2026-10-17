@@ -53,6 +53,8 @@ import TeamPermissionsRow from './teamPermissionsRow'
 import ChannelPermissionsRow from './channelPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
 
+import {confirmDialog} from '../fusion/confirm_dialog'
+
 import './shareBoard.scss'
 
 type Props = {
@@ -162,8 +164,21 @@ export default function ShareBoardDialog(props: Props): React.JSX.Element {
     }
 
     const onRegenerateToken = async () => {
-        // eslint-disable-next-line no-alert
-        const accept = window.confirm(intl.formatMessage({id: 'ShareBoard.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
+        const accept = await confirmDialog({
+            title: intl.formatMessage({
+                id: 'ShareBoard.confirmRegenerateToken.title',
+                defaultMessage: 'Regenerate the public link?',
+                description: 'Kanban: the title of the confirmation before making a new public link to a board.',
+            }),
+            message: intl.formatMessage({id: 'ShareBoard.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}),
+            confirmLabel: intl.formatMessage({
+                id: 'ShareBoard.confirmRegenerateToken.confirm',
+                defaultMessage: 'Regenerate',
+                description: 'Kanban: the button that confirms making a new public link to a board.',
+            }),
+            cancelLabel: intl.formatMessage({id: 'ConfirmationDialog.cancel-action', defaultMessage: 'Cancel'}),
+            danger: true,
+        })
         if (accept) {
             const newSharing: ISharing = sharing || createSharingInfo()
             newSharing.token = Utils.createGuid(IDType.Token)

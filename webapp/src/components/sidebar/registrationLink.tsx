@@ -11,6 +11,7 @@ import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getCurrentTeam, Team, refreshCurrentTeam, regenerateSignupToken} from '../../store/teams'
 
 import Modal from '../modal'
+import {confirmDialog} from '../fusion/confirm_dialog'
 
 import './registrationLink.scss'
 
@@ -33,8 +34,21 @@ const RegistrationLink = (props: Props) => {
     }, [])
 
     const regenerateToken = async () => {
-        // eslint-disable-next-line no-alert
-        const accept = window.confirm(intl.formatMessage({id: 'RegistrationLink.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
+        const accept = await confirmDialog({
+            title: intl.formatMessage({
+                id: 'RegistrationLink.confirmRegenerateToken.title',
+                defaultMessage: 'Regenerate the registration link?',
+                description: 'Kanban: the title of the confirmation before making a new registration link.',
+            }),
+            message: intl.formatMessage({id: 'RegistrationLink.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}),
+            confirmLabel: intl.formatMessage({
+                id: 'ShareBoard.confirmRegenerateToken.confirm',
+                defaultMessage: 'Regenerate',
+                description: 'Kanban: the button that confirms making a new public link to a board.',
+            }),
+            cancelLabel: intl.formatMessage({id: 'ConfirmationDialog.cancel-action', defaultMessage: 'Cancel'}),
+            danger: true,
+        })
         if (accept) {
             await dispatch(regenerateSignupToken())
             await dispatch(refreshCurrentTeam())
