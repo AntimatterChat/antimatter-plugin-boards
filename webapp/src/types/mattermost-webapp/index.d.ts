@@ -27,5 +27,5 @@ export interface PluginRegistry {
     registerActionAfterChannelCreation(component: React.Element)
     registerReconnectHandler?(handler: () => void)
 
-    // Add more if needed from https://docs.antimatter.example/extend/plugins/webapp/reference
+    // Add more if needed, see https://antimatter.chat/docs/developers/apps.html
 }
