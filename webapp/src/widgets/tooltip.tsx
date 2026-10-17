@@ -17,8 +17,8 @@ type Props = {
 // Adds tooltip div over children elements, the popup will
 // be positioned based on the specified placement
 // Default position is 'top'
-// Under the Fusion UI, it's Fusion's tooltip (data-am-tip), drawn by the web app above the element; Kanban's own is
-// hidden there (fusion_skin.scss).
+// Under the Fusion UI, it's Fusion's tooltip (data-am-tip), drawn by the web app above the element (below it when
+// there's no room above, at the top of the window); Kanban's own is hidden there (fusion_skin.scss).
 function Tooltip(props: Props): React.JSX.Element {
     if (isFusion()) {
         return (
