@@ -19,7 +19,7 @@ import {Utils} from '../utils'
 import {AMWebSocketClient} from '../wsclient'
 
 import {InPanelContext, PANEL_ROOT_ATTRIBUTE} from './context'
-import {PanelHistory, panelHistory} from './history'
+import {PanelHistory, panelHistory, usePanelState} from './history'
 import {
     BOARD_PATH,
     NEW_LINKED_BOARD_PATH,
@@ -180,6 +180,12 @@ export function usePanelBox(ref: React.RefObject<HTMLDivElement | null>): boolea
 type Props = {
     webSocketClient?: AMWebSocketClient
     history?: PanelHistory
+
+    // Where the panel is, for the web app's "Open in a new window" (Fusion only; the classic UI passes neither).
+    setPanelState?: (state: string | null) => void
+
+    // In a pop-out window: where the main window's panel was.
+    initialPanelState?: string
 }
 
 // PanelCrash replaces the panel's views when one of them fails, rather than reloading the app on the error page.
@@ -201,7 +207,8 @@ const PanelCrash = () => {
  * page (the community's boards by category, the templates, a board in its board, table, gallery or calendar view,
  * a card, the welcome page) as views with a back button. A board widens the panel; a card opens in a dialog over it.
  */
-const KanbanPanel = ({webSocketClient, history = panelHistory}: Props): React.JSX.Element => {
+const KanbanPanel = ({webSocketClient, history = panelHistory, setPanelState, initialPanelState}: Props): React.JSX.Element => {
+    usePanelState(history, setPanelState, initialPanelState)
     useMarkOpen()
     const rootRef = useRef<HTMLDivElement>(null)
     const narrow = usePanelBox(rootRef)

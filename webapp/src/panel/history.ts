@@ -4,6 +4,7 @@
 // the paths they had under /kanban, in a memory history: their links and routes work as they did, the page's address
 // stays the conversation's, and the panel's back button goes back through them.
 
+import {useEffect, useState} from 'react'
 import {
     History,
     LocationDescriptor,
@@ -13,7 +14,7 @@ import {
     createPath,
 } from 'history'
 
-import {PANEL_HOME} from './paths'
+import {PANEL_HOME, teamOfPath} from './paths'
 
 export type PanelHistory = History & {
 
@@ -97,4 +98,53 @@ export function openPanelHome(history: PanelHistory = panelHistory): void {
     if (!(controls?.isOpen() ?? false)) {
         history.reset(PANEL_HOME)
     }
+}
+
+// The longest panel state the web app keeps in a pop-out window's address.
+const MAX_PANEL_STATE = 512
+
+/**
+ * panelPathOfState is the view a pop-out window starts at, from the state the main window's panel reported (a board,
+ * a card, the community's boards: /team/<team>/...), or null for the panel's start. The state comes from the window's
+ * address, so it is untrusted: only a path of the panel's, without control characters, is taken; the board itself is
+ * then fetched as the signed-in person, and one they can't open shows Kanban's error view.
+ */
+export function panelPathOfState(panelState?: string): string | null {
+    if (!panelState || panelState.length > MAX_PANEL_STATE || /[\u0000-\u001f\u007f]/.test(panelState)) {
+        return null
+    }
+    const location = createLocation(panelState)
+    if (!location.pathname?.startsWith('/team/') || !teamOfPath(location.pathname) || location.pathname.split('/').includes('..')) {
+        return null
+    }
+    return createPath(location)
+}
+
+/**
+ * usePanelState keeps the web app told where the panel is (setPanelState: the view's path, or null on the channel's
+ * boards), so that "Open in a new window" starts the pop-out at the same board or card; in the pop-out
+ * (initialPanelState), the panel starts there, with the channel's boards to go back to. Without these props (the
+ * classic UI), the panel works as before.
+ */
+export function usePanelState(history: PanelHistory, setPanelState?: (state: string | null) => void, initialPanelState?: string): void {
+    useState(() => {
+        const path = panelPathOfState(initialPanelState)
+        if (path) {
+            history.reset(PANEL_HOME)
+            history.push(path)
+        }
+        return true
+    })
+
+    useEffect(() => {
+        if (!setPanelState) {
+            return undefined
+        }
+        const report = () => {
+            const path = createPath(history.location)
+            setPanelState(path === PANEL_HOME ? null : path)
+        }
+        report()
+        return history.listen(report)
+    }, [history, setPanelState])
 }

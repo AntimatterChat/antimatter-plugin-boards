@@ -179,7 +179,13 @@ export default class Plugin {
         // boards, the templates, a board and its cards are views of the panel. Links to the old pages open them
         // there (OldUrlRedirect and the link handler below).
         const {id: rhsId, showRHSPlugin, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
-            (props: {webSocketClient: AMWebSocketClient}) => <KanbanPanel webSocketClient={props.webSocketClient}/>,
+            (props: {webSocketClient: AMWebSocketClient, setPanelState?: (state: string | null) => void, initialPanelState?: string}) => (
+                <KanbanPanel
+                    webSocketClient={props.webSocketClient}
+                    setPanelState={props.setPanelState}
+                    initialPanelState={props.initialPanelState}
+                />
+            ),
             <PanelTitlePlaceholder/>,
         )
         this.rhsId = rhsId
