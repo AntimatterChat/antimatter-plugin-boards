@@ -442,6 +442,9 @@ describe('components/sidebarSidebar', () => {
         const customGlobal = global as any
         customGlobal.innerWidth = 500
 
+        // The side panel is the plugin's.
+        customGlobal.isFocalboardPlugin = true
+
         const store = mockStore({
             teams: {
                 current: {id: 'team-id'},
@@ -451,6 +454,7 @@ describe('components/sidebarSidebar', () => {
                 boards: {
                     [board.id]: board,
                 },
+                templates: {},
                 myBoardMemberships: {
                     [board.id]: board,
                 },
@@ -497,6 +501,7 @@ describe('components/sidebarSidebar', () => {
         expect(container.querySelector('.octo-sidebar-list')).not.toBeNull()
         expect(getByTestId('settings-menu')).toBeTruthy()
         customGlobal.innerWidth = 1024
+        delete customGlobal.isFocalboardPlugin
     })
 
     // TODO: Fix this later

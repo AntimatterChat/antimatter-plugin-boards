@@ -4,12 +4,12 @@ import React from 'react'
 import {IntlProvider} from 'react-intl'
 import {Provider as ReduxProvider} from 'react-redux'
 import {Router} from 'react-router-dom'
-import configureStore from 'redux-mock-store'
-import {thunk} from 'redux-thunk'
 import {act, render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import RootPortal from '../components/rootPortal'
+
+import {mockStateStore} from '../testUtils'
 
 import {InPanelContext} from './context'
 import {makePanelHistory, PanelHistory} from './history'
@@ -46,13 +46,18 @@ jest.mock('../components/boardTemplateSelector/boardTemplateSelector', () => ({_
 jest.mock('../components/rhsChannelBoards', () => ({__esModule: true, default: () => <div data-testid='channel-boards'/>}))
 jest.mock('../components/globalHeader/globalHeaderSettingsMenu', () => ({__esModule: true, default: () => <div data-testid='settings-menu'/>}))
 jest.mock('../pages/welcome/welcomePage', () => ({__esModule: true, default: () => <div data-testid='welcome'/>}))
-jest.mock('../store/initialLoad', () => ({initialLoad: () => ({type: 'mock/initialLoad'})}))
+// The store keeps its reducers (they need the thunks' action types); loading the community's boards does nothing.
+jest.mock('../store/initialLoad', () => {
+    const actual = jest.requireActual('../store/initialLoad')
+    return {...actual, initialLoad: Object.assign(() => ({type: 'mock/initialLoad'}), actual.initialLoad)}
+})
 jest.mock('../app', () => ({__esModule: true, default: ({children}: {children: React.ReactNode}) => <>{children}</>}))
 jest.mock('../components/withWebSockets', () => ({__esModule: true, default: ({children}: {children: React.ReactNode}) => <>{children}</>}))
 
 // Antimatter: Kanban has no full page any more: its pages are views of the side panel, with a back button.
 describe('panel/KanbanPanel', () => {
-    const mockStore = configureStore([thunk])
+    // The views dispatch plain actions only (loading the community's boards is mocked).
+    const mockStore = (state: unknown) => mockStateStore([], state)
 
     const board = {id: 'b1', teamId: 't1', title: 'Roadmap', icon: '', cardProperties: []}
 
@@ -268,7 +273,7 @@ describe('panel/KanbanPanel', () => {
 describe('panel/KanbanPanel title', () => {
     test('waits for the web app to draw the title bar', async () => {
         const history = makePanelHistory()
-        const store = configureStore([thunk])({
+        const store = mockStateStore([], {
             users: {me: {id: 'u1', props: {}}, loggedIn: true, myConfig: {}},
             clientConfig: {value: {featureFlags: {}}},
             globalError: {value: ''},

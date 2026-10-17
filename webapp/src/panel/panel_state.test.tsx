@@ -4,9 +4,9 @@ import React from 'react'
 import {IntlProvider} from 'react-intl'
 import {Provider as ReduxProvider} from 'react-redux'
 import {Router} from 'react-router-dom'
-import configureStore from 'redux-mock-store'
-import {thunk} from 'redux-thunk'
 import {act, render, renderHook, screen} from '@testing-library/react'
+
+import {mockStateStore} from '../testUtils'
 
 import {InPanelContext} from './context'
 import {makePanelHistory, panelPathOfState, usePanelState} from './history'
@@ -17,7 +17,11 @@ jest.mock('../pages/boardPage/boardPage', () => ({__esModule: true, default: () 
 jest.mock('../pages/accessDeniedPage', () => ({__esModule: true, default: () => <div data-testid='access-denied'/>}))
 jest.mock('../pages/errorPage', () => ({__esModule: true, default: () => <div data-testid='error-page'/>}))
 jest.mock('../components/rhsChannelBoards', () => ({__esModule: true, default: () => <div data-testid='channel-boards'/>}))
-jest.mock('../store/initialLoad', () => ({initialLoad: () => ({type: 'mock/initialLoad'})}))
+// The store keeps its reducers (they need the thunks' action types); loading the community's boards does nothing.
+jest.mock('../store/initialLoad', () => {
+    const actual = jest.requireActual('../store/initialLoad')
+    return {...actual, initialLoad: Object.assign(() => ({type: 'mock/initialLoad'}), actual.initialLoad)}
+})
 
 // Antimatter: "Open in a new window" starts the pop-out at the board or card the panel shows: the panel tells the web
 // app where it is (setPanelState), and the pop-out's panel starts there (initialPanelState, from its address).
@@ -110,7 +114,8 @@ describe('panel/usePanelState', () => {
 })
 
 describe('the pop-out\'s panel', () => {
-    const mockStore = configureStore([thunk])
+    // The views dispatch plain actions only (loading the community's boards is mocked).
+    const mockStore = (state: unknown) => mockStateStore([], state)
     const makeStore = (globalError = '') => mockStore({
         users: {me: {id: 'u1', is_guest: false, props: {}}, loggedIn: true, myConfig: {welcomePageViewed: {value: '1'}}},
         clientConfig: {value: {featureFlags: {}}},

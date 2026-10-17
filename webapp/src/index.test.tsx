@@ -11,8 +11,12 @@ import {PANEL_HOME} from './panel/paths'
 import {installLinkInterceptor} from './panel/link_interceptor'
 
 jest.mock('./octoClient')
-jest.mock('./store/initialLoad', () => ({initialLoad: () => ({type: 'mock/initialLoad'})}))
-jest.mock('./theme', () => ({setAntimatterTheme: jest.fn()}))
+// The store keeps its reducers (they need the thunks' action types); loading the community's boards does nothing.
+jest.mock('./store/initialLoad', () => {
+    const actual = jest.requireActual('./store/initialLoad')
+    return {...actual, initialLoad: Object.assign(() => ({type: 'mock/initialLoad'}), actual.initialLoad)}
+})
+jest.mock('./theme', () => ({...jest.requireActual('./theme'), setAntimatterTheme: jest.fn()}))
 jest.mock('./panel/link_interceptor', () => ({installLinkInterceptor: jest.fn()}))
 
 // Antimatter: Kanban is an app of the side panel: it has no full page (registerProduct) any more.
@@ -55,6 +59,7 @@ describe('Plugin', () => {
     })
 
     beforeEach(() => {
+        jest.clearAllMocks()
         jest.mocked(installLinkInterceptor).mockReturnValue(removeLinkInterceptor)
     })
 
