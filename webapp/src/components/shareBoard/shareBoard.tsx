@@ -371,7 +371,7 @@ export default function ShareBoardDialog(props: Props): React.JSX.Element {
             {showLinkChannelConfirmation &&
                 <ConfirmationDialog
                     dialogBox={{
-                        heading: intl.formatMessage({id: 'shareBoard.confirm-link-channel', defaultMessage: 'Link board to channel'}),
+                        heading: intl.formatMessage({id: 'shareBoard.confirm-link-channel', defaultMessage: 'Add board to channel'}),
                         subText: confirmSubtext,
                         confirmButtonText,
                         destructive: board.channelId !== '',

@@ -224,7 +224,7 @@ exports[`components/rhsChannelBoards renders with empty list of boards 1`] = `
         type="button"
       >
         <span>
-          Link boards to Channel Name
+          Add boards to Channel Name
         </span>
       </button>
     </div>

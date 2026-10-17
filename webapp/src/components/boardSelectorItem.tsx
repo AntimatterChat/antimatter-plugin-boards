@@ -49,7 +49,7 @@ const BoardSelectorItem = (props: Props) => {
                     >
                         <FormattedMessage
                             id='boardSelector.link'
-                            defaultMessage='Link'
+                            defaultMessage='Add'
                         />
                     </Button>}
             </div>

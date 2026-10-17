@@ -115,7 +115,7 @@ const RHSChannelBoards = () => {
                         title={intl.formatMessage({id: 'rhs-boards.no-boards-linked-to-channel', defaultMessage: 'No boards are linked to {channelName} yet'}, {channelName: headerChannelName})}
                         text={intl.formatMessage({id: 'rhs-boards.no-boards-linked-to-channel-description', defaultMessage: 'Kanban is a project management tool that helps define, organize, track and manage work across teams, with boards of cards and columns.'})}
                         action={canLink ? {
-                            label: intl.formatMessage({id: 'rhs-boards.link-boards-to-channel', defaultMessage: 'Link boards to {channelName}'}, {channelName}),
+                            label: intl.formatMessage({id: 'rhs-boards.link-boards-to-channel', defaultMessage: 'Add boards to {channelName}'}, {channelName}),
                             onClick: () => dispatch(setLinkToChannel(currentChannel.id)),
                         } : undefined}
                     />
@@ -149,7 +149,7 @@ const RHSChannelBoards = () => {
                         >
                             <FormattedMessage
                                 id='rhs-boards.link-boards-to-channel'
-                                defaultMessage='Link boards to {channelName}'
+                                defaultMessage='Add boards to {channelName}'
                                 values={{channelName: channelName}}
                             />
                         </Button>

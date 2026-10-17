@@ -105,11 +105,11 @@ describe('components/boardSelector', () => {
             </ReduxProvider>
         ))
 
-        expect(getByText(/Link boards/i)).not.toBeNull()
+        expect(getByText(/Add boards/i)).not.toBeNull()
 
         expect(store.dispatch).toHaveBeenCalledTimes(0)
 
-        fireEvent.keyDown(getByText(/Link boards/i), {
+        fireEvent.keyDown(getByText(/Add boards/i), {
             key: "Escape",
             code: "Escape",
             keyCode: 27,
