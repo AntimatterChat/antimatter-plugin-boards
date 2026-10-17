@@ -50,6 +50,9 @@ func (a *App) notifySubscriptionChanged(subscription *model.Subscription) {
 			mlog.String("block_id", subscription.BlockID),
 			mlog.Err(err),
 		)
+		// The block (or its board) is gone, e.g. deleted right after it was created from a template:
+		// there's no team to tell, and board is nil.
+		return
 	}
 	a.wsAdapter.BroadcastSubscriptionChange(board.TeamID, subscription)
 }
