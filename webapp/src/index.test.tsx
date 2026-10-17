@@ -1,14 +1,17 @@
-// Copyright (c) 2026-present Antimatter contributors. See LICENSE.txt for license information.
+// Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 
 import React from 'react'
 
 import {SuiteWindow} from './types/index'
-import Plugin from './index'
+
 import {PanelTitlePlaceholder} from './panel/panel_title'
 import OldUrlRedirect from './panel/old_urls'
 import {panelHistory} from './panel/history'
 import {PANEL_HOME} from './panel/paths'
 import {installLinkInterceptor} from './panel/link_interceptor'
+
+import Plugin from './index'
 
 jest.mock('./octoClient')
 // The store keeps its reducers (they need the thunks' action types); loading the community's boards does nothing.

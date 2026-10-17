@@ -1,4 +1,5 @@
-// Copyright (c) 2026-present Antimatter contributors. See LICENSE.txt for license information.
+// Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 
 // Antimatter: the panel's history. Kanban's views (a board, its card, the community's boards, the templates...) keep
 // the paths they had under /kanban, in a memory history: their links and routes work as they did, the page's address

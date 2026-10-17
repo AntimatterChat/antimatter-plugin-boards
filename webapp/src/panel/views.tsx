@@ -1,4 +1,5 @@
-// Copyright (c) 2026-present Antimatter contributors. See LICENSE.txt for license information.
+// Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 
 // Antimatter: the views of the Kanban panel that weren't pages of the full page, and the frames of those that were.
 
@@ -93,8 +94,6 @@ function useTeamOfRoute(teamId: string | undefined): void {
         octoClient.teamId = teamId
         dispatch(setTeam(teamId))
         dispatch(initialLoad())
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [teamId])
 }
 

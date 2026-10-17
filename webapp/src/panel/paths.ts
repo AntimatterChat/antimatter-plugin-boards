@@ -1,4 +1,5 @@
-// Copyright (c) 2026-present Antimatter contributors. See LICENSE.txt for license information.
+// Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 
 // Antimatter: Kanban has no full page any more. Its pages are views of its side panel, kept at the paths the full
 // page had under /kanban (/team/<team>/<board>/<view>/<card>...), in the panel's own history. This module only holds

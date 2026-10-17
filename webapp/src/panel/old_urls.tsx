@@ -1,4 +1,5 @@
-// Copyright (c) 2026-present Antimatter contributors. See LICENSE.txt for license information.
+// Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 
 // Antimatter: the links to the old full page keep working. Messages, emails and notifications link to
 // /kanban/team/<team>/<board>/<view>/<card> (or /boards/..., as it was called before); the web app sends them to
@@ -172,8 +173,6 @@ const OldUrlRedirect = (props: Props): null => {
             replace: (path) => history.replace(path),
             open: openKanbanPanel,
         })
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return null

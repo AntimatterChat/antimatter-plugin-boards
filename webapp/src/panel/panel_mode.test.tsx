@@ -1,4 +1,5 @@
-// Copyright (c) 2026-present Antimatter contributors. See LICENSE.txt for license information.
+// Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 
 // Antimatter: Kanban's components behave as views of the side panel there: they navigate in the panel, keep the
 // app's keyboard shortcuts and page, and build the links the full page had.
