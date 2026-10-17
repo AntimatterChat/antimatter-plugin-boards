@@ -5,7 +5,7 @@ import React from 'react'
 import {IntlProvider} from 'react-intl'
 import {Provider as ReduxProvider} from 'react-redux'
 import {Router} from 'react-router-dom'
-import {act, render, screen, waitFor} from '@testing-library/react'
+import {act, render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import RootPortal from '../components/rootPortal'
@@ -17,7 +17,7 @@ import {makePanelHistory, PanelHistory} from './history'
 import {SET_RHS_EXPANDED, setHostStore} from './host'
 import KanbanPanel, {PanelRoutes, isKanbanPanelOpen} from './panel'
 import {PANEL_HOME} from './paths'
-import {PANEL_TITLE_ID, PanelTitlePlaceholder} from './panel_title'
+import {PanelToolbarRow} from './panel_title'
 
 // The views' contents have tests of their own: here, what the panel shows where.
 jest.mock('../pages/boardPage/boardPage', () => {
@@ -104,34 +104,69 @@ describe('panel/KanbanPanel', () => {
 
     const renderPanel = (history: PanelHistory, store = makeStore()) => render(
         <IntlProvider locale='en'>
-            <PanelTitlePlaceholder/>
-            <ReduxProvider store={store}>
-                <Router history={history}>
-                    <InPanelContext.Provider value={true}>
-                        <PanelRoutes/>
-                    </InPanelContext.Provider>
-                </Router>
-            </ReduxProvider>
+            <PanelToolbarRow>
+                <ReduxProvider store={store}>
+                    <Router history={history}>
+                        <InPanelContext.Provider value={true}>
+                            <PanelRoutes/>
+                        </InPanelContext.Provider>
+                    </Router>
+                </ReduxProvider>
+            </PanelToolbarRow>
         </IntlProvider>,
     )
 
-    const title = () => document.getElementById(PANEL_TITLE_ID)!
+    // The panel's toolbar row, where each view puts its title, back button and actions.
+    const title = () => screen.getByTestId('kanban-panel-toolbar')
 
     test('opens on the channel\'s boards, titled with the channel, without a back button', () => {
         const history = makePanelHistory()
         renderPanel(history)
 
         expect(screen.getByTestId('channel-boards')).toBeTruthy()
-        expect(title().textContent).toContain('Kanban')
         expect(title().textContent).toContain('Town Square')
         expect(title().querySelector('.KanbanPanelTitle__back')).toBeNull()
+    })
+
+    test('has one icon, the panel header\'s: the toolbar doesn\'t draw Kanban\'s logo or name again', () => {
+        renderPanel(makePanelHistory())
+
+        expect(title().querySelector('.KanbanPanelTitle__logo, .BoardsAppIcon, img')).toBeNull()
+        expect(title().textContent).not.toContain('Kanban')
+    })
+
+    test('puts All boards and New board in the toolbar, as icon buttons named by their tooltips', () => {
+        renderPanel(makePanelHistory())
+
+        const allBoards = screen.getByRole('button', {name: 'All boards'})
+        const newBoard = screen.getByRole('button', {name: 'New board'})
+        for (const button of [allBoards, newBoard]) {
+            expect(title().querySelector('.KanbanPanelTitle__actions')!.contains(button)).toBe(true)
+            expect(button.classList.contains('IconButton')).toBe(true)
+            expect(button.classList.contains('KanbanPanelTitle__action')).toBe(true)
+            expect(button.textContent).toBe('')
+            expect(button.getAttribute('title') || button.getAttribute('data-am-tip')).toBe(button.getAttribute('aria-label'))
+        }
+        expect(Array.from(title().querySelectorAll('button')).map((b) => b.getAttribute('aria-label'))).toEqual(['All boards', 'New board'])
+
+        // Not in the view's body any more.
+        expect(document.querySelector('.KanbanPanelHome__browse')).toBeNull()
+        expect(screen.getByTestId('channel-boards').closest('[data-testid="kanban-panel-toolbar"]')).toBeNull()
+    })
+
+    test('New board opens the templates', () => {
+        const history = makePanelHistory()
+        renderPanel(history)
+
+        userEvent.click(screen.getByRole('button', {name: 'New board'}))
+        expect(history.location.pathname).toBe('/team/t1/templates')
     })
 
     test('goes to the community\'s boards (the full page\'s sidebar) and back', () => {
         const history = makePanelHistory()
         renderPanel(history)
 
-        userEvent.click(screen.getByText('All boards'))
+        userEvent.click(screen.getByRole('button', {name: 'All boards'}))
         expect(history.location.pathname).toBe('/team/t1')
         expect(screen.getByTestId('boards-list')).toBeTruthy()
         expect(screen.getByTestId('settings-menu')).toBeTruthy()
@@ -271,41 +306,47 @@ describe('panel/KanbanPanel', () => {
     })
 })
 
-describe('panel/KanbanPanel title', () => {
-    test('waits for the web app to draw the title bar', async () => {
-        const history = makePanelHistory()
-        const store = mockStateStore([], {
-            users: {me: {id: 'u1', props: {}}, loggedIn: true, myConfig: {}},
-            clientConfig: {value: {featureFlags: {}}},
-            globalError: {value: ''},
-            teams: {current: {id: 't1', title: 'Lumen'}, currentId: 't1'},
-            channels: {current: {id: 'ch1', display_name: 'Town Square', type: 'O'}},
-            boards: {current: '', boards: {}, templates: {}, myBoardMemberships: {}},
-            views: {current: '', views: {}},
-            cards: {cards: {}, current: ''},
-        })
-        const panel = (
-            <ReduxProvider store={store}>
-                <Router history={history}>
-                    <InPanelContext.Provider value={true}>
-                        <PanelRoutes/>
-                    </InPanelContext.Provider>
-                </Router>
-            </ReduxProvider>
-        )
+describe('panel/KanbanPanel toolbar', () => {
+    const makeStore = () => mockStateStore([], {
+        users: {me: {id: 'u1', props: {}}, loggedIn: true, myConfig: {}},
+        clientConfig: {value: {featureFlags: {}}},
+        globalError: {value: ''},
+        teams: {current: {id: 't1', title: 'Lumen'}, currentId: 't1'},
+        channels: {current: {id: 'ch1', display_name: 'Town Square', type: 'O'}},
+        boards: {current: '', boards: {}, templates: {}, myBoardMemberships: {}},
+        views: {current: '', views: {}},
+        cards: {cards: {}, current: ''},
+    })
 
-        const {rerender} = render(<IntlProvider locale='en'>{panel}</IntlProvider>)
-        expect(document.getElementById(PANEL_TITLE_ID)).toBeNull()
-
-        rerender(
+    test('is the first row of the panel, above its views, not in the web app\'s header', () => {
+        const {container} = render(
             <IntlProvider locale='en'>
-                <PanelTitlePlaceholder/>
-                {panel}
+                <KanbanPanel history={makePanelHistory()}/>
             </IntlProvider>,
         )
 
-        await waitFor(() => {
-            expect(document.getElementById(PANEL_TITLE_ID)!.textContent).toContain('Town Square')
-        })
+        const root = container.querySelector('[data-kanban-panel]')!
+        const toolbar = screen.getByTestId('kanban-panel-toolbar')
+        expect(root.firstElementChild).toBe(toolbar)
+        expect(root.querySelector('#focalboard-app')!.contains(toolbar)).toBe(false)
+        expect(document.getElementById('kanban-panel-title')).toBeNull()
+    })
+
+    test('a view drawn on its own draws its title in place', () => {
+        render(
+            <IntlProvider locale='en'>
+                <ReduxProvider store={makeStore()}>
+                    <Router history={makePanelHistory()}>
+                        <InPanelContext.Provider value={true}>
+                            <PanelRoutes/>
+                        </InPanelContext.Provider>
+                    </Router>
+                </ReduxProvider>
+            </IntlProvider>,
+        )
+
+        const title = screen.getByTestId('kanban-panel-title')
+        expect(title.parentElement!.classList.contains('KanbanPanelToolbar')).toBe(true)
+        expect(title.textContent).toContain('Town Square')
     })
 })

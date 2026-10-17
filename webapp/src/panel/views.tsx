@@ -12,7 +12,7 @@ import Sidebar from '../components/sidebar/sidebar'
 import BoardTemplateSelector from '../components/boardTemplateSelector/boardTemplateSelector'
 import RHSChannelBoards from '../components/rhsChannelBoards'
 import GlobalHeaderSettingsMenu from '../components/globalHeader/globalHeaderSettingsMenu'
-import Button from '../widgets/buttons/button'
+import IconButton from '../widgets/buttons/iconButton'
 import CompassIcon from '../widgets/icons/compassIcon'
 import octoClient from '../octoClient'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
@@ -31,7 +31,8 @@ import {PanelTitle, usePanelHistory} from './panel_title'
 
 /**
  * ChannelHome is the panel's first view, as the side panel always was: the boards linked to the current channel, and
- * the way to all of the community's boards (the full page's left sidebar) and to a new board.
+ * in its toolbar the way to all of the community's boards (the full page's left sidebar) and to a new board. The
+ * panel's header names the app: the toolbar is titled with the channel.
  */
 export const ChannelHome = (): React.JSX.Element => {
     const intl = useIntl()
@@ -40,42 +41,41 @@ export const ChannelHome = (): React.JSX.Element => {
     const team = useAppSelector(getCurrentTeam)
     const me = useAppSelector<IUser|null>(getMe)
 
+    const allBoards = intl.formatMessage({
+        id: 'KanbanPanel.all-boards',
+        defaultMessage: 'All boards',
+        description: 'Kanban side panel: the button that shows every board of the community, by category.',
+    })
+    const newBoard = intl.formatMessage({
+        id: 'KanbanPanel.new-board',
+        defaultMessage: 'New board',
+        description: 'Kanban side panel: the button that creates a board from a template.',
+    })
+
     return (
         <>
             <PanelTitle
                 back={false}
-                title={intl.formatMessage({id: 'rhs-channel-boards-header.title', defaultMessage: 'Kanban'})}
-                subtitle={channel?.display_name}
-            />
-            <div className='KanbanPanelHome'>
-                {team &&
-                    <div className='KanbanPanelHome__browse'>
-                        <Button
-                            emphasis='tertiary'
-                            size='medium'
+                title={channel?.display_name || intl.formatMessage({id: 'rhs-channel-boards-header.title', defaultMessage: 'Kanban'})}
+                actions={team && (
+                    <>
+                        <IconButton
+                            className='KanbanPanelTitle__action KanbanPanel__all-boards'
+                            title={allBoards}
                             icon={<CompassIcon icon='view-grid-outline'/>}
                             onClick={() => history.push(boardsPath(team.id))}
-                        >
-                            {intl.formatMessage({
-                                id: 'KanbanPanel.all-boards',
-                                defaultMessage: 'All boards',
-                                description: 'Kanban side panel: the button that shows every board of the community, by category.',
-                            })}
-                        </Button>
+                        />
                         {me && !me.is_guest &&
-                            <Button
-                                emphasis='tertiary'
-                                size='medium'
+                            <IconButton
+                                className='KanbanPanelTitle__action KanbanPanel__new-board'
+                                title={newBoard}
                                 icon={<CompassIcon icon='plus'/>}
                                 onClick={() => history.push(templatesPath(team.id))}
-                            >
-                                {intl.formatMessage({
-                                    id: 'KanbanPanel.new-board',
-                                    defaultMessage: 'New board',
-                                    description: 'Kanban side panel: the button that creates a board from a template.',
-                                })}
-                            </Button>}
-                    </div>}
+                            />}
+                    </>
+                )}
+            />
+            <div className='KanbanPanelHome'>
                 <RHSChannelBoards/>
             </div>
         </>

@@ -42,7 +42,6 @@ import {PluginRegistry} from './types/mattermost-webapp'
 import './plugin.scss'
 import CreateBoardFromTemplate from './components/createBoardFromTemplate'
 import KanbanPanel, {isKanbanPanelOpen} from './panel/panel'
-import {PanelTitlePlaceholder} from './panel/panel_title'
 import OldUrlRedirect from './panel/old_urls'
 import {openPanelHome, panelHistory, setPanelControls} from './panel/history'
 import {installLinkInterceptor} from './panel/link_interceptor'
@@ -186,7 +185,10 @@ export default class Plugin {
                     initialPanelState={props.initialPanelState}
                 />
             ),
-            <PanelTitlePlaceholder/>,
+
+            // The panel's title is the app's name, which the web app's panel header shows: the views' titles, back
+            // buttons and actions are in the panel's own toolbar row (PanelToolbarRow), not in the header.
+            'Kanban',
         )
         this.rhsId = rhsId
         setPanelControls({

@@ -1,53 +1,44 @@
 // Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useEffect, useState} from 'react'
+import React, {createContext, useContext, useState} from 'react'
 import ReactDOM from 'react-dom'
 import {useIntl} from 'react-intl'
 import {useHistory} from 'react-router-dom'
 
 import IconButton from '../widgets/buttons/iconButton'
 import CompassIcon from '../widgets/icons/compassIcon'
-import BoardsAppIcon from '../widgets/icons/boardsAppIcon'
 
 import type {PanelHistory} from './history'
 
-// The title bar of the side panel is the web app's: the views fill the placeholder the plugin registers as its title.
-export const PANEL_TITLE_ID = 'kanban-panel-title'
-const TITLE_READY_EVENT = 'kanban-panel-title-ready'
+// The panel's toolbar: the row at the top of the panel's body where the view shown puts its title, its back button
+// and its actions (the channel's boards: all boards, a new board; a board's name and view...). It's Kanban's own row,
+// under the web app's panel header, which is the same for every app (the app's icon and name, its size, a new window,
+// close) and has nothing of the app in it.
+
+// The row the views fill, once it's drawn: undefined outside a panel (a view drawn on its own draws its title in
+// place), null while the row isn't drawn yet.
+const ToolbarSlot = createContext<HTMLElement | null | undefined>(undefined)
 
 /**
- * PanelTitlePlaceholder is the panel's title, as registered with the web app (registerRightHandSidebarComponent):
- * an empty box that the panel's views fill.
+ * PanelToolbarRow is the panel's toolbar row, above the views given as children, which fill it with PanelTitle. The
+ * row takes no room when the view puts nothing in it.
  */
-export const PanelTitlePlaceholder = (): React.JSX.Element => {
-    useEffect(() => {
-        window.dispatchEvent(new Event(TITLE_READY_EVENT))
-    }, [])
+export const PanelToolbarRow = ({children}: {children: React.ReactNode}): React.JSX.Element => {
+    const [slot, setSlot] = useState<HTMLDivElement | null>(null)
 
     return (
-        <div
-            id={PANEL_TITLE_ID}
-            className='KanbanPanelTitlePlaceholder'
-        />
+        <>
+            <div
+                ref={setSlot}
+                className='KanbanPanelToolbar'
+                data-testid='kanban-panel-toolbar'
+            />
+            <ToolbarSlot.Provider value={slot}>
+                {children}
+            </ToolbarSlot.Provider>
+        </>
     )
-}
-
-// useTitleContainer is the placeholder, once the web app has drawn it (it may come after the panel's views).
-function useTitleContainer(): HTMLElement | null {
-    const [container, setContainer] = useState<HTMLElement | null>(() => document.getElementById(PANEL_TITLE_ID))
-
-    useEffect(() => {
-        const find = () => {
-            const found = document.getElementById(PANEL_TITLE_ID)
-            setContainer((current) => (current === found ? current : found))
-        }
-        find()
-        window.addEventListener(TITLE_READY_EVENT, find)
-        return () => window.removeEventListener(TITLE_READY_EVENT, find)
-    }, [])
-
-    return container
 }
 
 // usePanelHistory is the panel's history (its router's), with its back button's moves.
@@ -65,16 +56,13 @@ type Props = {
 }
 
 /**
- * PanelTitle is the title bar of a panel view: a back button (but on the panel's first view), the view's name and what
- * it shows (a board's name, a channel's).
+ * PanelTitle is the title bar of a panel view, in the panel's toolbar row: a back button (but on the panel's first
+ * view), the view's name and what it shows (a board's name, a community's), and its actions.
  */
 export const PanelTitle = ({title, subtitle, back = true, actions}: Props): React.JSX.Element | null => {
     const intl = useIntl()
     const history = usePanelHistory()
-    const container = useTitleContainer()
-    if (!container) {
-        return null
-    }
+    const slot = useContext(ToolbarSlot)
 
     const backLabel = intl.formatMessage({
         id: 'KanbanPanel.back',
@@ -82,25 +70,18 @@ export const PanelTitle = ({title, subtitle, back = true, actions}: Props): Reac
         description: 'Kanban side panel: the button that goes back to the previous view of the panel.',
     })
 
-    return ReactDOM.createPortal((
+    const bar = (
         <div
             className='KanbanPanelTitle'
             data-testid='kanban-panel-title'
         >
-            {back ? (
+            {back && (
                 <IconButton
                     className='KanbanPanelTitle__back'
                     onClick={() => history.back()}
                     title={backLabel}
                     icon={<CompassIcon icon='chevron-left'/>}
                 />
-            ) : (
-                <span className='KanbanPanelTitle__logo'>
-                    <BoardsAppIcon
-                        size={24}
-                        colored={true}
-                    />
-                </span>
             )}
             <span
                 className='KanbanPanelTitle__text'
@@ -110,7 +91,7 @@ export const PanelTitle = ({title, subtitle, back = true, actions}: Props): Reac
             </span>
             {subtitle && (
                 <span
-                    className='KanbanPanelTitle__subtitle style--none sidebar--right__title__subtitle'
+                    className='KanbanPanelTitle__subtitle'
                     data-testid='kanban-panel-subtitle'
                 >
                     {subtitle}
@@ -118,5 +99,13 @@ export const PanelTitle = ({title, subtitle, back = true, actions}: Props): Reac
             )}
             {actions && <span className='KanbanPanelTitle__actions'>{actions}</span>}
         </div>
-    ), container)
+    )
+
+    if (slot === undefined) {
+        return <div className='KanbanPanelToolbar'>{bar}</div>
+    }
+    if (!slot) {
+        return null
+    }
+    return ReactDOM.createPortal(bar, slot)
 }

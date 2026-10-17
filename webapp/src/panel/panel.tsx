@@ -22,6 +22,7 @@ import {setLayerPanelBox} from '../components/fusion/layer'
 
 import {InPanelContext, PANEL_ROOT_ATTRIBUTE} from './context'
 import {PanelHistory, panelHistory, usePanelState} from './history'
+import {PanelToolbarRow} from './panel_title'
 import {
     BOARD_PATH,
     NEW_LINKED_BOARD_PATH,
@@ -213,6 +214,7 @@ const PanelCrash = () => {
  * KanbanPanel is the Kanban app in the side panel: the channel's boards first, and every page the app had as a full
  * page (the community's boards by category, the templates, a board in its board, table, gallery or calendar view,
  * a card, the welcome page) as views with a back button. A board widens the panel; a card opens in a dialog over it.
+ * Each view puts its title, back button and actions in the panel's toolbar row, at the top of its body.
  */
 const KanbanPanel = ({webSocketClient, history = panelHistory, setPanelState, initialPanelState}: Props): React.JSX.Element => {
     usePanelState(history, setPanelState, initialPanelState)
@@ -235,15 +237,18 @@ const KanbanPanel = ({webSocketClient, history = panelHistory, setPanelState, in
                             className={`focalboard-body KanbanPanel${narrow ? ' KanbanPanel--narrow' : ''}`}
                             {...root}
                         >
-                            <div id='focalboard-app'>
-                                <App>
-                                    <ErrorBoundary fallback={<PanelCrash/>}>
-                                        <Router history={history}>
-                                            <PanelRoutes/>
-                                        </Router>
-                                    </ErrorBoundary>
-                                </App>
-                            </div>
+                            {/* The views' titles, back buttons and actions, at the top of the panel. */}
+                            <PanelToolbarRow>
+                                <div id='focalboard-app'>
+                                    <App>
+                                        <ErrorBoundary fallback={<PanelCrash/>}>
+                                            <Router history={history}>
+                                                <PanelRoutes/>
+                                            </Router>
+                                        </ErrorBoundary>
+                                    </App>
+                                </div>
+                            </PanelToolbarRow>
 
                             {/* The dialogs (a card, sharing a board...) cover the panel, not the whole window. */}
                             <div id='focalboard-root-portal'/>
