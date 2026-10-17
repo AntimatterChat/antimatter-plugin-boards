@@ -5,6 +5,7 @@ import React from 'react'
 
 import './iconButton.scss'
 import {Utils} from '../../utils'
+import {iconTip} from '../../components/fusion/tip'
 
 type Props = {
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
@@ -30,8 +31,9 @@ function IconButton(props: Props): React.JSX.Element {
             onClick={props.onClick}
             onMouseDown={props.onMouseDown}
             className={Utils.generateClassName(classNames)}
-            title={props.title}
-            aria-label={props.title}
+
+            // Its name, shown as Fusion's tooltip under the Fusion UI and the browser's under the classic UI.
+            {...(props.title ? iconTip(props.title) : {})}
         >
             {props.icon}
         </button>

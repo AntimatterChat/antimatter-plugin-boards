@@ -5,6 +5,7 @@ import React from 'react'
 
 import './button.scss'
 import {Utils} from '../../utils'
+import {tip} from '../../components/fusion/tip'
 
 type Props = {
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
@@ -43,7 +44,7 @@ function Button(props: Props): React.JSX.Element {
             onMouseOver={props.onMouseOver}
             onMouseLeave={props.onMouseLeave}
             className={Utils.generateClassName(classNames)}
-            title={props.title}
+            {...(props.title ? tip(props.title) : {})}
             onBlur={props.onBlur}
             disabled={props?.disabled}
         >
