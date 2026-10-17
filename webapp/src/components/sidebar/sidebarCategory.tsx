@@ -46,6 +46,8 @@ import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmation
 import SidebarCategoriesTourStep from '../../components/onboardingTour/sidebarCategories/sidebarCategories'
 import ManageCategoriesTourStep from '../../components/onboardingTour/manageCategories/manageCategories'
 
+import {useInPanel} from '../../panel/context'
+
 import DeleteBoardDialog from './deleteBoardDialog'
 import SidebarBoardItem from './sidebarBoardItem'
 
@@ -75,6 +77,9 @@ const SidebarCategory = (props: Props) => {
     const [categoryMenuOpen, setCategoryMenuOpen] = useState<boolean>(false)
 
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
+
+    // Antimatter: in the side panel, the list of boards shows no board: deleting one leaves you on the list.
+    const inPanel = useInPanel()
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
     const [showUpdateCategoryModal, setShowUpdateCategoryModal] = useState(false)
 
@@ -225,6 +230,10 @@ const SidebarCategory = (props: Props) => {
                     }
                 }
 
+                if (inPanel) {
+                    return
+                }
+
                 // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
                     if (targetBoardId) {
@@ -239,10 +248,12 @@ const SidebarCategory = (props: Props) => {
             async () => {
                 // Restore the board to the category it was deleted from
                 await mutator.moveBoardToCategory(teamID, deleteBoard.id, deletedFromCategoryID, '')
-                showBoard(deleteBoard.id)
+                if (!inPanel) {
+                    showBoard(deleteBoard.id)
+                }
             },
         )
-    }, [showBoard, deleteBoard, props.boards, props.allCategories, props.categoryBoards.id, teamID, allMyBoards, intl, isBoardVisible, match.path, history])
+    }, [showBoard, deleteBoard, props.boards, props.allCategories, props.categoryBoards.id, teamID, allMyBoards, intl, isBoardVisible, match.path, history, inPanel])
 
     const updateCategory = useCallback(async (value: boolean) => {
         const updatedCategory: Category = {

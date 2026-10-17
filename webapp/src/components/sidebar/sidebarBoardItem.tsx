@@ -45,6 +45,7 @@ import {getCurrentBoardId} from '../../store/boards'
 import {UserSettings} from '../../userSettings'
 import {Archiver} from '../../archiver'
 import {getValidEmojiData} from '../../utils/emojiUtils'
+import {useInPanel} from '../../panel/context'
 
 const iconForViewType = (viewType: IViewType): React.JSX.Element => {
     switch (viewType) {
@@ -85,6 +86,9 @@ const SidebarBoardItem = (props: Props) => {
     const dispatch = useAppDispatch()
     const currentBoardID = useAppSelector(getCurrentBoardId)
     const allBoards = useAppSelector(getMySortedBoards)
+
+    // Antimatter: in the side panel, the list of boards shows no board: hiding one leaves you on the list.
+    const inPanel = useInPanel()
 
     const generateMoveToCategoryOptions = (boardID: string) => {
         return props.allCategories.map((category) => (
@@ -170,7 +174,7 @@ const SidebarBoardItem = (props: Props) => {
 
         // If we're hiding the board we're currently on,
         // we need to switch to a different board once its hidden.
-        if (currentBoardID === props.board.id) {
+        if (currentBoardID === props.board.id && !inPanel) {
             // There's no special logic on what the next board needs to be.
             // To keep things simple, we just switch to the first unhidden board
 

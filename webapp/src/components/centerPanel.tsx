@@ -39,6 +39,7 @@ import {
 import {UserConfigPatch} from '../user'
 
 import octoClient from '../octoClient'
+import {isPanelActive, useInPanel} from '../panel/context'
 
 import ShareBoardButton from './shareBoard/shareBoardButton'
 import ShareBoardLoginButton from './shareBoard/shareBoardLoginButton'
@@ -94,18 +95,21 @@ const CenterPanel = (props: Props) => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: props.board.id, view: props.activeView.id, viewType: props.activeView.fields.viewType})
     }, [])
 
+    // Antimatter: in the side panel, the selected cards' shortcuts act only after a click in the panel.
+    const inPanel = useInPanel()
+
     useHotkeys('esc', (e: KeyboardEvent) => {
-        if (e.target !== document.body || props.readonly) {
+        if (e.target !== document.body || props.readonly || !isPanelActive(inPanel)) {
             return
         }
         if (selectedCardIds.length > 0) {
             setSelectedCardIds([])
             e.stopPropagation()
         }
-    }, [selectedCardIds, props.readonly])
+    }, [selectedCardIds, props.readonly, inPanel])
 
     useHotkeys('ctrl+d', (e: KeyboardEvent) => {
-        if (e.target !== document.body || props.readonly) {
+        if (e.target !== document.body || props.readonly || !isPanelActive(inPanel)) {
             return
         }
 
@@ -131,10 +135,10 @@ const CenterPanel = (props: Props) => {
             e.stopPropagation()
             e.preventDefault()
         }
-    }, [selectedCardIds, props.readonly, props.cards, props.board.id])
+    }, [selectedCardIds, props.readonly, props.cards, props.board.id, inPanel])
 
     useHotkeys('delete,backspace', (e: KeyboardEvent) => {
-        if (e.target !== document.body || props.readonly) {
+        if (e.target !== document.body || props.readonly || !isPanelActive(inPanel)) {
             return
         }
 

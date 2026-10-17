@@ -29,6 +29,7 @@ import propsRegistry from '../properties'
 import {getMe} from '../store/users'
 
 import {getHiddenBoardIDs} from '../store/sidebar'
+import {useInPanel} from '../panel/context'
 
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
@@ -151,6 +152,9 @@ function CenterContent(props: Props) {
 const Workspace = (props: Props) => {
     const board = useAppSelector(getCurrentBoard)
 
+    // Antimatter: in the side panel, the boards' list is a view of its own (the back button goes to it).
+    const inPanel = useInPanel()
+
     const viewId = useAppSelector(getCurrentViewId)
     const [boardTemplateSelectorOpen, setBoardTemplateSelectorOpen] = useState(false)
 
@@ -168,7 +172,7 @@ const Workspace = (props: Props) => {
 
     return (
         <div className='Workspace'>
-            {!props.readonly &&
+            {!props.readonly && !inPanel &&
                 <Sidebar
                     onBoardTemplateSelectorOpen={openBoardTemplateSelector}
                     onBoardTemplateSelectorClose={closeBoardTemplateSelector}

@@ -4,6 +4,7 @@
 
 import React, {ReactNode} from 'react'
 import {useIntl} from 'react-intl'
+import {useHistory} from 'react-router-dom'
 
 import DeleteIcon from '../../widgets/icons/delete'
 import Menu from '../../widgets/menu'
@@ -17,6 +18,7 @@ import {IUser} from '../../user'
 import {getMe} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import {useInPanel} from '../../panel/context'
 
 type Props = {
     cardId: string
@@ -28,6 +30,11 @@ type Props = {
 
 export const CardActionsMenu = (props: Props): React.JSX.Element => {
     const {cardId} = props
+
+    // Antimatter: in the side panel, the page's address is the conversation's; the card's link is the one the full
+    // page had (/kanban/team/<team>/<board>/<view>/<card>), which opens the panel on it.
+    const inPanel = useInPanel()
+    const history = useHistory()
 
     const me = useAppSelector<IUser|null>(getMe)
     const intl = useIntl()
@@ -68,6 +75,9 @@ export const CardActionsMenu = (props: Props): React.JSX.Element => {
                     name={intl.formatMessage({id: 'CardActionsMenu.copyLink', defaultMessage: 'Copy link'})}
                     onClick={() => {
                         let cardLink = window.location.href
+                        if (inPanel && history) {
+                            cardLink = Utils.getFrontendBaseURL(true) + history.location.pathname
+                        }
 
                         if (!cardLink.includes(cardId)) {
                             cardLink += `/${cardId}`

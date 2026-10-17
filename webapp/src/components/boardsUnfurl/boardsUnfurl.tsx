@@ -186,11 +186,12 @@ export const BoardsUnfurl = (props: Props): React.JSX.Element => {
         <WithWebSockets manifest={manifest} webSocketClient={webSocketClient}>
             {!loading && (!card || !board) && <></>}
             {!loading && card && board &&
+                // Antimatter: a click opens the card in the side panel (the link handler has it); a full page
+                // used to open in a new tab.
                 <a
                     className='FocalboardUnfurl'
                     href={`${baseURL}${originalPath}`}
                     rel='noopener noreferrer'
-                    target='_blank'
                 >
 
                     {/* Header of the Card*/}

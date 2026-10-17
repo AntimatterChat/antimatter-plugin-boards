@@ -3,6 +3,7 @@
 
 import React  from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
+import {useHistory} from 'react-router-dom'
 
 import mutator from '../mutator'
 import {Utils} from '../utils'
@@ -13,17 +14,16 @@ import IconButton from '../widgets/buttons/iconButton'
 import OptionsIcon from '../widgets/icons/options'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
-import {SuiteWindow} from '../types/index'
 import CompassIcon from '../widgets/icons/compassIcon'
 
 import {Permission} from '../constants'
 
 import BoardPermissionGate from '../components/permissions/boardPermissionGate'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import {openKanbanPanel} from '../panel/history'
+import {boardPath} from '../panel/paths'
 
 import './rhsChannelBoardItem.scss'
-
-const windowAny = (window as SuiteWindow)
 
 type Props = {
     board: Board
@@ -34,6 +34,9 @@ const RHSChannelBoardItem = (props: Props) => {
     const board = props.board
 
     const team = useAppSelector(getCurrentTeam)
+
+    // In the side panel, its router's history (undefined outside it).
+    const history = useHistory()
     if (!team) {
         return null
     }
@@ -43,7 +46,13 @@ const RHSChannelBoardItem = (props: Props) => {
         const extraData = {teamID: team.id, board: boardID}
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelsRHSBoard, extraData)
 
-        window.open(`${windowAny.frontendBaseURL}/team/${team.id}/${boardID}`, '_blank', 'noopener')
+        // Antimatter: the board opens in the side panel (a full page used to open in a new tab).
+        const path = boardPath(team.id, boardID)
+        if (history) {
+            history.push(path)
+        } else {
+            openKanbanPanel(path)
+        }
     }
 
     const onUnlinkBoard = async (board: Board) => {

@@ -22,6 +22,8 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 import octoClient from '../../../../webapp/src/octoClient'
 import {Constants} from '../../constants'
 
+import {InPanelContext} from '../../panel/context'
+
 import Sidebar from './sidebar'
 
 Object.defineProperty(Constants, 'versionString', {value: '1.0.0'})
@@ -432,6 +434,69 @@ describe('components/sidebarSidebar', () => {
         expect(container).toMatchSnapshot()
 
         expect(mockedOctoClient.moveBoardToCategory).toHaveBeenCalledTimes(0)
+    })
+
+    // Antimatter: in the side panel, the sidebar is the view that lists the boards: as wide as the panel, it never hides
+    // itself (the panel is narrower than the window size it used to hide at), and has Kanban's settings menu.
+    test('in the side panel, the list of boards never hides and has the settings menu', () => {
+        const customGlobal = global as any
+        customGlobal.innerWidth = 500
+
+        const store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: '',
+                boards: {
+                    [board.id]: board,
+                },
+                myBoardMemberships: {
+                    [board.id]: board,
+                },
+            },
+            cards: {
+                cards: {},
+                current: '',
+            },
+            views: {
+                views: [],
+            },
+            users: {
+                me: {
+                    id: 'user_id_1',
+                    props: {},
+                },
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
+                hiddenBoardIDs: [],
+            },
+        })
+
+        const history = createMemoryHistory()
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <InPanelContext.Provider value={true}>
+                        <Sidebar
+                            onBoardTemplateSelectorOpen={jest.fn()}
+                            settingsMenu={<div data-testid='settings-menu'/>}
+                        />
+                    </InPanelContext.Provider>
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container, getByTestId} = render(component)
+
+        expect(container.querySelector('.Sidebar.Sidebar--panel')).not.toBeNull()
+        expect(container.querySelector('.Sidebar.hidden')).toBeNull()
+        expect(container.querySelector('.HideSidebarIcon')).toBeNull()
+        expect(container.querySelector('.octo-sidebar-list')).not.toBeNull()
+        expect(getByTestId('settings-menu')).toBeTruthy()
+        customGlobal.innerWidth = 1024
     })
 
     // TODO: Fix this later

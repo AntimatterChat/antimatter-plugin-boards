@@ -20,6 +20,7 @@ import {IAppWindow} from './types'
 import {ChangeHandlerType, WSMessage} from './wsclient'
 import {BoardCategoryWebsocketData, Category} from './store/sidebar'
 import {UserSettings} from './userSettings'
+import {BOARD_PATH, NEW_LINKED_BOARD_PATH, PANEL_BOARDS_PATH, PANEL_TEMPLATES_PATH} from './panel/paths'
 
 declare let window: IAppWindow
 
@@ -774,8 +775,10 @@ class Utils {
     }
 
     static getBoardPagePath(currentPath: string) {
-        if (currentPath === '/team/:teamId/new/:channelId') {
-            return '/team/:teamId/:boardId?/:viewId?/:cardId?'
+        // Antimatter: the side panel's views that show no board (the community's boards, the templates) open a board
+        // at the board's path, as the template picker of a board for a channel does.
+        if (currentPath === NEW_LINKED_BOARD_PATH || currentPath === PANEL_BOARDS_PATH || currentPath === PANEL_TEMPLATES_PATH) {
+            return BOARD_PATH
         }
         return currentPath
     }

@@ -47,6 +47,8 @@ import {useWebsockets} from '../../hooks/websockets'
 
 import {Board} from '../../blocks/board'
 
+import {useInPanel} from '../../panel/context'
+
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
@@ -55,6 +57,9 @@ type Props = {
     activeBoardId?: string
     onBoardTemplateSelectorOpen: () => void
     onBoardTemplateSelectorClose?: () => void
+
+    // Antimatter: Kanban's settings menu, next to "Find boards" in the side panel's list of boards.
+    settingsMenu?: React.ReactNode
 }
 
 function getWindowDimensions() {
@@ -76,6 +81,10 @@ const Sidebar = (props: Props) => {
     const activeViewID = useAppSelector(getCurrentViewId)
     const currentBoard = useAppSelector(getCurrentBoard)
     const [initialized, setInitialized] = useState(false)
+
+    // Antimatter: in the side panel, the sidebar is the view that lists the boards, as wide as the panel: it never
+    // hides itself.
+    const inPanel = useInPanel()
 
     useEffect(() => {
         const categoryOnChangeHandler = (_: WSClient, categories: Category[]) => {
@@ -169,6 +178,9 @@ const Sidebar = (props: Props) => {
     }
 
     const hideSidebar = () => {
+        if (inPanel) {
+            return
+        }
         if (!userHidden) {
             if (windowDimensions.width < 768) {
                 setHidden(true)
@@ -348,7 +360,7 @@ const Sidebar = (props: Props) => {
         return <div/>
     }
 
-    if (isHidden) {
+    if (isHidden && !inPanel) {
         return (
             <div className='Sidebar octo-sidebar hidden'>
                 <div className='octo-sidebar-header show-button'>
@@ -396,7 +408,7 @@ const Sidebar = (props: Props) => {
     }
 
     return (
-        <div className='Sidebar octo-sidebar'>
+        <div className={`Sidebar octo-sidebar${inPanel ? ' Sidebar--panel' : ''}`}>
             {!Utils.isFocalboardPlugin() &&
                 <div className='octo-sidebar-header'>
                     <div className='heading'>
@@ -415,7 +427,7 @@ const Sidebar = (props: Props) => {
                     </div>
                 </div>}
 
-            {team && team.id !== Constants.globalTeamId &&
+            {team && team.id !== Constants.globalTeamId && !inPanel &&
                 <div className='WorkspaceTitle'>
                     {Utils.isFocalboardPlugin() &&
                     <>
@@ -437,6 +449,7 @@ const Sidebar = (props: Props) => {
             <BoardsSwitcher
                 onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}
                 userIsGuest={me?.is_guest}
+                settingsMenu={props.settingsMenu}
             />
 
             <DragDropContext

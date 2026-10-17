@@ -11,9 +11,10 @@ type Props = {
 
 const RootPortal = (props: Props): React.JSX.Element => {
     const [el] = useState(document.createElement('div'))
-    const rootPortal = document.getElementById('focalboard-root-portal')
 
     useLayoutEffect(() => {
+        // Looked up once mounted: in the side panel, the portal's box is drawn with the views that use it.
+        const rootPortal = document.getElementById('focalboard-root-portal')
         if (rootPortal) {
             rootPortal.appendChild(el)
         }

@@ -1,0 +1,219 @@
+// Antimatter: Kanban in the side panel. Its views were laid out for a full page; here they fit the panel, which a
+// board widens (the web app's expanded panel), and the dialogs (a card, sharing...) cover the panel, not the window.
+
+.KanbanPanel {
+    position: relative;
+
+    // The dialogs and menus stack within the panel.
+    z-index: 0;
+    min-height: 0;
+
+    > #focalboard-app {
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+
+    #frame,
+    #main {
+        min-height: 0;
+    }
+
+    /* The panel's views */
+
+    .KanbanPanelHome,
+    .KanbanPanelPage {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .KanbanPanelHome__browse {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px 16px 0;
+    }
+
+    .KanbanPanelBoards {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .KanbanPanelTemplates {
+        flex: 1 1 auto;
+        min-height: 0;
+        position: relative;
+
+        .BoardTemplateSelector {
+            border: 0;
+            border-radius: 0;
+        }
+    }
+
+    .KanbanPanelCrash {
+        padding: 24px;
+        color: rgba(var(--center-channel-color-rgb), 0.72);
+    }
+
+    /* The community's boards: the full page's sidebar, as wide as the panel and in its colours. */
+
+    .Sidebar.Sidebar--panel {
+        --sidebar-bg-rgb: var(--center-channel-bg-rgb);
+        --sidebar-text-rgb: var(--center-channel-color-rgb);
+        --sidebar-text: rgb(var(--center-channel-color-rgb));
+        --sidebar-text-active-border-rgb: var(--button-bg-rgb);
+
+        flex: 1 1 auto;
+        max-width: none;
+        min-height: 0;
+        height: 100%;
+        padding-top: 12px;
+    }
+
+    /* A board */
+
+    .BoardComponent > * {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .BoardComponent > div:nth-child(2) {
+        margin-left: 20px;
+    }
+
+    /* The dialogs cover the panel (the panel sets its box in --kanban-panel-*), wherever they are drawn in it. */
+
+    .Dialog.dialog-back {
+        position: fixed;
+        top: var(--kanban-panel-top, 0);
+        left: var(--kanban-panel-left, 0);
+        right: auto;
+        bottom: auto;
+        width: var(--kanban-panel-width, 100%);
+        height: var(--kanban-panel-height, 100%);
+    }
+
+    .Dialog .backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .Dialog .dialog {
+        max-width: calc(100% - 32px);
+        max-height: calc(100% - 32px);
+        margin: 16px auto;
+    }
+
+    // A card is a dialog over the whole panel, with the board behind it.
+    .Dialog.cardDialog .dialog {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        max-height: 100%;
+        margin: 0;
+        border-radius: 0;
+
+        > .CardDetail {
+            padding: 8px 32px 16px;
+        }
+
+        > .CardDetail--fullwidth {
+            padding-left: 32px;
+        }
+    }
+
+    /* A narrow panel (it isn't widened, or the window is small) */
+
+    &.KanbanPanel--narrow {
+        .BoardComponent > * {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .BoardComponent > div:nth-child(2) {
+            margin-left: 12px;
+        }
+
+        .BoardComponent > .top-head > .mid-head {
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .ViewTitle > div {
+            min-width: 0;
+        }
+
+        .ViewHeader {
+            flex-wrap: wrap;
+            row-gap: 4px;
+        }
+
+        .Dialog.cardDialog .dialog > .CardDetail {
+            padding: 8px 16px 16px;
+        }
+    }
+}
+
+/* The panel's title bar, in the web app's header */
+
+.KanbanPanelTitlePlaceholder {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+}
+
+.KanbanPanelTitle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    width: 100%;
+
+    .KanbanPanelTitle__back.IconButton {
+        flex: 0 0 28px;
+        width: 28px;
+        height: 28px;
+        color: rgba(var(--center-channel-color-rgb), 0.56);
+
+        &:hover {
+            color: rgba(var(--center-channel-color-rgb), 0.72);
+            background-color: rgba(var(--center-channel-color-rgb), 0.08);
+        }
+    }
+
+    .KanbanPanelTitle__logo {
+        display: inline-flex;
+        flex: none;
+        margin-right: 4px;
+    }
+
+    .KanbanPanelTitle__text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 600;
+    }
+
+    .KanbanPanelTitle__subtitle {
+        overflow: hidden;
+        min-width: 0;
+        margin-left: 8px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .KanbanPanelTitle__actions {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 4px;
+    }
+}

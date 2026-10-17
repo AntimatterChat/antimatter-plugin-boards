@@ -1,26 +1,21 @@
 // Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useEffect} from 'react'
+import React from 'react'
 import {createIntl, createIntlCache} from 'react-intl'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
-import {History} from 'history'
 import {GlobalState} from '@mattermost/types/store'
-import {selectTeam} from 'mattermost-redux/actions/teams'
 
 
 import {setAntimatterTheme} from './theme'
 import BoardsAppIcon, {boardsAppIconURL} from './widgets/icons/boardsAppIcon'
-import GlobalHeader from './components/globalHeader/globalHeader'
-import App from './app'
 import store from './store'
 import {setTeam} from './store/teams'
 import WithWebSockets from './components/withWebSockets'
 import {setChannel} from './store/channels'
 import {initialLoad} from './store/initialLoad'
 import {Utils} from './utils'
-import {customHistory} from './desktopHistory'
 import './styles/focalboard-variables.scss'
 import './styles/main.scss'
 import './styles/labels.scss'
@@ -30,8 +25,6 @@ import {getMessages, getCurrentLanguage} from './i18n'
 import {UserSettings} from './userSettings'
 import {SuiteWindow} from './types/index'
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
-import RHSChannelBoards from './components/rhsChannelBoards'
-import RHSChannelBoardsHeader from './components/rhsChannelBoardsHeader'
 import BoardSelector from './components/boardSelector'
 import wsClient, {
     AMWebSocketClient,
@@ -44,15 +37,24 @@ import wsClient, {
     ACTION_REORDER_CATEGORIES,
 } from './wsclient'
 import manifest from './manifest'
-import ErrorBoundary from './error_boundary'
 // eslint-disable-next-line import/no-unresolved
 import {PluginRegistry} from './types/mattermost-webapp'
 import './plugin.scss'
 import CreateBoardFromTemplate from './components/createBoardFromTemplate'
+import KanbanPanel, {isKanbanPanelOpen} from './panel/panel'
+import {PanelTitlePlaceholder} from './panel/panel_title'
+import OldUrlRedirect from './panel/old_urls'
+import {openPanelHome, panelHistory, setPanelControls} from './panel/history'
+import {installLinkInterceptor} from './panel/link_interceptor'
+import {setHostStore} from './panel/host'
+import {trackPanelFocus} from './panel/context'
+import {KANBAN_ROUTE, PANEL_HOME, teamOfPath} from './panel/paths'
 
 const windowAny = (window as SuiteWindow)
 windowAny.baseURL = process.env.TARGET_IS_PRODUCT ? '/plugins/boards' : '/plugins/focalboard'
-windowAny.frontendBaseURL = '/kanban'
+// Antimatter: Kanban has no full page any more (its views are the side panel's), but its links keep the address the
+// full page had, which opens the panel on them.
+windowAny.frontendBaseURL = KANBAN_ROUTE
 windowAny.isFocalboardPlugin = true
 
 function getSubpath(siteURL: string): string {
@@ -62,56 +64,14 @@ function getSubpath(siteURL: string): string {
     return url.pathname.replace(/\/+$/, '')
 }
 
-type Props = {
-    webSocketClient: AMWebSocketClient
-}
-
-let browserHistory: History<unknown>
-
-const MainApp = (props: Props) => {
-    useEffect(() => {
-        // Note: the host webapp owns the `app__body` class on `document.body` across product navigation.
-        document.body.classList.add('focalboard-body')
-        const root = document.getElementById('root')
-        if (root) {
-            root.classList.add('focalboard-plugin-root')
-        }
-
-        return () => {
-            document.body.classList.remove('focalboard-body')
-            if (root) {
-                root.classList.remove('focalboard-plugin-root')
-            }
-        }
-    }, [])
-
-    return (
-        <ErrorBoundary>
-            <ReduxProvider store={store}>
-                <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
-                    <div id='focalboard-app'>
-                        <App history={browserHistory} />
-                    </div>
-                    <div id='focalboard-root-portal' />
-                </WithWebSockets>
-            </ReduxProvider>
-        </ErrorBoundary>
-    )
-}
-
-const HeaderComponent = () => {
-    return (
-        <ErrorBoundary>
-            <GlobalHeader history={browserHistory} />
-        </ErrorBoundary>
-    )
-}
-
 export default class Plugin {
     channelHeaderButtonId?: string
     rhsId?: string
     boardSelectorId?: string
+    teamRouteId?: string
     registry?: PluginRegistry
+    removeLinkInterceptor?: () => void
+    removeFocusTracking?: () => void
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     async initialize(registry: PluginRegistry, amStore: Store<GlobalState, Action>): Promise<void> {
@@ -119,7 +79,7 @@ export default class Plugin {
         const subpath = siteURL ? getSubpath(siteURL) : ''
         windowAny.frontendBaseURL = subpath + windowAny.frontendBaseURL
         windowAny.baseURL = subpath + windowAny.baseURL
-        browserHistory = customHistory()
+        setHostStore(amStore as unknown as Store<unknown, Action>)
         const cache = createIntlCache()
         const intl = createIntl({
             // modeled after <IntlProvider> in webapp/src/app.tsx
@@ -195,10 +155,10 @@ export default class Plugin {
             // This handles the user selecting a team from the team sidebar.
             const currentTeamID = amStore.getState().entities.teams.currentTeamId
             if (currentTeamID && currentTeamID !== prevTeamID) {
-                if (prevTeamID && window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
-                    // Don't re-push the URL if we're already on a URL for the current team
-                    if (!window.location.pathname.startsWith(`${(windowAny.frontendBaseURL || '')}/team/${currentTeamID}`))
-                        browserHistory.push(`/team/${currentTeamID}`)
+                // Antimatter: a panel left on a view of the community you left goes back to the channel's boards.
+                const panelTeamID = teamOfPath(panelHistory.location.pathname)
+                if (prevTeamID && panelTeamID && panelTeamID !== currentTeamID) {
+                    panelHistory.reset(PANEL_HOME)
                 }
                 prevTeamID = currentTeamID
                 store.dispatch(setTeam(currentTeamID))
@@ -215,111 +175,93 @@ export default class Plugin {
             }
         })
 
-        let fbPrevTeamID = store.getState().teams.currentId
-        store.subscribe(() => {
-            const currentTeamID: string = store.getState().teams.currentId
-            const currentUserId = amStore.getState().entities.users.currentUserId
-            if (currentTeamID !== fbPrevTeamID) {
-                fbPrevTeamID = currentTeamID
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                amStore.dispatch(selectTeam(currentTeamID))
-                localStorage.setItem(`user_prev_team:${currentUserId}`, currentTeamID)
-            }
+        // Antimatter: Kanban is an app of the side panel, without a full page (registerProduct): the community's
+        // boards, the templates, a board and its cards are views of the panel. Links to the old pages open them
+        // there (OldUrlRedirect and the link handler below).
+        const {id: rhsId, showRHSPlugin, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
+            (props: {webSocketClient: AMWebSocketClient}) => <KanbanPanel webSocketClient={props.webSocketClient}/>,
+            <PanelTitlePlaceholder/>,
+        )
+        this.rhsId = rhsId
+        setPanelControls({
+            isOpen: isKanbanPanelOpen,
+            show: () => amStore.dispatch(showRHSPlugin),
         })
 
-        if (this.registry.registerProduct) {
-            windowAny.frontendBaseURL = subpath + '/kanban'
+        // The channel header button and the app bar icon open the panel on the channel's boards.
+        const togglePanel = () => {
+            openPanelHome()
+            amStore.dispatch(toggleRHSPlugin)
+        }
 
-            const {rhsId, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
-                (props: {webSocketClient: AMWebSocketClient}) => (
-                    <ReduxProvider store={store}>
-                        <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
-                            <RHSChannelBoards />
-                        </WithWebSockets>
-                    </ReduxProvider>
-                ),
-                <ErrorBoundary>
-                    <ReduxProvider store={store}>
-                        <RHSChannelBoardsHeader />
-                    </ReduxProvider>
-                </ErrorBoundary>
-                ,
-            )
-            this.rhsId = rhsId
+        this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<BoardsAppIcon colored={true}/>, togglePanel, 'Kanban', 'Kanban')
 
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<BoardsAppIcon colored={true}/>, () => amStore.dispatch(toggleRHSPlugin), 'Kanban', 'Kanban')
+        // The old full-page URLs (/kanban/..., sent to /<team>/focalboard/... by the web app) open the side panel.
+        if (this.registry.registerNeedsTeamRoute) {
+            this.teamRouteId = this.registry.registerNeedsTeamRoute('/', OldUrlRedirect)
+        }
 
-            this.registry.registerProduct(
-                '/kanban',
-                <BoardsAppIcon
-                    size={24}
-                    colored={true}
-                />,
-                'Kanban',
-                '/kanban',
-                MainApp,
-                HeaderComponent,
-                () => null,
-                true,
-            )
+        // Links to the old full page, in messages, link previews and dialogs, open the side panel.
+        this.removeLinkInterceptor = installLinkInterceptor({getSiteURL: () => amStore.getState().entities.general.config.SiteURL || ''})
 
-            if (this.registry.registerAppBarComponent) {
-                this.registry.registerAppBarComponent(boardsAppIconURL, () => amStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Kanban'}))
-            }
+        // Kanban's keyboard shortcuts act on the panel only after a click in it.
+        this.removeFocusTracking = trackPanelFocus()
 
-            if (this.registry.registerActionAfterChannelCreation) {
-                this.registry.registerActionAfterChannelCreation((props: {
-                    setCanCreate: (canCreate: boolean) => void,
-                    setAction: (fn: () => (channelId: string, teamId: string) => Promise<Board | undefined>) => void,
-                    newBoardInfoIcon: React.ReactNode,
-                }) => (
-                    <ReduxProvider store={store}>
-                        <CreateBoardFromTemplate
-                            setCanCreate={props.setCanCreate}
-                            setAction={props.setAction}
-                            newBoardInfoIcon={props.newBoardInfoIcon}
-                        />
-                    </ReduxProvider>
-                ))
-            }
+        if (this.registry.registerAppBarComponent) {
+            this.registry.registerAppBarComponent(boardsAppIconURL, togglePanel, intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Kanban'}))
+        }
 
-            this.registry.registerPostWillRenderEmbedComponent(
-                (embed) => embed.type === 'boards',
-                (props: {embed: {data: string}, webSocketClient: AMWebSocketClient}) => (
-                    <ReduxProvider store={store}>
-                        <BoardsUnfurl
-                            embed={props.embed}
-                            webSocketClient={props.webSocketClient}
-                        />
-                    </ReduxProvider>
-                ),
-                false
-            )
+        if (this.registry.registerActionAfterChannelCreation) {
+            this.registry.registerActionAfterChannelCreation((props: {
+                setCanCreate: (canCreate: boolean) => void,
+                setAction: (fn: () => (channelId: string, teamId: string) => Promise<Board | undefined>) => void,
+                newBoardInfoIcon: React.ReactNode,
+            }) => (
+                <ReduxProvider store={store}>
+                    <CreateBoardFromTemplate
+                        setCanCreate={props.setCanCreate}
+                        setAction={props.setAction}
+                        newBoardInfoIcon={props.newBoardInfoIcon}
+                    />
+                </ReduxProvider>
+            ))
+        }
 
-            // Site statistics handler
-            if (registry.registerSiteStatisticsHandler) {
-                registry.registerSiteStatisticsHandler(async () => {
-                    const siteStats = await octoClient.getSiteStatistics()
-                    if (siteStats) {
-                        return {
-                            boards_count: {
-                                name: intl.formatMessage({id: 'SiteStats.total_boards', defaultMessage: 'Total Boards'}),
-                                id: 'total_boards',
-                                icon: 'icon-product-boards',
-                                value: siteStats.board_count,
-                            },
-                            cards_count: {
-                                name: intl.formatMessage({id: 'SiteStats.total_cards', defaultMessage: 'Total Cards'}),
-                                id: 'total_cards',
-                                icon: 'icon-products',
-                                value: siteStats.card_count,
-                            },
-                        }
+        this.registry.registerPostWillRenderEmbedComponent(
+            (embed) => embed.type === 'boards',
+            (props: {embed: {data: string}, webSocketClient: AMWebSocketClient}) => (
+                <ReduxProvider store={store}>
+                    <BoardsUnfurl
+                        embed={props.embed}
+                        webSocketClient={props.webSocketClient}
+                    />
+                </ReduxProvider>
+            ),
+            false
+        )
+
+        // Site statistics handler
+        if (registry.registerSiteStatisticsHandler) {
+            registry.registerSiteStatisticsHandler(async () => {
+                const siteStats = await octoClient.getSiteStatistics()
+                if (siteStats) {
+                    return {
+                        boards_count: {
+                            name: intl.formatMessage({id: 'SiteStats.total_boards', defaultMessage: 'Total Boards'}),
+                            id: 'total_boards',
+                            icon: 'icon-product-boards',
+                            value: siteStats.board_count,
+                        },
+                        cards_count: {
+                            name: intl.formatMessage({id: 'SiteStats.total_cards', defaultMessage: 'Total Cards'}),
+                            id: 'total_cards',
+                            icon: 'icon-products',
+                            value: siteStats.card_count,
+                        },
                     }
-                    return {}
-                })
-            }
+                }
+                return {}
+            })
         }
 
         this.boardSelectorId = this.registry.registerRootComponent((props: {webSocketClient: AMWebSocketClient}) => (
@@ -347,6 +289,15 @@ export default class Plugin {
         if (this.boardSelectorId) {
             this.registry?.unregisterComponent(this.boardSelectorId)
         }
+        if (this.teamRouteId) {
+            this.registry?.unregisterComponent(this.teamRouteId)
+        }
+        this.removeLinkInterceptor?.()
+        delete this.removeLinkInterceptor
+        this.removeFocusTracking?.()
+        delete this.removeFocusTracking
+        setPanelControls(null)
+        setHostStore(null)
 
         // unregister websocket handlers
         this.registry?.unregisterWebSocketEventHandler(wsClient.clientPrefix + ACTION_UPDATE_BLOCK)

@@ -1,7 +1,7 @@
 // Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 
 import {FormattedMessage, useIntl} from 'react-intl'
 
@@ -27,10 +27,14 @@ import {TOUR_SIDEBAR, SidebarTourSteps} from '../../components/onboardingTour'
 
 import IconButton from '../../widgets/buttons/iconButton'
 import SearchForBoardsTourStep from '../../components/onboardingTour/searchForBoards/searchForBoards'
+import {useInPanel} from '../../panel/context'
 
 type Props = {
     onBoardTemplateSelectorOpen: () => void
     userIsGuest?: boolean
+
+    // Antimatter: Kanban's settings menu, in the side panel's list of boards.
+    settingsMenu?: React.ReactNode
 }
 
 const BoardsSwitcher = (props: Props): React.JSX.Element => {
@@ -42,6 +46,11 @@ const BoardsSwitcher = (props: Props): React.JSX.Element => {
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
     const currentCard = useAppSelector(getCurrentCard)
     const noCardOpen = !currentCard
+
+    // Antimatter: in the side panel, Ctrl/Cmd+K stays the app's channel switcher; "Find boards" is a click away.
+    const inPanel = useInPanel()
+    const showSwitcherRef = useRef(false)
+    showSwitcherRef.current = showSwitcher
 
     const shouldViewSearchForBoardsTour = noCardOpen &&
                                        onboardingTourCategory === TOUR_SIDEBAR &&
@@ -65,6 +74,10 @@ const BoardsSwitcher = (props: Props): React.JSX.Element => {
     }
 
     const handleEscKeyPress = (e: KeyboardEvent) => {
+        // In the side panel, Escape is the app's (closing a thread, a dialog...) unless "Find boards" is open.
+        if (inPanel && !showSwitcherRef.current) {
+            return
+        }
         if (Utils.isKeyPressed(e, Constants.keyCodes.ESC)) {
             e.preventDefault()
             setShowSwitcher(false)
@@ -76,7 +89,9 @@ const BoardsSwitcher = (props: Props): React.JSX.Element => {
     }
 
     useEffect(() => {
-        document.addEventListener('keydown', handleQuickSwitchKeyPress)
+        if (!inPanel) {
+            document.addEventListener('keydown', handleQuickSwitchKeyPress)
+        }
         document.addEventListener('keydown', handleEscKeyPress)
 
         // cleanup function
@@ -84,7 +99,7 @@ const BoardsSwitcher = (props: Props): React.JSX.Element => {
             document.removeEventListener('keydown', handleQuickSwitchKeyPress)
             document.removeEventListener('keydown', handleEscKeyPress)
         }
-    }, [])
+    }, [inPanel])
 
     return (
         <div className='BoardsSwitcherWrapper'>
@@ -131,6 +146,8 @@ const BoardsSwitcher = (props: Props): React.JSX.Element => {
                     </Menu>
                 </MenuWrapper>
             }
+
+            {props.settingsMenu}
 
             {
                 showSwitcher &&

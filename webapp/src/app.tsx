@@ -24,6 +24,9 @@ import {IUser} from './user'
 
 type Props = {
     history?: History<unknown>
+
+    // Antimatter: the routes, when they aren't the full page's (the side panel has its own).
+    children?: React.ReactNode
 }
 
 const App = (props: Props): React.JSX.Element => {
@@ -53,7 +56,7 @@ const App = (props: Props): React.JSX.Element => {
                 <div id='frame'>
                     <div id='main'>
                         <NewVersionBanner/>
-                        <FocalboardRouter history={props.history}/>
+                        {props.children ?? <FocalboardRouter history={props.history}/>}
                     </div>
                 </div>
             </DndProvider>

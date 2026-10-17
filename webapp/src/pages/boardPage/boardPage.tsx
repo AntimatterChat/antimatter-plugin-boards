@@ -55,6 +55,7 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 import {Constants} from '../../constants'
 
 import {getCategoryOfBoard, getHiddenBoardIDs, removeBoardsFromAllCategories} from '../../store/sidebar'
+import {useInPanel} from '../../panel/context'
 
 import SetWindowTitleAndIcon from './setWindowTitleAndIcon'
 import TeamToBoardAndViewRedirect from './teamToBoardAndViewRedirect'
@@ -89,6 +90,9 @@ const BoardPage = (props: Props): React.JSX.Element => {
     // doesn't call loadOrJoinBoard on a board that no longer exists.
     const deletedBoardIdsRef = useRef<Set<string>>(new Set())
     const globalError = useAppSelector<string>(getGlobalError)
+
+    // Antimatter: in the side panel, the window's title and icon stay the conversation's.
+    const inPanel = useInPanel()
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -386,7 +390,7 @@ const BoardPage = (props: Props): React.JSX.Element => {
                 <div className='BoardPage'>
                     {!props.new && <TeamToBoardAndViewRedirect/>}
                     <BackwardCompatibilityQueryParamsRedirect/>
-                    <SetWindowTitleAndIcon/>
+                    {!inPanel && <SetWindowTitleAndIcon/>}
                     <UndoRedoHotKeys/>
                     <WebsocketConnection/>
 

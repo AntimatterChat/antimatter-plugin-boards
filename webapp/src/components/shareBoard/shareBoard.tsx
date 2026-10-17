@@ -47,6 +47,7 @@ import PublicIcon from '../../widgets/icons/globe'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import {useHasPermissions} from '../../hooks/permissions'
+import {useInPanel} from '../../panel/context'
 
 import TeamPermissionsRow from './teamPermissionsRow'
 import ChannelPermissionsRow from './channelPermissionsRow'
@@ -119,6 +120,7 @@ export default function ShareBoardDialog(props: Props): React.JSX.Element {
 
     const intl = useIntl()
     const match = useRouteMatch<{teamId?: string, boardId: string, viewId: string}>()
+    const inPanel = useInPanel()
 
     const hasSharePermissions = useHasPermissions(board.teamId, boardId, [Permission.ShareBoard])
 
@@ -251,9 +253,11 @@ export default function ShareBoardDialog(props: Props): React.JSX.Element {
 
     const isSharing = Boolean(sharing && sharing.id === boardId && sharing.enabled)
     const readToken = (sharing && isSharing) ? sharing.token : ''
-    const shareUrl = new URL(window.location.toString())
+    // Antimatter: in the side panel, the page's address is the conversation's: the links start from the site alone.
+    const pageUrl = inPanel ? window.location.origin : window.location.toString()
+    const shareUrl = new URL(pageUrl)
     shareUrl.searchParams.set('r', readToken)
-    const boardUrl = new URL(window.location.toString())
+    const boardUrl = new URL(pageUrl)
 
     if (match.params.teamId) {
         const newPath = generatePath('/team/:teamId/shared/:boardId/:viewId', {

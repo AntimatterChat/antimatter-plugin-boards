@@ -12,6 +12,10 @@ type State = {
 
 type Props = {
     children: React.ReactNode
+
+    // Antimatter: what to show instead of the error page, where leaving for it would reload the whole app (the side
+    // panel).
+    fallback?: React.ReactNode
 }
 
 export default class ErrorBoundary extends React.Component<Props, State> {
@@ -37,6 +41,9 @@ export default class ErrorBoundary extends React.Component<Props, State> {
 
     render(): React.ReactNode {
         if (this.state.hasError) {
+            if (this.props.fallback !== undefined) {
+                return this.props.fallback
+            }
             this.handleError()
             return <span>{this.msg}</span>
         }

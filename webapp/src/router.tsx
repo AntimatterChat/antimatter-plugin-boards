@@ -148,7 +148,7 @@ function HomeToCurrentTeam(props: {path: string, exact: boolean}) {
     )
 }
 
-function WorkspaceToTeamRedirect() {
+export function WorkspaceToTeamRedirect(): null {
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
     const queryParams = new URLSearchParams(useLocation().search)
     const history = useHistory()
@@ -171,7 +171,7 @@ function WorkspaceToTeamRedirect() {
     return null
 }
 
-function GlobalErrorRedirect() {
+export function GlobalErrorRedirect(): null {
     const globalError = useAppSelector<string>(getGlobalError)
     const dispatch = useAppDispatch()
     const history = useHistory()

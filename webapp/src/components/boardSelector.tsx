@@ -22,11 +22,10 @@ import SearchIcon from '../widgets/icons/search'
 import Button from '../widgets/buttons/button'
 import {getCurrentLinkToChannel, setLinkToChannel} from '../store/boards'
 import {WSClient} from '../wsclient'
-import {SuiteWindow} from '../types/index'
+import {openKanbanPanel} from '../panel/history'
+import {newLinkedBoardPath} from '../panel/paths'
 
 import BoardSelectorItem from './boardSelectorItem'
-
-const windowAny = (window as SuiteWindow)
 
 import './boardSelector.scss'
 
@@ -113,7 +112,8 @@ const BoardSelector = () => {
     }
 
     const newLinkedBoard = async (): Promise<void> => {
-        window.open(`${windowAny.frontendBaseURL}/team/${teamId}/new/${currentChannel}`, '_blank', 'noopener')
+        // Antimatter: the template picker opens in the side panel (a full page used to open in a new tab).
+        openKanbanPanel(newLinkedBoardPath(teamId, currentChannel))
         dispatch(setLinkToChannel(''))
     }
 

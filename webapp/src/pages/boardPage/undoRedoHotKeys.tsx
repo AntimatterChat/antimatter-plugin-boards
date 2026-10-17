@@ -7,11 +7,19 @@ import {useIntl} from 'react-intl'
 import {sendFlashMessage} from '../../components/flashMessages'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
+import {isPanelActive, useInPanel} from '../../panel/context'
 
 const UndoRedoHotKeys = (): null => {
     const intl = useIntl()
 
+    // Antimatter: in the side panel, undo and redo are the board's only after a click in the panel: typing a message
+    // next to it keeps them for the message.
+    const inPanel = useInPanel()
+
     useHotkeys('ctrl+z,meta+z', () => {
+        if (!isPanelActive(inPanel)) {
+            return
+        }
         Utils.log('Undo')
         if (mutator.canUndo) {
             const description = mutator.undoDescription
@@ -36,6 +44,9 @@ const UndoRedoHotKeys = (): null => {
     })
 
     useHotkeys('shift+ctrl+z,shift+meta+z', () => {
+        if (!isPanelActive(inPanel)) {
+            return
+        }
         Utils.log('Redo')
         if (mutator.canRedo) {
             const description = mutator.redoDescription
