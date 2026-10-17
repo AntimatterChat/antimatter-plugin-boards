@@ -1,4 +1,5 @@
-// Copyright (c) 2026-present Antimatter contributors. See LICENSE.txt for license information.
+// Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 
 // The tests build their mock stores with redux-mock-store (on redux 4) and redux-thunk's middleware, which only fit
 // once redux's Dispatch knows thunks. mattermost-redux's action types extend it (they import
