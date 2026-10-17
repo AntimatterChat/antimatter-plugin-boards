@@ -118,7 +118,7 @@ const ChannelPermissionsRow = (props: Props): React.JSX.Element => {
             </div>
             <div>
                 <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
-                    <MenuWrapper>
+                    <MenuWrapper layerClassName='ShareBoardMenu'>
                         <button className='user-item__button'>
                             <FormattedMessage
                                 id='BoardMember.schemeEditor'

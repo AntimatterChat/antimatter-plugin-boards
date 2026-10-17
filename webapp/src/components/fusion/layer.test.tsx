@@ -144,6 +144,41 @@ describe('Kanban\'s menus', () => {
         expect(screen.queryByText('Duplicate')).toBeNull()
     })
 
+    test('carry their layer class in the layer, and open below their button there', () => {
+        setWebUI('fusion')
+        const rect = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+            top: 100, left: 50, width: 30, height: 24, right: 80, bottom: 124, x: 50, y: 100, toJSON: () => ({}),
+        } as DOMRect)
+        try {
+            render(wrapIntl(
+                <MenuWrapper layerClassName='FilterValueMenu'>
+                    <button type='button'>{'Open the menu'}</button>
+                    <Menu>
+                        <Menu.Text
+                            id='done'
+                            name='Done'
+                            onClick={jest.fn()}
+                        />
+                    </Menu>
+                </MenuWrapper>,
+            ))
+            fireEvent.click(screen.getByText('Open the menu'))
+            const box = screen.getByText('Done').closest<HTMLElement>('[data-kanban-menu-box]')!
+            expect(box.classList).toContain('KanbanMenuBox')
+            expect(box.classList).toContain('FilterValueMenu')
+            expect(box.style.top).toBe('100px')
+            expect(box.style.left).toBe('50px')
+            expect(box.style.width).toBe('30px')
+
+            // The button's height as padding: the menu starts where it did in the wrapper, below the button.
+            expect(box.style.height).toBe('24px')
+            expect(box.style.paddingTop).toBe('24px')
+            expect(box.style.boxSizing).toBe('border-box')
+        } finally {
+            rect.mockRestore()
+        }
+    })
+
     test('close on a click outside, in the layer too', () => {
         setWebUI('fusion')
         render(wrapIntl(menu()))

@@ -239,6 +239,7 @@ const SidebarBoardItem = (props: Props) => {
                         <div>
                             <MenuWrapper
                                 className={boardsMenuOpen[board.id] ? 'menuOpen' : 'x'}
+                                layerClassName='SidebarBoardItemMenu'
                                 stopPropagationOnToggle={true}
                                 onToggle={(open) => {
                                     setBoardsMenuOpen((menuState) => {

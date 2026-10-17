@@ -22,6 +22,10 @@ type Props = {
     isOpen?: boolean
     onToggle?: (open: boolean) => void
     label?: string
+
+    // A class for the menu's box in Fusion's layer, which the styles the menu took from where it stands (the
+    // sidebar, the share dialog...) are scoped to there (panel/fusion_skin.scss).
+    layerClassName?: string
 }
 
 const MenuWrapper = (props: Props) => {
@@ -142,7 +146,7 @@ const MenuWrapper = (props: Props) => {
             {layer && menu ? ReactDOM.createPortal((
                 <div
                     ref={menuBox}
-                    className='MenuWrapper menuOpened KanbanMenuBox'
+                    className={'MenuWrapper menuOpened KanbanMenuBox' + (props.layerClassName ? ' ' + props.layerClassName : '')}
                     data-kanban-menu-box='true'
                     style={{
                         position: 'fixed',
@@ -150,6 +154,12 @@ const MenuWrapper = (props: Props) => {
                         left: anchor?.left ?? 0,
                         width: anchor?.width ?? 0,
                         height: anchor?.height ?? 0,
+
+                        // The button's height as padding: a menu that opens below its button (where it would
+                        // follow it in the wrapper) starts below it, one that opens above it (bottom: 100%) ends
+                        // over it.
+                        boxSizing: 'border-box',
+                        paddingTop: anchor?.height ?? 0,
                         zIndex: LAYER_MENU_Z_INDEX,
                         pointerEvents: 'none',
                         visibility: anchor ? 'visible' : 'hidden',

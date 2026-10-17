@@ -29,6 +29,54 @@ html[data-am-web-ui='fusion'] .KanbanMenuBox > * {
     pointer-events: auto;
 }
 
+/*
+ * What the menus took from where they stand, now that they're drawn in the layer (each box carries its menu's
+ * layerClassName, widgets/menuWrapper.tsx): sidebarBoardItem.scss, shareBoard.scss and filterValue.scss.
+ */
+
+/* A board's "Move to..." list scrolls past 600px (350px, or half the screen, on a short one) */
+html[data-am-web-ui='fusion'] .KanbanMenuBox.SidebarBoardItemMenu .boardMoveToCategorySubmenu {
+    .menu-options {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+
+    @media only screen and (max-height: 768px) {
+        .menu-options {
+            max-height: min(350px, 50vh);
+        }
+    }
+}
+
+/*
+ * The share dialog's role menus: 240px wide, on the screen (a member's menu is placed below its row in the screen's
+ * coordinates), and ending at their button's right edge, as the box's only flex item. On a phone, Kanban's menus
+ * cover the screen.
+ */
+html[data-am-web-ui='fusion'] .KanbanMenuBox.ShareBoardMenu .menu-contents {
+    min-width: 240px;
+    max-width: 240px;
+}
+
+@media not screen and (max-width: 430px) {
+    html[data-am-web-ui='fusion'] .KanbanMenuBox.ShareBoardMenu {
+        display: flex;
+        justify-content: flex-end;
+
+        > .Menu.noselect {
+            position: fixed;
+            right: auto;
+            left: auto;
+        }
+    }
+}
+
+/* A filter's values scroll past 400px */
+html[data-am-web-ui='fusion'] .KanbanMenuBox.FilterValueMenu > .Menu.noselect {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
 html[data-am-web-ui='fusion'] .focalboard-body {
     /* Kanban's own variables, as Fusion's tokens */
     --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.12);

@@ -99,7 +99,10 @@ const filterValue = (props: Props): React.JSX.Element|null => {
     }
 
     return (
-        <MenuWrapper className='filterValue'>
+        <MenuWrapper
+            className='filterValue'
+            layerClassName='FilterValueMenu'
+        >
             <Button>{displayValue}</Button>
 
             <Menu>

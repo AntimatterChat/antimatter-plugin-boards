@@ -91,6 +91,21 @@ describe('the Fusion skin', () => {
         expect(css).toMatch(/--error-text: var\(--am-danger\)/)
     })
 
+    // The menus drawn in Fusion's layer left the rules that were scoped to where they stand: their boxes there carry
+    // a class (MenuWrapper's layerClassName) the skin gives those rules back to.
+    test.each([
+        ['SidebarBoardItemMenu', '../components/sidebar/sidebarBoardItem.tsx', 'max-height: 600px'],
+        ['ShareBoardMenu', '../components/shareBoard/userPermissionsRow.tsx', 'min-width: 240px'],
+        ['ShareBoardMenu', '../components/shareBoard/teamPermissionsRow.tsx', 'position: fixed'],
+        ['ShareBoardMenu', '../components/shareBoard/channelPermissionsRow.tsx', 'justify-content: flex-end'],
+        ['FilterValueMenu', '../components/viewHeader/filterValue.tsx', 'max-height: 400px'],
+    ])('gives the menus of the layer with %s (%s) their rules back', (name, source, declaration) => {
+        expect(fs.readFileSync(path.join(__dirname, source), 'utf8')).toContain(`layerClassName='${name}'`)
+        const rules = css.split(`.KanbanMenuBox.${name}`).slice(1)
+        expect(rules.length).toBeGreaterThan(0)
+        expect(rules.some((rule) => rule.slice(0, rule.indexOf('\n}')).includes(declaration))).toBe(true)
+    })
+
     test('is loaded by the panel', () => {
         const panel = fs.readFileSync(path.join(__dirname, 'panel.tsx'), 'utf8')
         for (const sheet of SHEETS) {

@@ -102,7 +102,7 @@ const TeamPermissionsRow = (): React.JSX.Element => {
             </div>
             <div>
                 <BoardPermissionGate permissions={[Permission.ManageBoardType]}>
-                    <MenuWrapper>
+                    <MenuWrapper layerClassName='ShareBoardMenu'>
                         <button className='user-item__button'>
                             {currentRoleName}
                             <CompassIcon
