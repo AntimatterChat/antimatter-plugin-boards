@@ -8,8 +8,6 @@ import {FormattedMessage} from 'react-intl'
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
 
 import './copy_link.scss'
-import {Utils} from '../../../utils'
-import copyLink from '../../../../static/copyLink.gif'
 
 import {BoardTourSteps, TOUR_BOARD} from '../index'
 import {OnboardingCardClassName} from '../../kanban/kanbanCard'
@@ -43,7 +41,6 @@ const CopyLinkTourStep = (): React.JSX.Element | null => {
             classname='CopyLinkTourStep'
             telemetryTag='tourPoint3b'
             placement={'right-start'}
-            imageURL={Utils.buildURL(copyLink, true)}
             hideBackdrop={true}
         />
     )

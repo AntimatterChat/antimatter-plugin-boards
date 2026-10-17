@@ -42,14 +42,6 @@ exports[`components/onboardingTour/addComments/AddPropertiesTourStep after hover
           Add various properties to cards to make them more powerful!
         </div>
         <div
-          class="tutorial-tour-tip__image"
-        >
-          <img
-            alt="tutorial tour tip product image"
-            src="test-file-stub"
-          />
-        </div>
-        <div
           class="tutorial-tour-tip__footer"
         >
           <div

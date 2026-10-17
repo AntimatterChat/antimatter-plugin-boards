@@ -2,13 +2,31 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
-import ErrorIllustration from '../svg/error-illustration'
+import EmptyState from './fusion/empty_state'
+import FusionIcon from './fusion/icon'
+import {isFusion} from './fusion/fusion_ui'
 
 import './guestNoBoards.scss'
 
 const GuestNoBoards = () => {
+    const intl = useIntl()
+
+    // Under the Fusion UI, Fusion's empty state: Kanban's icon, a title and a sentence.
+    if (isFusion()) {
+        return (
+            <div className='GuestNoBoards'>
+                <EmptyState
+                    data-testid='guest-no-boards'
+                    icon={<FusionIcon name='kanban'/>}
+                    title={intl.formatMessage({id: 'guest-no-board.title', defaultMessage: 'No boards yet'})}
+                    text={intl.formatMessage({id: 'guest-no-board.subtitle', defaultMessage: 'You don\'t have access to any board in this team yet, please wait until somebody adds you to any board.'})}
+                />
+            </div>
+        )
+    }
+
     return (
         <div className='GuestNoBoards'>
             <div>
@@ -24,7 +42,6 @@ const GuestNoBoards = () => {
                         defaultMessage={'You don\'t have access to any board in this team yet, please wait until somebody adds you to any board.'}
                     />
                 </div>
-                <ErrorIllustration/>
             </div>
         </div>
     )

@@ -42,14 +42,6 @@ exports[`components/onboardingTour/addComments/AddViewTourStep after hover 1`] =
           Go here to create a new view to organise your board using different layouts.
         </div>
         <div
-          class="tutorial-tour-tip__image"
-        >
-          <img
-            alt="tutorial tour tip product image"
-            src="test-file-stub"
-          />
-        </div>
-        <div
           class="tutorial-tour-tip__footer"
         >
           <div

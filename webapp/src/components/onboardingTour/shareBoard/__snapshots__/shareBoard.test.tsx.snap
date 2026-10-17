@@ -42,14 +42,6 @@ exports[`components/onboardingTour/addComments/ShareBoardTourStep after hover 1`
           You can share your board internally, within your team, or publish it publicly for visibility outside of your organization.
         </div>
         <div
-          class="tutorial-tour-tip__image"
-        >
-          <img
-            alt="tutorial tour tip product image"
-            src="test-file-stub"
-          />
-        </div>
-        <div
           class="tutorial-tour-tip__footer"
         >
           <div

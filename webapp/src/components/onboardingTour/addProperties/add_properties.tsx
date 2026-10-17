@@ -8,8 +8,6 @@ import {FormattedMessage} from 'react-intl'
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
 
 import './add_properties.scss'
-import {Utils} from '../../../utils'
-import addProperty from '../../../../static/addProperty.gif'
 
 import {BaseTourSteps, CardTourSteps, TOUR_BASE, TOUR_CARD} from '../index'
 import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
@@ -102,7 +100,6 @@ const AddPropertiesTourStep = (): React.JSX.Element | null => {
             classname='AddPropertiesTourStep'
             telemetryTag='tourPoint2a'
             placement={'right-end'}
-            imageURL={Utils.buildURL(addProperty, true)}
             hideBackdrop={true}
         />
     )

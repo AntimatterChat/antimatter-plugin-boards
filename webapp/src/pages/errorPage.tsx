@@ -3,9 +3,11 @@
 
 import React, {useCallback} from 'react'
 import {useHistory, useLocation} from 'react-router-dom'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
-import ErrorIllustration from '../svg/error-illustration'
+import EmptyState from '../components/fusion/empty_state'
+import FusionIcon from '../components/fusion/icon'
+import {isFusion} from '../components/fusion/fusion_ui'
 
 import Button from '../widgets/buttons/button'
 import './errorPage.scss'
@@ -21,6 +23,7 @@ const ErrorPage = () => {
     const errid = queryParams.get('id')
     const errorDef = errorDefFromId(errid as ErrorId)
     const history = useHistory()
+    const intl = useIntl()
 
     // Antimatter: in the side panel, "back home" is the panel's start, not a page load; logging in is still a page.
     const inPanel = useInPanel()
@@ -67,6 +70,35 @@ const ErrorPage = () => {
         handleButtonClick(errorDef.button1Redirect, errorDef.button1ClearHistory)
     }
 
+    const buttons = (
+        <>
+            {
+                (errorDef.button1Enabled ? makeButton(errorDef.button1Redirect, errorDef.button1Text, errorDef.button1Fill, errorDef.button1ClearHistory) : null)
+            }
+            {
+                (errorDef.button2Enabled ? makeButton(errorDef.button2Redirect, errorDef.button2Text, errorDef.button2Fill, errorDef.button2ClearHistory) : null)
+            }
+        </>
+    )
+
+    // Under the Fusion UI, Fusion's empty state in the danger tone, with the error's ways out under it.
+    if (isFusion()) {
+        return (
+            <div className='ErrorPage ErrorPage--fusion'>
+                <EmptyState
+                    data-testid='error-page'
+                    tone='danger'
+                    icon={<FusionIcon name='ban'/>}
+                    title={intl.formatMessage({id: 'error.page.title', defaultMessage: 'Sorry, something went wrong'})}
+                    text={errorDef.title}
+                />
+                <div className='ErrorPage__actions'>
+                    {buttons}
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className='ErrorPage'>
             <div>
@@ -79,14 +111,8 @@ const ErrorPage = () => {
                 <div className='subtitle'>
                     {errorDef.title}
                 </div>
-                <ErrorIllustration/>
                 <br/>
-                {
-                    (errorDef.button1Enabled ? makeButton(errorDef.button1Redirect, errorDef.button1Text, errorDef.button1Fill, errorDef.button1ClearHistory) : null)
-                }
-                {
-                    (errorDef.button2Enabled ? makeButton(errorDef.button2Redirect, errorDef.button2Text, errorDef.button2Fill, errorDef.button2ClearHistory) : null)
-                }
+                {buttons}
             </div>
         </div>
     )

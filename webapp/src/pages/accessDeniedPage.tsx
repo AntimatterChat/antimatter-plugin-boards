@@ -11,7 +11,9 @@ import './accessDeniedPage.scss'
 import {setGlobalError} from '../store/globalError'
 import {useAppDispatch} from '../store/hooks'
 import {UserSettings} from '../userSettings'
-import AccessDeniedIllustration from '../svg/access-denied-illustation'
+import EmptyState from '../components/fusion/empty_state'
+import FusionIcon from '../components/fusion/icon'
+import {isFusion} from '../components/fusion/fusion_ui'
 
 const clearLastBoardAndViewIds = () => {
     const lastTeamId = UserSettings.lastTeamId
@@ -56,10 +58,26 @@ const AccessDeniedPage = () => {
         history.push('/')
     }, [history, dispatch, location.search])
 
+    const backLabel = intl.formatMessage({id: 'accessDenied.back-to-home', defaultMessage: 'Back to your boards'})
+
+    // Under the Fusion UI, Fusion's empty state: a lock, a title, a sentence and the way back.
+    if (isFusion()) {
+        return (
+            <div className='AccessDeniedPage AccessDeniedPage--fusion'>
+                <EmptyState
+                    data-testid='access-denied'
+                    icon={<FusionIcon name='lock'/>}
+                    title={intl.formatMessage({id: 'accessDenied.page.title', defaultMessage: 'You don’t have access to this board'})}
+                    text={intl.formatMessage({id: 'accessDenied.page.subtitle', defaultMessage: 'This board is private or has restricted permissions.'})}
+                    action={{label: backLabel, onClick: handleBackToHome}}
+                />
+            </div>
+        )
+    }
+
     return (
         <div className='AccessDeniedPage'>
             <div>
-                <AccessDeniedIllustration/>
                 <div className='title'>
                     <FormattedMessage
                         id='accessDenied.page.title'
@@ -78,7 +96,7 @@ const AccessDeniedPage = () => {
                     size='large'
                     onClick={handleBackToHome}
                 >
-                    {intl.formatMessage({id: 'accessDenied.back-to-home', defaultMessage: 'Back to your boards'})}
+                    {backLabel}
                 </Button>
             </div>
         </div>

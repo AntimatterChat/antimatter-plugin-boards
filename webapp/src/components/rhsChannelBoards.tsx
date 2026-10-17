@@ -30,6 +30,9 @@ import {WSClient} from '../wsclient'
 import {getMessages} from '../i18n'
 
 import RHSChannelBoardItem from './rhsChannelBoardItem'
+import EmptyState from './fusion/empty_state'
+import FusionIcon from './fusion/icon'
+import {isFusion} from './fusion/fusion_ui'
 
 
 import './rhsChannelBoards.scss'
@@ -97,6 +100,28 @@ const RHSChannelBoards = () => {
     } else if (currentChannel.type === 'G') {
         channelName = intl.formatMessage({id: 'rhs-boards.gm', defaultMessage: 'GM'})
         headerChannelName = intl.formatMessage({id: 'rhs-boards.header.gm', defaultMessage: 'this Group Message'})
+    }
+
+    const canLink = Boolean(me?.permissions?.find((s: string) => s === 'create_post'))
+
+    // Under the Fusion UI, Fusion's empty state: Kanban's icon, a title, a sentence and the one thing to do.
+    if (channelBoards.length === 0 && isFusion()) {
+        return (
+            <div className='focalboard-body'>
+                <div className='RHSChannelBoards empty'>
+                    <EmptyState
+                        data-testid='rhs-boards-empty'
+                        icon={<FusionIcon name='kanban'/>}
+                        title={intl.formatMessage({id: 'rhs-boards.no-boards-linked-to-channel', defaultMessage: 'No boards are linked to {channelName} yet'}, {channelName: headerChannelName})}
+                        text={intl.formatMessage({id: 'rhs-boards.no-boards-linked-to-channel-description', defaultMessage: 'Kanban is a project management tool that helps define, organize, track and manage work across teams, with boards of cards and columns.'})}
+                        action={canLink ? {
+                            label: intl.formatMessage({id: 'rhs-boards.link-boards-to-channel', defaultMessage: 'Link boards to {channelName}'}, {channelName}),
+                            onClick: () => dispatch(setLinkToChannel(currentChannel.id)),
+                        } : undefined}
+                    />
+                </div>
+            </div>
+        )
     }
 
     if (channelBoards.length === 0) {

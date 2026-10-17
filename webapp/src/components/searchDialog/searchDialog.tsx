@@ -4,7 +4,7 @@
 import React, {ReactNode, useEffect, useMemo, useState} from 'react'
 
 import './searchDialog.scss'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {debounce} from 'lodash'
 
@@ -12,6 +12,9 @@ import Dialog from '../dialog'
 import {Utils} from '../../utils'
 import Search from '../../widgets/icons/search'
 import {Constants} from '../../constants'
+import EmptyState from '../fusion/empty_state'
+import FusionIcon from '../fusion/icon'
+import {isFusion} from '../fusion/fusion_ui'
 
 type Props = {
     onClose: () => void
@@ -23,7 +26,31 @@ type Props = {
     setSelected: (n: number) => void
 }
 
-export const EmptySearch = (): React.JSX.Element => (
+// Under the Fusion UI, the search's empty states are Fusion's (a search icon, a title and a sentence).
+const FusionEmptySearch = (): React.JSX.Element => {
+    const intl = useIntl()
+    return (
+        <EmptyState
+            data-testid='search-intro'
+            icon={<FusionIcon name='search'/>}
+            title={intl.formatMessage({id: 'FindBoardsDialog.IntroText', defaultMessage: 'Search for boards'})}
+        />
+    )
+}
+
+const FusionEmptyResults = (props: {query: string}): React.JSX.Element => {
+    const intl = useIntl()
+    return (
+        <EmptyState
+            data-testid='search-no-results'
+            icon={<FusionIcon name='search'/>}
+            title={intl.formatMessage({id: 'FindBoardsDialog.NoResultsFor', defaultMessage: 'No results for "{searchQuery}"'}, {searchQuery: props.query})}
+            text={intl.formatMessage({id: 'FindBoardsDialog.NoResultsSubtext', defaultMessage: 'Check the spelling or try another search.'})}
+        />
+    )
+}
+
+export const EmptySearch = (): React.JSX.Element => (isFusion() ? <FusionEmptySearch/> : (
     <div className='noResults introScreen'>
         <div className='iconWrapper'>
             <Search/>
@@ -35,9 +62,9 @@ export const EmptySearch = (): React.JSX.Element => (
             />
         </h4>
     </div>
-)
+))
 
-export const EmptyResults = (props: {query: string}): React.JSX.Element => (
+export const EmptyResults = (props: {query: string}): React.JSX.Element => (isFusion() ? <FusionEmptyResults query={props.query}/> : (
     <div className='noResults'>
         <div className='iconWrapper'>
             <Search/>
@@ -58,7 +85,7 @@ export const EmptyResults = (props: {query: string}): React.JSX.Element => (
             />
         </span>
     </div>
-)
+))
 
 const SearchDialog = (props: Props): React.JSX.Element => {
     const {selected, setSelected} = props
