@@ -18,6 +18,7 @@ import ErrorPage from '../pages/errorPage'
 import AccessDeniedPage from '../pages/accessDeniedPage'
 import {Utils} from '../utils'
 import {AMWebSocketClient} from '../wsclient'
+import {setLayerPanelBox} from '../components/fusion/layer'
 
 import {InPanelContext, PANEL_ROOT_ATTRIBUTE} from './context'
 import {PanelHistory, panelHistory, usePanelState} from './history'
@@ -165,6 +166,9 @@ export function usePanelBox(ref: React.RefObject<HTMLDivElement | null>): boolea
             element.style.setProperty('--kanban-panel-width', `${Math.round(box.width)}px`)
             element.style.setProperty('--kanban-panel-height', `${Math.round(box.height)}px`)
             setNarrow(box.width < NARROW_PANEL_WIDTH)
+
+            // Under the Fusion UI, the dialogs and menus are drawn in Fusion's layer: it gets the panel's box too.
+            setLayerPanelBox(box, box.width < NARROW_PANEL_WIDTH)
         }
         measure()
 

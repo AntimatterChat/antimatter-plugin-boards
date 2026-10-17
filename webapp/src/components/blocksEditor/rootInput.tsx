@@ -6,6 +6,7 @@ import Select from 'react-select'
 import {CSSObject} from '@emotion/serialize'
 
 import {getSelectBaseStyle} from '../../theme'
+import {layerOr} from '../fusion/layer'
 
 import * as registry from './blocks/'
 import {ContentType} from './blocks/types'
@@ -60,7 +61,7 @@ export default function RootInput(props: Props) {
             placeholder={'Introduce your text or your slash command'}
             autoFocus={true}
             menuIsOpen={showMenu}
-            menuPortalTarget={document.getElementById('focalboard-root-portal')}
+            menuPortalTarget={layerOr(document.getElementById('focalboard-root-portal'))}
             menuPosition={'fixed'}
             options={registry.list()}
             getOptionValue={(ct: ContentType) => ct.slashCommand}

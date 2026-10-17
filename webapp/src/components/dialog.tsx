@@ -9,6 +9,8 @@ import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
 import OptionsIcon from '../widgets/icons/options'
 import MenuWrapper from '../widgets/menuWrapper'
+
+import {LayerPortal} from './fusion/layer'
 import './dialog.scss'
 
 type Props = {
@@ -36,60 +38,63 @@ const Dialog = (props: Props) => {
 
     const isBackdropClickedRef = useRef(false)
 
+    // Under the Fusion UI, in Fusion's layer, above the app (see LayerPortal); where it stands under the classic UI.
     return (
-        <div className={`Dialog dialog-back ${props.className} size--${size || 'medium'}`}>
-            <div className='backdrop'/>
-            <div
-                className='wrapper'
-                onClick={(e) => {
-                    e.stopPropagation()
-                    if (!isBackdropClickedRef.current) {
-                        return
-                    }
-                    isBackdropClickedRef.current = false
-                    props.onClose()
-                }}
-                onMouseDown={(e) => {
-                    if (e.target === e.currentTarget) {
-                        isBackdropClickedRef.current = true
-                    }
-                }}
-            >
+        <LayerPortal>
+            <div className={`Dialog dialog-back ${props.className} size--${size || 'medium'}`}>
+                <div className='backdrop'/>
                 <div
-                    role='dialog'
-                    className='dialog'
+                    className='wrapper'
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        if (!isBackdropClickedRef.current) {
+                            return
+                        }
+                        isBackdropClickedRef.current = false
+                        props.onClose()
+                    }}
+                    onMouseDown={(e) => {
+                        if (e.target === e.currentTarget) {
+                            isBackdropClickedRef.current = true
+                        }
+                    }}
                 >
-                    <div className='toolbar'>
-                        <div>
-                            {<h1 className='dialog-title'>{title || ''}</h1>}
-                            {subtitle && <h5 className='dialog-subtitle'>{subtitle}</h5>}
+                    <div
+                        role='dialog'
+                        className='dialog'
+                    >
+                        <div className='toolbar'>
+                            <div>
+                                {<h1 className='dialog-title'>{title || ''}</h1>}
+                                {subtitle && <h5 className='dialog-subtitle'>{subtitle}</h5>}
+                            </div>
+                            <div className='toolbar--right'>
+                                {toolbar && <div className='d-flex'>{toolbar}</div>}
+                                {toolsMenu && <MenuWrapper>
+                                    <IconButton
+                                        size='medium'
+                                        icon={<OptionsIcon/>}
+                                    />
+                                    {toolsMenu}
+                                </MenuWrapper>
+                                }
+                                {
+                                    !props.hideCloseButton &&
+                                    <IconButton
+                                        className='dialog__close'
+                                        onClick={props.onClose}
+                                        icon={<CloseIcon/>}
+                                        title={closeDialogText}
+                                        size='medium'
+                                    />
+                                }
+                            </div>
                         </div>
-                        <div className='toolbar--right'>
-                            {toolbar && <div className='d-flex'>{toolbar}</div>}
-                            {toolsMenu && <MenuWrapper>
-                                <IconButton
-                                    size='medium'
-                                    icon={<OptionsIcon/>}
-                                />
-                                {toolsMenu}
-                            </MenuWrapper>
-                            }
-                            {
-                                !props.hideCloseButton &&
-                                <IconButton
-                                    className='dialog__close'
-                                    onClick={props.onClose}
-                                    icon={<CloseIcon/>}
-                                    title={closeDialogText}
-                                    size='medium'
-                                />
-                            }
-                        </div>
+                        {props.children}
                     </div>
-                    {props.children}
                 </div>
             </div>
-        </div>
+        </LayerPortal>
     )
 }
 

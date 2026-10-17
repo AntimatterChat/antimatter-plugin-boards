@@ -11,6 +11,7 @@ import {MemberRole} from '../blocks/board'
 import {IUser} from '../user'
 
 import ConfirmationDialog from './confirmationDialogBox'
+import {layerOr} from './fusion/layer'
 
 import './confirmAddUserForNotifications.scss'
 
@@ -130,7 +131,7 @@ const ConfirmAddUserForNotifications = (props: Props): React.JSX.Element => {
                 getOptionLabel={(o: {id: MemberRole, label: string}) => o.label}
                 getOptionValue={(o: {id: MemberRole, label: string}) => o.id}
                 styles={selectStyles}
-                menuPortalTarget={document.body}
+                menuPortalTarget={layerOr(document.body)}
                 isDisabled={!allowManageBoardRoles}
                 options={roleOptions}
                 onChange={(option) => {
