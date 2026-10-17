@@ -19,6 +19,7 @@ import octoClient from '../../octoClient'
 import {FINISHED, TOUR_ORDER} from '../../components/onboardingTour'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {UserSettingKey} from '../../userSettings'
+import {Utils} from '../../utils'
 
 const WelcomePage = () => {
     const history = useHistory()
@@ -87,8 +88,19 @@ const WelcomePage = () => {
         await setWelcomePageViewed(me.id)
         const onboardingData = await octoClient.prepareOnboarding(currentTeam.id)
         await dispatch(fetchMe())
-        const newPath = `/team/${onboardingData?.teamID}/${onboardingData?.boardID}`
-        history.replace(newPath)
+
+        // The server copies the welcome template into the team. When it can't (it failed with a 500
+        // when the template became "Welcome to Kanban!" while the server still looked for "Welcome
+        // to Boards!"), there is no board to open: go on to the team's boards and their template
+        // picker. Opening /team/undefined/undefined switched the whole app to a team called
+        // "undefined" and ended on the "Not a valid team" error page.
+        if (!onboardingData?.teamID || !onboardingData?.boardID) {
+            Utils.logError('The welcome board for the tour could not be created')
+            goForward()
+            return
+        }
+
+        history.replace(`/team/${onboardingData.teamID}/${onboardingData.boardID}`)
     }
 
     // It's still possible for a guest to end up at this route/page directly, so

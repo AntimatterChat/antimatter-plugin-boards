@@ -44,6 +44,7 @@ import ShareBoardButton from './shareBoard/shareBoardButton'
 import ShareBoardLoginButton from './shareBoard/shareBoardLoginButton'
 
 import CardDialog from './cardDialog'
+import {OnboardingBoardTitle} from './cardDetail/cardDetail'
 import RootPortal from './rootPortal'
 import TopBar from './topBar'
 import ViewHeader from './viewHeader/viewHeader'
@@ -214,7 +215,7 @@ const CenterPanel = (props: Props) => {
     const addEmptyCardAndShow = useCallback(() => addCard('', true), [addCard])
 
     const shouldStartBoardsTour = useCallback((): boolean => {
-        const isOnboardingBoard = props.board.title === 'Welcome to Kanban!'
+        const isOnboardingBoard = props.board.title === OnboardingBoardTitle
         const isTourStarted = onboardingTourStarted
         const completedCardsTour = onboardingTourCategory === TOUR_CARD && onboardingTourStep === FINISHED.toString()
         const noCardOpen = !currentCard

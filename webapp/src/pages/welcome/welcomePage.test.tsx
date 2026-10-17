@@ -267,6 +267,35 @@ describe('pages/welcome', () => {
         await waitFor(() => expect(history.replace).toHaveBeenCalledWith('/team/team_id_1/board_id_1'))
     })
 
+    // The server answers 500 when it can't copy the welcome template (as when the template was
+    // renamed "Welcome to Kanban!" but the server looked for "Welcome to Boards!"), and the client
+    // then gets no onboarding data.
+    test('Welcome page opens the team boards, not /team/undefined, when the welcome board cannot be created', async () => {
+        history.replace = jest.fn()
+        const user = {} as unknown as IUser
+        mockedOctoClient.getMe.mockResolvedValue(user)
+        mockedOctoClient.prepareOnboarding.mockResolvedValue(undefined)
+
+        const component = (
+            <ReduxProvider store={store}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+        render(component)
+        userEvent.click(screen.getByText('Take a tour'))
+        await waitFor(() => expect(mockedOctoClient.prepareOnboarding).toHaveBeenCalledTimes(1))
+        await waitFor(() => expect(history.replace).toHaveBeenCalledWith('/team/team_id_1'))
+        for (const [path] of (history.replace as jest.Mock).mock.calls) {
+            expect(path).not.toContain('undefined')
+        }
+    })
+
     test('Welcome page skips tour on clicking no thanks option', async () => {
         history.replace = jest.fn()
         const user = {} as unknown as IUser
