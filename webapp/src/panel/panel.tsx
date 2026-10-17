@@ -31,6 +31,8 @@ import {
 import {BoardList, ChannelHome, PanelBoard, PanelPage, PanelStart, PanelTemplates} from './views'
 
 import './panel.scss'
+import './fusion_skin.scss'
+import './fusion_labels.scss'
 
 /**
  * PanelRoutes are the panel's views, at the paths the full page had (under /kanban): the channel's boards first, the

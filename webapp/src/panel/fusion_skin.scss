@@ -1,0 +1,543 @@
+/*
+ * Kanban in the Fusion UI: its views, dialogs and menus in Fusion's tokens (--am-main, --am-raise, --am-line...),
+ * type (Figtree, Sora) and shapes, as Fusion's own panels, dialogs (.am-modal), menus (.am-pop), buttons (.am-btn)
+ * and fields (.am-field). Kanban's colours are the classic theme's (--center-channel-*-rgb, --button-bg-rgb), which
+ * the Fusion themes already give in Fusion's palette; here its own variables and the surfaces, borders and controls
+ * that don't follow them take Fusion's tokens.
+ *
+ * Every rule is scoped to the Fusion UI (html[data-am-web-ui='fusion']), so the classic UI keeps its look (see
+ * fusion_skin.test.ts). Kanban's dialogs and menus are drawn in Fusion's layer there (components/fusion/layer.tsx),
+ * in a box that carries .focalboard-body, so the same rules reach them. The label colours are in fusion_labels.scss.
+ */
+
+/* Kanban's box in Fusion's layer: above the app, below Fusion's own dialogs (.am-scrim) and tooltips */
+html[data-am-web-ui='fusion'] .KanbanLayer.focalboard-body {
+    /* stylelint-disable-next-line property-disallowed-list */
+    z-index: 70;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 0;
+    height: 0;
+    overflow: visible;
+    background: none;
+}
+
+/* A menu's box over its button, in the layer: only the menu takes the pointer */
+html[data-am-web-ui='fusion'] .KanbanMenuBox > * {
+    pointer-events: auto;
+}
+
+html[data-am-web-ui='fusion'] .focalboard-body {
+    /* Kanban's own variables, as Fusion's tokens */
+    --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.12);
+    --elevation-2: 0 2px 6px rgba(0, 0, 0, 0.16);
+    --elevation-3: var(--am-shadow);
+    --elevation-4: var(--am-shadow);
+    --elevation-5: var(--am-shadow);
+    --elevation-6: var(--am-shadow);
+    --default-rad: 8px;
+    --modal-rad: 16px;
+    --error-text: var(--am-danger);
+    --cursor-color: var(--am-text);
+
+    background: var(--am-main);
+    color: var(--am-text);
+    font-family: var(--am-font-ui), sans-serif;
+
+    /* Fusion's type: Figtree for the text, Sora for the titles (not Open Sans and Metropolis) */
+    h1,
+    h2,
+    h3,
+    .title,
+    .dialog-title,
+    .text-heading1,
+    .text-heading2,
+    .text-heading3,
+    .text-heading4,
+    .text-heading5,
+    .text-heading6,
+    .text-heading7,
+    .text-heading8 {
+        font-family: var(--am-font-display), sans-serif;
+    }
+
+    .Button,
+    input,
+    textarea,
+    select,
+    button {
+        font-family: var(--am-font-ui), sans-serif;
+    }
+
+    a {
+        color: var(--am-anti);
+    }
+
+    hr {
+        background-color: var(--am-line);
+        color: var(--am-line);
+    }
+
+    ::selection {
+        background: var(--am-matter-soft);
+    }
+
+    .text-light,
+    .octo-placeholder,
+    .octo-propertyvalue.empty {
+        color: var(--am-muted);
+    }
+
+    /* The borders between things, in Fusion's line colour */
+    .octo-table-cell,
+    .octo-table-header,
+    .octo-table-row,
+    .octo-board-header-cell,
+    .ViewHeader,
+    .GalleryCard,
+    .CardDetail hr,
+    .CommentsList,
+    .ShareBoardDialog .tabs,
+    .BoardSwitcherDialogBody .head {
+        border-color: var(--am-line);
+    }
+
+    /* Fusion's icons, drawn in the elements of Compass's (widgets/icons/compassIcon.tsx): the glyph is hidden */
+    .CompassIcon.amfx-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .CompassIcon.amfx-icon::before {
+        display: none;
+        content: none;
+    }
+
+    .CompassIcon.amfx-icon > svg {
+        width: 1em;
+        height: 1em;
+    }
+
+    /* Kanban's own tooltip is hidden: Fusion's (data-am-tip) shows instead (widgets/tooltip.tsx) */
+    .octo-tooltip.amfx-tip::before,
+    .octo-tooltip.amfx-tip::after {
+        display: none;
+        content: none;
+    }
+
+    /* Buttons, as Fusion's (.am-btn) */
+    .Button {
+        border-radius: 10px;
+        font-weight: 600;
+
+        &:hover {
+            background-color: var(--am-hover);
+        }
+
+        &.filled,
+        &.emphasis--primary {
+            background: var(--am-matter);
+            color: #fff;
+
+            &:hover {
+                background: var(--am-matter);
+                filter: brightness(1.1);
+            }
+        }
+
+        &.filled.danger,
+        &.emphasis--primary.danger,
+        &.emphasis--danger {
+            background: var(--am-danger);
+            color: #fff;
+
+            &:hover {
+                background: var(--am-danger);
+                filter: brightness(1.1);
+            }
+        }
+
+        &.emphasis--secondary {
+            border-color: var(--am-line);
+            background: var(--am-raise);
+            color: var(--am-text);
+
+            &:hover,
+            &:active {
+                background: var(--am-raise-2);
+            }
+        }
+
+        &.emphasis--tertiary {
+            background: var(--am-raise);
+            color: var(--am-text);
+
+            &:hover,
+            &:active {
+                background: var(--am-raise-2);
+            }
+        }
+
+        &.emphasis--quaternary,
+        &.emphasis--link {
+            color: var(--am-matter);
+
+            &:hover,
+            &:active {
+                background: var(--am-matter-soft);
+            }
+        }
+
+        &.emphasis--gray {
+            color: var(--am-muted);
+
+            &:hover {
+                background: var(--am-hover);
+                color: var(--am-text);
+            }
+
+            &:active {
+                background: var(--am-matter-soft);
+                color: var(--am-matter);
+            }
+        }
+
+        &.active {
+            background: var(--am-matter-soft);
+            color: var(--am-matter);
+        }
+
+        &:disabled {
+            opacity: 0.45;
+            filter: none;
+        }
+    }
+
+    /* Icon buttons, as Fusion's (.am-icon-btn) */
+    .IconButton {
+        border-radius: 8px;
+        color: var(--am-muted);
+
+        &:hover {
+            background-color: var(--am-hover);
+            color: var(--am-text);
+        }
+
+        &:active {
+            background-color: var(--am-matter-soft);
+            color: var(--am-matter);
+        }
+    }
+
+    /* Fields, as Fusion's (.am-field) */
+    input,
+    textarea {
+        background: transparent;
+        color: var(--am-text);
+    }
+
+    .board-search-field input,
+    .queryWrapper,
+    .ShareBoardDialog input[type='text'],
+    .CreateCategory input,
+    .MarkdownEditor .MarkdownEditorInput {
+        border: 1px solid var(--am-line);
+        border-radius: 9px;
+        background: var(--am-side);
+        color: var(--am-text);
+
+        &:focus,
+        &:focus-within {
+            border-color: var(--am-matter);
+        }
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: var(--am-faint);
+    }
+
+    input[type='checkbox'],
+    input[type='radio'] {
+        accent-color: var(--am-matter);
+    }
+
+    /* The on-off switch, as Fusion's (.am-switch) */
+    .Switch.override-main {
+        background-color: var(--am-raise-2);
+
+        &.on {
+            background-color: var(--am-matter);
+        }
+
+        .octo-switch-inner {
+            background-color: #fff;
+        }
+    }
+
+    /* Menus, as Fusion's (.am-pop): the raised surface, a line, rounder, Fusion's shadow */
+    .Menu.noselect {
+        border: 1px solid var(--am-line);
+        border-radius: 12px;
+        background-color: var(--am-raise);
+        box-shadow: var(--am-shadow);
+        color: var(--am-text);
+
+        .menu-contents {
+            padding: 6px;
+        }
+
+        .menu-option {
+            border-radius: 8px;
+
+            &:hover {
+                background: var(--am-hover);
+            }
+        }
+
+        .menu-option.menu-option--active,
+        .menu-option.active {
+            background: var(--am-select);
+        }
+
+        .CompassIcon {
+            color: var(--am-muted);
+            opacity: 1;
+        }
+
+        .menu-spacer,
+        .MenuOption.MenuSeparator {
+            border-color: var(--am-line);
+        }
+    }
+
+    /* The small popovers (registration link, filters...), as Fusion's */
+    .Modal {
+        border: 1px solid var(--am-line);
+        border-radius: 12px;
+        background: var(--am-raise);
+        box-shadow: var(--am-shadow);
+    }
+
+    /* Dialogs, as Fusion's (.am-scrim, .am-modal) */
+    .Dialog {
+        .backdrop {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .dialog {
+            border-radius: 16px;
+            background-color: var(--am-main);
+            box-shadow: var(--am-shadow);
+            color: var(--am-text);
+        }
+
+        .dialog-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .dialog-subtitle {
+            color: var(--am-muted);
+        }
+
+        .dialog .IconButton {
+            color: var(--am-muted);
+
+            &:hover {
+                background-color: var(--am-hover);
+                color: var(--am-text);
+            }
+        }
+
+        &.size--small .dialog {
+            background-color: var(--am-raise);
+        }
+    }
+
+    /* A card is a dialog over the whole panel, flat */
+    .Dialog.cardDialog .dialog {
+        border-radius: 0;
+        background-color: var(--am-main);
+        box-shadow: none;
+    }
+
+    /* The board: cards on the raised surface, outlined by Fusion's line */
+    .KanbanCard {
+        border: 1px solid var(--am-line);
+        border-radius: 10px;
+        background: var(--am-raise);
+        box-shadow: none;
+        color: var(--am-text);
+
+        &:hover {
+            background: var(--am-raise-2);
+        }
+
+        &.selected {
+            border-color: var(--am-matter);
+            background: var(--am-matter-soft);
+        }
+
+        .optionsMenu {
+            border-radius: 8px;
+            background: var(--am-raise-2);
+        }
+    }
+
+    .GalleryCard {
+        border-radius: 10px;
+        background: var(--am-raise);
+
+        &:hover {
+            background: var(--am-raise-2);
+        }
+
+        &.selected {
+            border-color: var(--am-matter);
+            background: var(--am-matter-soft);
+        }
+
+        .gallery-item {
+            background: var(--am-side);
+        }
+
+        .optionsMenu {
+            background: var(--am-raise-2);
+        }
+    }
+
+    .Table {
+        .octo-table-header,
+        .octo-table-header .octo-table-cell {
+            background: var(--am-main);
+            color: var(--am-muted);
+        }
+
+        .octo-table-row:hover {
+            background: var(--am-hover);
+        }
+    }
+
+    /* The community's boards (the panel's list) */
+    .SidebarBoardItem,
+    .SidebarCategory .octo-sidebar-item {
+        border-radius: 8px;
+
+        &:hover {
+            background-color: var(--am-hover);
+        }
+
+        &.active {
+            background: var(--am-select);
+        }
+    }
+
+    /* The channel's boards */
+    .RHSChannelBoard {
+        border: 1px solid var(--am-line);
+        border-radius: 12px;
+        background: var(--am-raise);
+    }
+
+    /* The empty and error pages: Fusion's empty state, with the error's ways out under it */
+    .ErrorPage--fusion,
+    .AccessDeniedPage--fusion {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .ErrorPage__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    /* Flash messages and banners */
+    .FlashMessages {
+        border-radius: 10px;
+        background: var(--am-raise-2);
+        box-shadow: var(--am-shadow);
+        color: var(--am-text);
+    }
+
+    /* The panel's scrollbars, thin and in Fusion's colours */
+    * {
+        scrollbar-color: var(--am-raise-2) transparent;
+        scrollbar-width: thin;
+    }
+}
+
+/* The panel's title, in the web app's header */
+html[data-am-web-ui='fusion'] .KanbanPanelTitle {
+    font-family: var(--am-font-ui), sans-serif;
+
+    .KanbanPanelTitle__text {
+        font-family: var(--am-font-display), sans-serif;
+    }
+
+    .KanbanPanelTitle__subtitle {
+        color: var(--am-muted);
+    }
+
+    .KanbanPanelTitle__back.IconButton {
+        border-radius: 8px;
+        color: var(--am-muted);
+
+        &:hover {
+            background-color: var(--am-hover);
+            color: var(--am-text);
+        }
+    }
+}
+
+/* The tour's tips (drawn at the end of the page), as Fusion's popovers */
+html[data-am-web-ui='fusion'] .tutorial-tour-tip__box.tippy-box {
+    border: 1px solid var(--am-line);
+    border-radius: 14px;
+    background: var(--am-raise);
+    color: var(--am-text);
+    filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.35));
+    font-family: var(--am-font-ui), sans-serif;
+
+    .tippy-arrow,
+    .tippy-arrow::before {
+        border-color: var(--am-line);
+        background: var(--am-raise);
+        color: var(--am-raise);
+    }
+
+    .tutorial-tour-tip__header__title {
+        font-family: var(--am-font-display), sans-serif;
+    }
+
+    .tutorial-tour-tip__body {
+        color: var(--am-text-2);
+    }
+
+    .tutorial-tour-tip__btn {
+        border-radius: 10px;
+    }
+
+    .tutorial-tour-tip__confirm-btn {
+        background: var(--am-matter);
+        color: #fff;
+
+        &:hover:not(.disabled) {
+            background: var(--am-matter);
+            filter: brightness(1.1);
+        }
+    }
+
+    .tutorial-tour-tip__cancel-btn {
+        background: var(--am-raise-2);
+        color: var(--am-text);
+    }
+}

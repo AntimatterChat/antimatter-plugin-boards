@@ -1,0 +1,69 @@
+/*
+ * Kanban's label colours (the options of select and multi-select properties) in the Fusion UI. The classic ones are
+ * pastels, or translucent tints, under text in the theme's colour: on Fusion's dark surfaces the text was light on a
+ * light pastel and couldn't be read. Here each colour is a solid fill with its own text colour, deep tones under light
+ * text on the dark themes (Fusion Dark, OLED and the dark themes derived from a custom one) and pastels under dark
+ * text on the light ones, so a label reads the same whatever it sits on. fusion_labels.test.ts checks that every
+ * label's text has a contrast of at least 4.5:1 (WCAG AA) on its fill. Every rule is scoped to the Fusion UI; the
+ * classic UI keeps theme.ts's colours.
+ *
+ * The colours are set on <body>, under <html> whose inline style holds the classic ones (theme.ts), so they win
+ * wherever a label is drawn: the panel, Fusion's layer, a card's dialog.
+ */
+
+/* The dark themes (Fusion's default) */
+html[data-am-web-ui='fusion'] body {
+    --kanban-label-text: #f2f3f5;
+    --prop-default: #404249;
+    --prop-gray: #4a4d55;
+    --prop-brown: #5c4330;
+    --prop-orange: #6b3d1f;
+    --prop-yellow: #5e4d12;
+    --prop-green: #1f5232;
+    --prop-blue: #1e4170;
+    --prop-purple: #4b2f78;
+    --prop-pink: #6a2a52;
+    --prop-red: #742a2d;
+}
+
+/* The light themes: Fusion Light, light derived themes, and Fusion System on a light system */
+html[data-am-web-ui='fusion'][data-am-theme='light'] body {
+    --kanban-label-text: #1b1238;
+    --prop-default: #ebe8f4;
+    --prop-gray: #e3e1ea;
+    --prop-brown: #f1dfcd;
+    --prop-orange: #fddcc8;
+    --prop-yellow: #f8eeb0;
+    --prop-green: #cdedd3;
+    --prop-blue: #cfe0fa;
+    --prop-purple: #e5d6fd;
+    --prop-pink: #fbd5e8;
+    --prop-red: #fdd0d0;
+}
+
+@media (prefers-color-scheme: light) {
+    html[data-am-web-ui='fusion'][data-am-theme='system'] body {
+        --kanban-label-text: #1b1238;
+        --prop-default: #ebe8f4;
+        --prop-gray: #e3e1ea;
+        --prop-brown: #f1dfcd;
+        --prop-orange: #fddcc8;
+        --prop-yellow: #f8eeb0;
+        --prop-green: #cdedd3;
+        --prop-blue: #cfe0fa;
+        --prop-purple: #e5d6fd;
+        --prop-pink: #fbd5e8;
+        --prop-red: #fdd0d0;
+    }
+}
+
+/* A coloured label's text, and its text while it's edited, in its own colour */
+html[data-am-web-ui='fusion'] .Label:not(.empty),
+html[data-am-web-ui='fusion'] .Label:not(.empty) input {
+    color: var(--kanban-label-text);
+}
+
+/* Rounder, as Fusion's tags */
+html[data-am-web-ui='fusion'] .Label {
+    border-radius: 6px;
+}
