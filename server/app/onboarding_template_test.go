@@ -8,6 +8,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
+	"io"
 	"path"
 	"testing"
 
@@ -56,4 +57,20 @@ func TestWelcomeBoardTitleIsABuiltInTemplate(t *testing.T) {
 
 	require.Greater(t, len(titles), 1, "the embedded archive should hold the built-in templates")
 	require.Contains(t, titles, WelcomeBoardTitle)
+}
+
+// The built-in templates link to Antimatter's docs, not to the dead docs.antimatter.example of the
+// rebrand: the welcome board's cards open their links for every new user.
+func TestBuiltInTemplatesHaveNoDeadDocsLinks(t *testing.T) {
+	archive, err := zip.NewReader(bytes.NewReader(assets.DefaultTemplatesArchive), int64(len(assets.DefaultTemplatesArchive)))
+	require.NoError(t, err)
+
+	for _, f := range archive.File {
+		rc, err := f.Open()
+		require.NoError(t, err)
+		data, err := io.ReadAll(rc)
+		require.NoError(t, err)
+		require.NoError(t, rc.Close())
+		require.NotContains(t, string(data), "docs.antimatter.example", f.Name)
+	}
 }
