@@ -39,7 +39,7 @@ const BoardSelectorItem = (props: Props) => {
                     >
                         <FormattedMessage
                             id='boardSelector.unlink'
-                            defaultMessage='Unlink'
+                            defaultMessage='Remove'
                         />
                     </Button>}
                 {item.channelId !== currentChannel &&
@@ -49,7 +49,7 @@ const BoardSelectorItem = (props: Props) => {
                     >
                         <FormattedMessage
                             id='boardSelector.link'
-                            defaultMessage='Link'
+                            defaultMessage='Add'
                         />
                     </Button>}
             </div>

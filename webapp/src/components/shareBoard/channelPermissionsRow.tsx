@@ -70,15 +70,15 @@ const ChannelPermissionsRow = (props: Props): React.JSX.Element => {
             dialogBox={{
                 heading: intl.formatMessage({
                     id: 'shareBoard.confirm-unlink.title',
-                    defaultMessage: 'Unlink channel from board',
+                    defaultMessage: 'Remove channel from board',
                 }),
                 subText: intl.formatMessage({
                     id: 'shareBoard.confirm-unlink.body',
-                    defaultMessage: 'When you unlink a channel from a board, all members of the channel (existing and new) will lose access to it unless they\'re given permission separately.',
+                    defaultMessage: 'When you remove a channel from a board, all members of the channel (existing and new) will lose access to it unless they\'re given permission separately.',
                 }),
                 confirmButtonText: intl.formatMessage({
                     id: 'shareBoard.confirm-unlink.confirmBtnText',
-                    defaultMessage: 'Unlink channel',
+                    defaultMessage: 'Remove channel',
                 }),
                 onConfirm: onUnlinkBoard,
                 onClose: () => setShowUnlinkChannelConfirmation(false),
@@ -133,7 +133,7 @@ const ChannelPermissionsRow = (props: Props): React.JSX.Element => {
                             <Menu.Text
                                 id='Unlink'
                                 icon={<DeleteIcon/>}
-                                name={intl.formatMessage({id: 'BoardMember.unlinkChannel', defaultMessage: 'Unlink'})}
+                                name={intl.formatMessage({id: 'BoardMember.unlinkChannel', defaultMessage: 'Remove'})}
                                 onClick={() => setShowUnlinkChannelConfirmation(true)}
                             />
                         </Menu>

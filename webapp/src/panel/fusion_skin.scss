@@ -523,9 +523,15 @@ html[data-am-web-ui='fusion'] .focalboard-body {
     }
 }
 
-/* The panel's title, in the web app's header */
+/* The panel's toolbar row, at the top of its body, as the toolbars of Fusion's app panels */
+html[data-am-web-ui='fusion'] .KanbanPanelToolbar {
+    border-bottom-color: var(--am-line);
+    background: var(--am-main);
+}
+
 html[data-am-web-ui='fusion'] .KanbanPanelTitle {
     font-family: var(--am-font-ui), sans-serif;
+    color: var(--am-text);
 
     .KanbanPanelTitle__text {
         font-family: var(--am-font-display), sans-serif;
@@ -535,7 +541,8 @@ html[data-am-web-ui='fusion'] .KanbanPanelTitle {
         color: var(--am-muted);
     }
 
-    .KanbanPanelTitle__back.IconButton {
+    .KanbanPanelTitle__back.IconButton,
+    .KanbanPanelTitle__action.IconButton {
         border-radius: 8px;
         color: var(--am-muted);
 

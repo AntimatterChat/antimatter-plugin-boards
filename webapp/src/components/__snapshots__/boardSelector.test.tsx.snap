@@ -25,7 +25,7 @@ exports[`components/boardSelector escape button should unmount the component 1`]
               <h1
                 class="dialog-title"
               >
-                Link boards
+                Add boards
               </h1>
             </div>
             <div
@@ -128,7 +128,7 @@ exports[`components/boardSelector renders with no results 1`] = `
               <h1
                 class="dialog-title"
               >
-                Link boards
+                Add boards
               </h1>
             </div>
             <div
@@ -234,7 +234,7 @@ exports[`components/boardSelector renders with some results 1`] = `
               <h1
                 class="dialog-title"
               >
-                Link boards
+                Add boards
               </h1>
             </div>
             <div
@@ -321,7 +321,7 @@ exports[`components/boardSelector renders with some results 1`] = `
                     type="button"
                   >
                     <span>
-                      Link
+                      Add
                     </span>
                   </button>
                 </div>
@@ -360,7 +360,7 @@ exports[`components/boardSelector renders with some results 1`] = `
                     type="button"
                   >
                     <span>
-                      Link
+                      Add
                     </span>
                   </button>
                 </div>
@@ -399,7 +399,7 @@ exports[`components/boardSelector renders with some results 1`] = `
                     type="button"
                   >
                     <span>
-                      Link
+                      Add
                     </span>
                   </button>
                 </div>
@@ -438,7 +438,7 @@ exports[`components/boardSelector renders without start searching 1`] = `
               <h1
                 class="dialog-title"
               >
-                Link boards
+                Add boards
               </h1>
             </div>
             <div

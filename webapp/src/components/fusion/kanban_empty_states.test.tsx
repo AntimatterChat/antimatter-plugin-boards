@@ -105,7 +105,7 @@ describe('Kanban\'s empty states under the Fusion UI', () => {
         })
         const root = screen.getByTestId('rhs-boards-empty')
         expectFusionEmptyState(root, 'kanban')
-        const link = screen.getByRole('button', {name: 'Link boards to Channel Name'})
+        const link = screen.getByRole('button', {name: 'Add boards to Channel Name'})
         expect(link.className).toBe('am-btn am-primary')
         fireEvent.click(link)
         expect(store.getActions().length).toBeGreaterThan(0)

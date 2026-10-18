@@ -122,7 +122,7 @@ describe('components/rhsChannelBoards', () => {
             container = result.container
         })
 
-        const buttonElement = screen.queryByText('Link boards to Channel Name')
+        const buttonElement = screen.queryByText('Add boards to Channel Name')
         expect(buttonElement).not.toBeNull()
         expect(container).toMatchSnapshot()
     })
@@ -159,7 +159,7 @@ describe('components/rhsChannelBoards', () => {
             container = result.container
         })
 
-        const buttonElement = screen.queryByText('Link boards to Channel Name')
+        const buttonElement = screen.queryByText('Add boards to Channel Name')
         expect(buttonElement).toBeNull()
         expect(container).toMatchSnapshot()
     })

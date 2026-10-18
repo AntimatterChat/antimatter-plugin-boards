@@ -1,11 +1,8 @@
 // Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
-
 import {SuiteWindow} from './types/index'
 
-import {PanelTitlePlaceholder} from './panel/panel_title'
 import OldUrlRedirect from './panel/old_urls'
 import {panelHistory} from './panel/history'
 import {PANEL_HOME} from './panel/paths'
@@ -80,8 +77,9 @@ describe('Plugin', () => {
         expect(registry.registerProduct).not.toHaveBeenCalled()
         expect(registry.registerRightHandSidebarComponent).toHaveBeenCalledTimes(1)
 
-        const [, title] = registry.registerRightHandSidebarComponent.mock.calls[0] as unknown as [unknown, React.ReactElement]
-        expect(title.type).toBe(PanelTitlePlaceholder)
+        // Its title is its name, which the web app's panel header shows: nothing of the app goes in the header.
+        const [, title] = registry.registerRightHandSidebarComponent.mock.calls[0] as unknown as [unknown, unknown]
+        expect(title).toBe('Kanban')
     })
 
     test('keeps the full page\'s address for its links, which open the panel', async () => {

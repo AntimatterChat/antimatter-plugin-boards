@@ -14,7 +14,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
         <span
           class="linked-boards"
         >
-          Linked boards
+          Boards in this channel
         </span>
         <button
           class="Button emphasis--primary"
@@ -121,7 +121,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards, no add 
         <span
           class="linked-boards"
         >
-          Linked boards
+          Boards in this channel
         </span>
       </div>
       <div
@@ -212,7 +212,7 @@ exports[`components/rhsChannelBoards renders with empty list of boards 1`] = `
       class="RHSChannelBoards empty"
     >
       <h2>
-        No boards are linked to Channel Name yet
+        No boards in Channel Name yet
       </h2>
       <div
         class="empty-paragraph"
@@ -224,7 +224,7 @@ exports[`components/rhsChannelBoards renders with empty list of boards 1`] = `
         type="button"
       >
         <span>
-          Link boards to Channel Name
+          Add boards to Channel Name
         </span>
       </button>
     </div>
@@ -241,7 +241,7 @@ exports[`components/rhsChannelBoards renders with empty list of boards, cannot a
       class="RHSChannelBoards empty"
     >
       <h2>
-        No boards are linked to Channel Name yet
+        No boards in Channel Name yet
       </h2>
       <div
         class="empty-paragraph"

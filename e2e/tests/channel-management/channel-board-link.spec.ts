@@ -52,7 +52,7 @@ test.describe('Channel-Board Linking', () => {
         await openBoardsRHS(page);
 
         await expect(page.locator('.RHSChannelBoards.empty')).toBeVisible({ timeout: 15000 });
-        await expect(page.locator('.RHSChannelBoards.empty h2')).toContainText('No boards are linked to');
+        await expect(page.locator('.RHSChannelBoards.empty h2')).toContainText('No boards in');
     });
 
     test('can link a board to a channel via RHS and see it listed', async ({ page }) => {
@@ -70,7 +70,7 @@ test.describe('Channel-Board Linking', () => {
         // Open the Boards RHS panel
         await openBoardsRHS(page);
 
-        // Click the "Link boards to..." button in the empty state
+        // Click the "Add boards to..." button in the empty state
         await expect(page.locator('.RHSChannelBoards.empty')).toBeVisible({ timeout: 15000 });
         await page.locator('.RHSChannelBoards.empty button').click();
 
@@ -84,12 +84,12 @@ test.describe('Channel-Board Linking', () => {
         const boardItem = page.locator('.BoardSelectorItem').filter({ hasText: boardTitle });
         await expect(boardItem).toBeVisible({ timeout: 10000 });
 
-        // Click "Link" on the matching result
-        await boardItem.locator('button').filter({ hasText: 'Link' }).click();
+        // Click "Add" on the matching result
+        await boardItem.locator('button').filter({ hasText: 'Add' }).click();
 
         // Confirmation dialog
         await expect(page.locator('.confirmation-dialog-box')).toBeVisible({ timeout: 10000 });
-        await page.getByRole('button', { name: 'Yes, link board' }).click();
+        await page.getByRole('button', { name: 'Yes, add board' }).click();
 
         // Board should now appear in the RHS list
         await expect(page.locator('.RHSChannelBoards .rhs-boards-list')).toBeVisible({ timeout: 15000 });
@@ -129,21 +129,21 @@ test.describe('Channel-Board Linking', () => {
 
         const boardItem = page.locator('.BoardSelectorItem').filter({ hasText: boardTitle });
         await expect(boardItem).toBeVisible({ timeout: 10000 });
-        await boardItem.locator('button').filter({ hasText: 'Link' }).click();
+        await boardItem.locator('button').filter({ hasText: 'Add' }).click();
 
         await expect(page.locator('.confirmation-dialog-box')).toBeVisible({ timeout: 10000 });
-        await page.getByRole('button', { name: 'Yes, link board' }).click();
+        await page.getByRole('button', { name: 'Yes, add board' }).click();
 
         // Wait for board to appear in the list
         const boardListItem = page.locator('.RHSChannelBoardItem').filter({ hasText: boardTitle });
         await expect(boardListItem).toBeVisible({ timeout: 15000 });
 
-        // Hover to reveal the options menu, then click "Unlink board".
+        // Hover to reveal the options menu, then click "Remove board".
         // The MenuWrapper renders menu actions as direct buttons (not .MenuItem wrappers),
         // so target the button by its accessible name.
         await boardListItem.hover();
         await boardListItem.locator('.MenuWrapper button.IconButton').click();
-        await page.getByRole('button', { name: 'Unlink board' }).click();
+        await page.getByRole('button', { name: 'Remove board' }).click();
 
         // After unlink the board should no longer appear
         await expect(boardListItem).not.toBeVisible({ timeout: 10000 });

@@ -91,7 +91,7 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot i
             >
               <div>
                 <div
-                  aria-label="Unlink"
+                  aria-label="Remove"
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
@@ -112,7 +112,7 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot i
                     <div
                       class="menu-name"
                     >
-                      Unlink
+                      Remove
                     </div>
                   </div>
                   <div
@@ -209,7 +209,7 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot i
             >
               <div>
                 <div
-                  aria-label="Unlink"
+                  aria-label="Remove"
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
@@ -230,7 +230,7 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot i
                     <div
                       class="menu-name"
                     >
-                      Unlink
+                      Remove
                     </div>
                   </div>
                   <div
@@ -331,7 +331,7 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot w
             >
               <div>
                 <div
-                  aria-label="Unlink"
+                  aria-label="Remove"
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
@@ -352,7 +352,7 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot w
                     <div
                       class="menu-name"
                     >
-                      Unlink
+                      Remove
                     </div>
                   </div>
                   <div

@@ -121,12 +121,12 @@ const BoardSelector = () => {
     if (showLinkBoardConfirmation?.channelId !== '') {
         confirmationSubText = intl.formatMessage({
             id: 'boardSelector.confirm-link-board-subtext-with-other-channel',
-            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.{lineBreak} This board is currently linked to another channel. It will be unlinked if you choose to link it here.'
+            defaultMessage: 'When you add "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.{lineBreak} This board is currently in another channel. It will be removed from it if you add it here.'
         }, {boardName: showLinkBoardConfirmation?.title, lineBreak: <p/>})
     } else {
         confirmationSubText = intl.formatMessage({
             id: 'boardSelector.confirm-link-board-subtext',
-            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests. You can unlink a board from a channel at any time.'
+            defaultMessage: 'When you add "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests. You can remove a board from a channel at any time.'
         }, {boardName: showLinkBoardConfirmation?.title})
     }
 
@@ -156,7 +156,7 @@ const BoardSelector = () => {
                 title={
                     <FormattedMessage
                         id='boardSelector.title'
-                        defaultMessage='Link boards'
+                        defaultMessage='Add boards'
                     />
                 }
                 toolbar={
@@ -174,9 +174,9 @@ const BoardSelector = () => {
                 {showLinkBoardConfirmation &&
                     <ConfirmationDialog
                         dialogBox={{
-                            heading: intl.formatMessage({id: 'boardSelector.confirm-link-board', defaultMessage: 'Link board to channel'}),
+                            heading: intl.formatMessage({id: 'boardSelector.confirm-link-board', defaultMessage: 'Add board to channel'}),
                             subText: confirmationSubText,
-                            confirmButtonText: intl.formatMessage({id: 'boardSelector.confirm-link-board-button', defaultMessage: 'Yes, link board'}),
+                            confirmButtonText: intl.formatMessage({id: 'boardSelector.confirm-link-board-button', defaultMessage: 'Yes, add board'}),
                             destructive: showLinkBoardConfirmation?.channelId !== '',
                             onConfirm: () => linkBoard(showLinkBoardConfirmation, true),
                             onClose: () => setShowLinkBoardConfirmation(null),
