@@ -112,7 +112,7 @@ const RHSChannelBoards = () => {
                     <EmptyState
                         data-testid='rhs-boards-empty'
                         icon={<FusionIcon name='kanban'/>}
-                        title={intl.formatMessage({id: 'rhs-boards.no-boards-linked-to-channel', defaultMessage: 'No boards are linked to {channelName} yet'}, {channelName: headerChannelName})}
+                        title={intl.formatMessage({id: 'rhs-boards.no-boards-linked-to-channel', defaultMessage: 'No boards in {channelName} yet'}, {channelName: headerChannelName})}
                         text={intl.formatMessage({id: 'rhs-boards.no-boards-linked-to-channel-description', defaultMessage: 'Kanban is a project management tool that helps define, organize, track and manage work across teams, with boards of cards and columns.'})}
                         action={canLink ? {
                             label: intl.formatMessage({id: 'rhs-boards.link-boards-to-channel', defaultMessage: 'Add boards to {channelName}'}, {channelName}),
@@ -131,7 +131,7 @@ const RHSChannelBoards = () => {
                     <h2>
                         <FormattedMessage
                             id='rhs-boards.no-boards-linked-to-channel'
-                            defaultMessage='No boards are linked to {channelName} yet'
+                            defaultMessage='No boards in {channelName} yet'
                             values={{channelName: headerChannelName}}
                         />
                     </h2>

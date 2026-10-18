@@ -52,7 +52,7 @@ test.describe('Channel-Board Linking', () => {
         await openBoardsRHS(page);
 
         await expect(page.locator('.RHSChannelBoards.empty')).toBeVisible({ timeout: 15000 });
-        await expect(page.locator('.RHSChannelBoards.empty h2')).toContainText('No boards are linked to');
+        await expect(page.locator('.RHSChannelBoards.empty h2')).toContainText('No boards in');
     });
 
     test('can link a board to a channel via RHS and see it listed', async ({ page }) => {

@@ -212,7 +212,7 @@ exports[`components/rhsChannelBoards renders with empty list of boards 1`] = `
       class="RHSChannelBoards empty"
     >
       <h2>
-        No boards are linked to Channel Name yet
+        No boards in Channel Name yet
       </h2>
       <div
         class="empty-paragraph"
@@ -241,7 +241,7 @@ exports[`components/rhsChannelBoards renders with empty list of boards, cannot a
       class="RHSChannelBoards empty"
     >
       <h2>
-        No boards are linked to Channel Name yet
+        No boards in Channel Name yet
       </h2>
       <div
         class="empty-paragraph"
