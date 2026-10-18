@@ -36,7 +36,7 @@ exports[`components/boardSelectorItem renders board without title 1`] = `
         type="button"
       >
         <span>
-          Unlink
+          Remove
         </span>
       </button>
     </div>
@@ -80,7 +80,7 @@ exports[`components/boardSelectorItem renders linked board 1`] = `
         type="button"
       >
         <span>
-          Unlink
+          Remove
         </span>
       </button>
     </div>

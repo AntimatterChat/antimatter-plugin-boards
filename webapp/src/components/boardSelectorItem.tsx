@@ -39,7 +39,7 @@ const BoardSelectorItem = (props: Props) => {
                     >
                         <FormattedMessage
                             id='boardSelector.unlink'
-                            defaultMessage='Unlink'
+                            defaultMessage='Remove'
                         />
                     </Button>}
                 {item.channelId !== currentChannel &&

@@ -83,7 +83,7 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
               <div />
               <div>
                 <div
-                  aria-label="Unlink board"
+                  aria-label="Remove board"
                   class="MenuOption TextOption menu-option menu-option--with-subtext menu-option--disabled"
                   role="button"
                 >
@@ -104,7 +104,7 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
                     <div
                       class="menu-name"
                     >
-                      Unlink board
+                      Remove board
                     </div>
                     <div
                       class="menu-subtext text-75 mt-1"

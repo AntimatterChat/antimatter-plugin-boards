@@ -166,7 +166,7 @@ const RHSChannelBoards = () => {
                     <span className='linked-boards'>
                         <FormattedMessage
                             id='rhs-boards.linked-boards'
-                            defaultMessage='Linked boards'
+                            defaultMessage='Boards in this channel'
                         />
                     </span>
                     {me?.permissions?.find((s: string) => s === 'create_post') &&

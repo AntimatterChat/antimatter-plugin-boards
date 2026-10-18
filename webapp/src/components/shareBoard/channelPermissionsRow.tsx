@@ -133,7 +133,7 @@ const ChannelPermissionsRow = (props: Props): React.JSX.Element => {
                             <Menu.Text
                                 id='Unlink'
                                 icon={<DeleteIcon/>}
-                                name={intl.formatMessage({id: 'BoardMember.unlinkChannel', defaultMessage: 'Unlink'})}
+                                name={intl.formatMessage({id: 'BoardMember.unlinkChannel', defaultMessage: 'Remove'})}
                                 onClick={() => setShowUnlinkChannelConfirmation(true)}
                             />
                         </Menu>

@@ -138,12 +138,12 @@ test.describe('Channel-Board Linking', () => {
         const boardListItem = page.locator('.RHSChannelBoardItem').filter({ hasText: boardTitle });
         await expect(boardListItem).toBeVisible({ timeout: 15000 });
 
-        // Hover to reveal the options menu, then click "Unlink board".
+        // Hover to reveal the options menu, then click "Remove board".
         // The MenuWrapper renders menu actions as direct buttons (not .MenuItem wrappers),
         // so target the button by its accessible name.
         await boardListItem.hover();
         await boardListItem.locator('.MenuWrapper button.IconButton').click();
-        await page.getByRole('button', { name: 'Unlink board' }).click();
+        await page.getByRole('button', { name: 'Remove board' }).click();
 
         // After unlink the board should no longer appear
         await expect(boardListItem).not.toBeVisible({ timeout: 10000 });

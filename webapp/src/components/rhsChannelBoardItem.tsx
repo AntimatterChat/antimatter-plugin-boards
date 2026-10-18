@@ -85,7 +85,7 @@ const RHSChannelBoardItem = (props: Props) => {
                             <Menu.Text
                                 key={`unlinkBoard-${board.id}`}
                                 id='unlinkBoard'
-                                name={intl.formatMessage({id: 'rhs-boards.unlink-board', defaultMessage: 'Unlink board'})}
+                                name={intl.formatMessage({id: 'rhs-boards.unlink-board', defaultMessage: 'Remove board'})}
                                 icon={<CompassIcon icon='link-variant-off'/>}
                                 onClick={() => {
                                     onUnlinkBoard(board)
@@ -102,7 +102,7 @@ const RHSChannelBoardItem = (props: Props) => {
                                 key={`unlinkBoard-${board.id}`}
                                 id='unlinkBoard'
                                 disabled={true}
-                                name={intl.formatMessage({id: 'rhs-boards.unlink-board1', defaultMessage: 'Unlink board'})}
+                                name={intl.formatMessage({id: 'rhs-boards.unlink-board1', defaultMessage: 'Remove board'})}
                                 icon={<CompassIcon icon='link-variant-off'/>}
                                 onClick={() => {
                                     onUnlinkBoard(board)

@@ -621,7 +621,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(channelMenuBtn).not.toBeNull()
         userEvent.click(channelMenuBtn as Element)
 
-        const unlinkOption = screen.getByText('Unlink')
+        const unlinkOption = screen.getByText('Remove')
         expect(unlinkOption).not.toBeNull()
         userEvent.click(unlinkOption)
 
