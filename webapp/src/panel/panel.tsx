@@ -29,6 +29,8 @@ import {
     PANEL_BOARDS_PATH,
     PANEL_HOME,
     PANEL_TEMPLATES_PATH,
+    newLinkedBoardPath,
+    templatesPath,
 } from './paths'
 import {BoardList, ChannelHome, PanelBoard, PanelPage, PanelStart, PanelTemplates} from './views'
 
@@ -75,16 +77,19 @@ export const PanelRoutes = (): React.JSX.Element => (
                     <AccessDeniedPage/>
                 </PanelPage>
             </FBRoute>
+            {/* The welcome page (shown the first time) goes on to the view asked for: getOriginalPath. */}
             <FBRoute
                 loginRequired={true}
                 path={PANEL_TEMPLATES_PATH}
                 exact={true}
+                getOriginalPath={({params: {teamId}}) => templatesPath(teamId)}
             >
                 <PanelTemplates/>
             </FBRoute>
             <FBRoute
                 loginRequired={true}
                 path={NEW_LINKED_BOARD_PATH}
+                getOriginalPath={({params: {teamId, channelId}}) => newLinkedBoardPath(teamId, channelId)}
             >
                 <PanelBoard new={true}/>
             </FBRoute>

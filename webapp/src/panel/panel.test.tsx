@@ -273,6 +273,26 @@ describe('panel/KanbanPanel', () => {
         delete appWindow.isFocalboardPlugin
     })
 
+    test('the first time, New board shows the welcome page, which then goes on to the templates', () => {
+        const appWindow = window as unknown as {isFocalboardPlugin?: boolean}
+        appWindow.isFocalboardPlugin = true
+        const history = makePanelHistory()
+        renderPanel(history, makeStore(false))
+
+        act(() => {
+            history.push('/team/t1/templates')
+        })
+        expect(history.location.pathname).toBe('/welcome')
+        expect(new URLSearchParams(history.location.search).get('r')).toBe('/team/t1/templates')
+
+        act(() => {
+            history.push('/team/t1/new/ch1')
+        })
+        expect(history.location.pathname).toBe('/welcome')
+        expect(new URLSearchParams(history.location.search).get('r')).toBe('/team/t1/new/ch1')
+        delete appWindow.isFocalboardPlugin
+    })
+
     test('is the panel\'s root, with the box its dialogs open in, and says when it shows', () => {
         const {container, unmount} = render(
             <IntlProvider locale='en'>
