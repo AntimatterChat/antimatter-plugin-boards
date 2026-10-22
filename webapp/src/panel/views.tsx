@@ -25,6 +25,7 @@ import {getMe} from '../store/users'
 import {IUser} from '../user'
 import {getValidEmojiData} from '../utils/emojiUtils'
 
+import {useBoardUpdates} from './board_updates'
 import {useExpandedPanel} from './host'
 import {PANEL_HOME, boardsPath, templatesPath} from './paths'
 import {PanelTitle, usePanelHistory} from './panel_title'
@@ -100,7 +101,8 @@ function useTeamOfRoute(teamId: string | undefined): void {
 /**
  * BoardList is the community's boards by category, which the full page showed as its left sidebar: finding a board,
  * creating one or a category, and each board's menu (move, duplicate, export, hide, delete). Kanban's own settings
- * (importing an archive, its language, random icons, the tour) are in its menu.
+ * (importing an archive, its language, random icons, the tour) are in its menu. Boards made, changed or deleted
+ * elsewhere show as they change.
  */
 export const BoardList = (): React.JSX.Element => {
     const intl = useIntl()
@@ -108,6 +110,7 @@ export const BoardList = (): React.JSX.Element => {
     const match = useRouteMatch<{teamId: string}>()
     const team = useAppSelector(getCurrentTeam)
     useTeamOfRoute(match.params.teamId)
+    useBoardUpdates()
 
     return (
         <>
@@ -138,6 +141,7 @@ export const PanelTemplates = (): React.JSX.Element => {
     const match = useRouteMatch<{teamId: string}>()
     useTeamOfRoute(match.params.teamId)
     useExpandedPanel()
+    useBoardUpdates()
 
     return (
         <>

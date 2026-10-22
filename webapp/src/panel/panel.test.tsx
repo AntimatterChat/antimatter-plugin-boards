@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event'
 import RootPortal from '../components/rootPortal'
 
 import {mockStateStore} from '../testUtils'
+import wsClient from '../wsclient'
 
 import {InPanelContext} from './context'
 import {makePanelHistory, PanelHistory} from './history'
@@ -271,6 +272,24 @@ describe('panel/KanbanPanel', () => {
         expect(history.location.search).toContain('r=/team/t1/b1')
         expect(screen.getByTestId('welcome')).toBeTruthy()
         delete appWindow.isFocalboardPlugin
+    })
+
+    test('the community\'s boards and the templates take the boards\' changes, as the full page did', () => {
+        const history = makePanelHistory()
+        const before = wsClient.onChange.Board.length
+        renderPanel(history)
+
+        act(() => {
+            history.push('/team/t1')
+        })
+        expect(screen.getByTestId('boards-list')).toBeTruthy()
+        expect(wsClient.onChange.Board.length).toBe(before + 1)
+
+        act(() => {
+            history.push('/team/t1/templates')
+        })
+        expect(screen.getByTestId('templates')).toBeTruthy()
+        expect(wsClient.onChange.Board.length).toBe(before + 1)
     })
 
     test('the first time, New board shows the welcome page, which then goes on to the templates', () => {
