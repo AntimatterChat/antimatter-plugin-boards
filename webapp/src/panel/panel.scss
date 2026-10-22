@@ -91,8 +91,25 @@
     // The view's header (its menu, Properties, Group by, Filter, Sort, the search and New) wraps when the panel is
     // narrower than it: the full page only scrolled it on a small window, and the panel is narrower than the window.
     .ViewHeader {
+        position: relative;
         flex-wrap: wrap;
         row-gap: 4px;
+    }
+
+    // The filters open under the view's header, from its right edge, and no wider than the panel: the full page
+    // opened them from the Filter button, which leaves them past the panel's edge, their Delete buttons cut off. (On
+    // a phone they cover the screen, as everywhere.)
+    @media not screen and (max-width: 430px) {
+        .ViewHeader > .ModalWrapper {
+            position: static;
+        }
+
+        .ViewHeader > .ModalWrapper > .Modal {
+            top: 100%;
+            right: 0;
+            left: auto;
+            max-width: 100%;
+        }
     }
 
     /* The dialogs cover the panel (the panel sets its box in --kanban-panel-*), wherever they are drawn in it. */

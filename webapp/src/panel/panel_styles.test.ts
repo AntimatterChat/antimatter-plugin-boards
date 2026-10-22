@@ -76,6 +76,19 @@ describe('panel/panel.scss, as built', () => {
         expect(declared(root.querySelector('.ViewHeader')!, 'flex-wrap')).toContain('wrap')
     })
 
+    test('opens a view\'s filters from the right edge of its header, inside the panel', () => {
+        root.querySelector('#focalboard-app')!.innerHTML = `
+            <div class="BoardComponent"><div class="ViewHeader">
+                <div class="ModalWrapper"><div class="Modal bottom"><div class="FilterComponent"></div></div></div>
+            </div></div>`
+        const modal = root.querySelector('.Modal')!
+        expect(declared(root.querySelector('.ViewHeader')!, 'position')).toContain('relative')
+        expect(declared(root.querySelector('.ModalWrapper')!, 'position')).toContain('static')
+        expect(declared(modal, 'right')).toContain('0')
+        expect(declared(modal, 'left')).toContain('auto')
+        expect(declared(modal, 'max-width')).toContain('100%')
+    })
+
     test('applies each of its rules to the panel, none only to a panel inside another', () => {
         const panelRules = rules.filter((rule) => rule.selectorText.includes('KanbanPanel'))
         expect(panelRules.length).toBeGreaterThan(0)
