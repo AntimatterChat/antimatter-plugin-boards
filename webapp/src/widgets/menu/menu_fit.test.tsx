@@ -8,12 +8,14 @@ import Menu from '.'
 
 // Antimatter: a long menu scrolls within the window, rather than running past its bottom (the Properties menu of a
 // board with many properties, in the side panel).
-describe('widgets/menu/Menu in a short window', () => {
+describe('widgets/menu/Menu in a small window', () => {
     const innerHeight = window.innerHeight
 
-    // The menu's contents are `height` tall and start `top` pixels down the window.
-    const layOut = (top: number, height: number) => {
-        jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({top, bottom: top + height} as DOMRect)
+    const innerWidth = window.innerWidth
+
+    // The menu's contents are `height` tall and start `top` pixels down the window; the menu spans `left` to `right`.
+    const layOut = (top: number, height: number, left = 100, right = 340) => {
+        jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({top, bottom: top + height, left, right} as DOMRect)
         jest.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(height)
     }
 
@@ -32,6 +34,7 @@ describe('widgets/menu/Menu in a short window', () => {
     afterEach(() => {
         jest.restoreAllMocks()
         window.innerHeight = innerHeight
+        window.innerWidth = innerWidth
     })
 
     test('scrolls a menu that would run past the bottom of the window', () => {
@@ -61,5 +64,20 @@ describe('widgets/menu/Menu in a short window', () => {
         })
         expect(contents(container).style.maxHeight).toBe('')
         expect(contents(container).style.overflowY).toBe('')
+    })
+
+    test('moves a menu that would run past the right edge of the window to the left', () => {
+        window.innerWidth = 1280
+        layOut(100, 300, 1118, 1388)
+        const {container} = renderMenu()
+        const menu = container.querySelector('.Menu') as HTMLElement
+        expect(menu.style.transform).toBe(`translateX(-${1388 - (1280 - 16)}px)`)
+    })
+
+    test('leaves a menu within the window\'s width where it is', () => {
+        window.innerWidth = 1280
+        layOut(100, 300, 800, 1060)
+        const {container} = renderMenu()
+        expect((container.querySelector('.Menu') as HTMLElement).style.transform).toBe('')
     })
 })

@@ -44,31 +44,49 @@ export default class Menu extends React.PureComponent<Props> {
         this.contentsRef = React.createRef<HTMLDivElement>()
     }
 
-    public state: {hovering: React.ReactNode, contentsStyle?: CSSProperties} = {
+    public state: {hovering: React.ReactNode, contentsStyle?: CSSProperties, shiftLeft: number} = {
         hovering: null,
+        shiftLeft: 0,
     }
+
+    private fitFrame = 0
 
     public componentDidMount(): void {
         this.fitInWindow()
+
+        // Once more when the menu has its place: under Fusion, it's drawn in Fusion's layer, at its button, once its
+        // box there has measured the button.
+        this.fitFrame = window.requestAnimationFrame(this.fitInWindow)
         window.addEventListener('resize', this.fitInWindow)
     }
 
     public componentWillUnmount(): void {
+        window.cancelAnimationFrame(this.fitFrame)
         window.removeEventListener('resize', this.fitInWindow)
     }
 
-    // Antimatter: a menu longer than the space left below its top (a board with many properties, in the side panel
-    // or a short window) scrolls, rather than running past the bottom of the window, out of reach.
+    // Antimatter: a menu stays within the window. One longer than the space left below its top (a board with many
+    // properties, in the side panel or a short window) scrolls, rather than running past the bottom of the window,
+    // out of reach; one that would run past its right edge (opened from a button at the right of the side panel)
+    // moves left.
     private fitInWindow = (): void => {
         const contents = this.contentsRef.current
-        if (!contents) {
+        const menu = this.menuRef.current
+        if (!contents || !menu) {
             return
         }
         const top = contents.getBoundingClientRect().top
         const available = Math.floor(window.innerHeight - WINDOW_MARGIN - top)
         const contentsStyle = top >= 0 && contents.scrollHeight > available ? {maxHeight: Math.max(available, MIN_SCROLLING_HEIGHT), overflowY: 'auto' as const} : undefined
-        if (contentsStyle?.maxHeight !== this.state.contentsStyle?.maxHeight) {
-            this.setState({contentsStyle})
+
+        // Where the menu would be without the shift it has.
+        const box = menu.getBoundingClientRect()
+        const left = box.left + this.state.shiftLeft
+        const right = box.right + this.state.shiftLeft
+        const shiftLeft = Math.max(0, Math.min(Math.ceil(right - (window.innerWidth - WINDOW_MARGIN)), Math.floor(left - WINDOW_MARGIN)))
+
+        if (contentsStyle?.maxHeight !== this.state.contentsStyle?.maxHeight || shiftLeft !== this.state.shiftLeft) {
+            this.setState({contentsStyle, shiftLeft})
         }
     }
 
@@ -79,6 +97,9 @@ export default class Menu extends React.PureComponent<Props> {
         if (this.props.parentRef) {
             const forceBottom = position ? ['bottom', 'left', 'right'].includes(position) : false
             style = MenuUtil.openUp(this.props.parentRef, forceBottom).style
+        }
+        if (this.state.shiftLeft > 0) {
+            style = {...style, transform: `translateX(-${this.state.shiftLeft}px)`}
         }
 
         return (
