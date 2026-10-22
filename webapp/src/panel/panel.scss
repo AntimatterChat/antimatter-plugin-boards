@@ -1,7 +1,10 @@
 // Antimatter: Kanban in the side panel. Its views were laid out for a full page; here they fit the panel, which a
 // board widens (the web app's expanded panel), and the dialogs (a card, sharing...) cover the panel, not the window.
 
-.KanbanPanel {
+// The panel's root is itself the .focalboard-body box: the build prefixes Kanban's top-level rules with
+// ".focalboard-body " (loaders/globalScssClassLoader.js), unless they start with .focalboard-body, and
+// ".focalboard-body .KanbanPanel" would only match a panel inside another one (panel_styles.test.ts).
+.focalboard-body.KanbanPanel {
     position: relative;
 
     // The toolbar row over the views, which take the rest of the panel.
