@@ -290,6 +290,9 @@ describe('components/cardDetail/CardDetail', () => {
         expect(tourTip.length).toBe(2)
         expect(tourTip[1]).toMatchSnapshot()
 
+        // Antimatter: the tour is text only, without Mattermost's pictures.
+        expect(tourTip[1].querySelector('img')).toBeNull()
+
         // moving to next step
         mockedOctoClient.patchUserConfig.mockResolvedValueOnce([])
 
@@ -396,6 +399,9 @@ describe('components/cardDetail/CardDetail', () => {
         const tourTip = document.querySelectorAll('.AddCommentTourStep')
         expect(tourTip.length).toBe(2)
         expect(tourTip[1]).toMatchSnapshot()
+
+        // Antimatter: the tour is text only, without Mattermost's pictures.
+        expect(tourTip[1].querySelector('img')).toBeNull()
 
         // moving to next step
         mockedOctoClient.patchUserConfig.mockResolvedValueOnce([])
@@ -507,6 +513,9 @@ describe('components/cardDetail/CardDetail', () => {
         const tourTip = document.querySelectorAll('.AddDescriptionTourStep')
         expect(tourTip.length).toBe(2)
         expect(tourTip[1]).toMatchSnapshot()
+
+        // Antimatter: the tour is text only, without Mattermost's pictures.
+        expect(tourTip[1].querySelector('img')).toBeNull()
 
         // moving to next step
         mockedOctoClient.patchUserConfig.mockResolvedValueOnce([])
