@@ -70,6 +70,12 @@ describe('panel/panel.scss, as built', () => {
         expect(declared(templates, 'flex')).toContain('1 1 auto')
     })
 
+    test('wraps a board view\'s header in a panel of any width: its New button never leaves the panel', () => {
+        root.querySelector('#focalboard-app')!.innerHTML = '<div class="BoardComponent"><div class="ViewHeader"></div></div>'
+        expect(root.classList.contains('KanbanPanel--narrow')).toBe(false)
+        expect(declared(root.querySelector('.ViewHeader')!, 'flex-wrap')).toContain('wrap')
+    })
+
     test('applies each of its rules to the panel, none only to a panel inside another', () => {
         const panelRules = rules.filter((rule) => rule.selectorText.includes('KanbanPanel'))
         expect(panelRules.length).toBeGreaterThan(0)
