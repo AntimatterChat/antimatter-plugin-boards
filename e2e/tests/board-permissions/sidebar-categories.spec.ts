@@ -61,22 +61,21 @@ async function createCategoryViaApi(name: string, userId: string, token: string)
 }
 
 /**
- * Log in as `username` and navigate directly to a board URL so the sidebar
- * is fully loaded. Returns after `.BoardComponent` is visible.
+ * Log in as `username` and open the community's boards by category (the
+ * Kanban panel's All boards, which the full page showed as its sidebar).
+ * Returns once the board `boardTitle` is listed.
  */
-async function loginAndOpenBoard(
+async function loginAndOpenBoardList(
     browser: Browser,
     username: string,
     password: string,
     teamId: string,
-    boardId: string,
-    viewId: string,
+    boardTitle: string,
 ): Promise<{ ctx: import('@playwright/test').BrowserContext; page: Page }> {
     const ctx = await browser.newContext();
     const page = await ctx.newPage();
 
-    // Set lastTeamId before page scripts run so HomeToCurrentTeam always
-    // resolves a team and never falls through to error?id=unknown.
+    // Set lastTeamId before page scripts run so the web app always resolves a team.
     await page.addInitScript((tid) => {
         localStorage.setItem('lastTeamId', tid);
     }, teamId);
@@ -84,19 +83,8 @@ async function loginAndOpenBoard(
     const amPage = new AntimatterPage(page);
     await amPage.login(antimatter.url(), username, password);
     await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-
-    // Navigate to the boards root URL first so the app fully initialises —
-    // welcome-page check, user-config fetch, Redux store hydration — before
-    // going to a specific board URL. Jumping straight to /kanban/team/…/boardId/viewId
-    // on a fresh context can race against the welcomePageViewed redirect and
-    // trigger the React ErrorBoundary ("Sorry, something went wrong").
-    await amPage.navigateToBoardsFromUrl(antimatter.url());
-
-    await page.goto(
-        `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}`,
-        { waitUntil: 'domcontentloaded', timeout: 60000 },
-    );
-    await expect(page.locator('.BoardComponent')).toBeVisible({ timeout: 20000 });
+    await amPage.openBoardList();
+    await expect(page.locator('.SidebarBoardItem.subitem').filter({ hasText: exact(boardTitle) })).toBeVisible({ timeout: 20000 });
 
     return { ctx, page };
 }
@@ -150,11 +138,11 @@ test.describe('Sidebar Categories', () => {
         const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
         const boardId = await createBoardViaApi(antimatter, 'Create Category Board', token);
-        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
+        const { teamId } = await getBoardMeta(antimatter, boardId, token);
         const adminProfile = await adminClient.getMe();
         await seedWelcomePageViewed(antimatter, adminProfile.id, token);
 
-        const { ctx, page } = await loginAndOpenBoard(browser, adminUser, adminPass, teamId, boardId, viewId);
+        const { ctx, page } = await loginAndOpenBoardList(browser, adminUser, adminPass, teamId, 'Create Category Board');
 
         // Open the options on the default "Boards" system category.
         await openCategoryMenu(page, 'Boards');
@@ -181,11 +169,11 @@ test.describe('Sidebar Categories', () => {
         const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
         const boardId = await createBoardViaApi(antimatter, 'Default Category Board', token);
-        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
+        const { teamId } = await getBoardMeta(antimatter, boardId, token);
         const adminProfile = await adminClient.getMe();
         await seedWelcomePageViewed(antimatter, adminProfile.id, token);
 
-        const { ctx, page } = await loginAndOpenBoard(browser, adminUser, adminPass, teamId, boardId, viewId);
+        const { ctx, page } = await loginAndOpenBoardList(browser, adminUser, adminPass, teamId, 'Default Category Board');
 
         await openCategoryMenu(page, 'Boards');
         const menu = page.locator('.Menu.noselect');
@@ -209,12 +197,12 @@ test.describe('Sidebar Categories', () => {
         const token = (adminClient as any).token as string;
         const adminProfile = await adminClient.getMe();
         const boardId = await createBoardViaApi(antimatter, 'Rename Category Board', token);
-        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
+        const { teamId } = await getBoardMeta(antimatter, boardId, token);
         // Pre-create the category via API so the test starts with it already present.
         await createCategoryViaApi('Old Category Name', adminProfile.id, token);
         await seedWelcomePageViewed(antimatter, adminProfile.id, token);
 
-        const { ctx, page } = await loginAndOpenBoard(browser, adminUser, adminPass, teamId, boardId, viewId);
+        const { ctx, page } = await loginAndOpenBoardList(browser, adminUser, adminPass, teamId, 'Rename Category Board');
 
         await expect(
             page.locator('.octo-sidebar-item.category').filter({ has: page.locator('.category-title', { hasText: exact('Old Category Name') }) }),
@@ -251,11 +239,11 @@ test.describe('Sidebar Categories', () => {
         const token = (adminClient as any).token as string;
         const adminProfile = await adminClient.getMe();
         const boardId = await createBoardViaApi(antimatter, 'Delete Category Board', token);
-        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
+        const { teamId } = await getBoardMeta(antimatter, boardId, token);
         await createCategoryViaApi('Temporary Category', adminProfile.id, token);
         await seedWelcomePageViewed(antimatter, adminProfile.id, token);
 
-        const { ctx, page } = await loginAndOpenBoard(browser, adminUser, adminPass, teamId, boardId, viewId);
+        const { ctx, page } = await loginAndOpenBoardList(browser, adminUser, adminPass, teamId, 'Delete Category Board');
 
         await expect(
             page.locator('.octo-sidebar-item.category').filter({ has: page.locator('.category-title', { hasText: exact('Temporary Category') }) }),
@@ -292,10 +280,10 @@ test.describe('Sidebar Categories', () => {
         const token = (adminClient as any).token as string;
         const adminProfile = await adminClient.getMe();
         const boardId = await createBoardViaApi(antimatter, 'Collapse Test Board', token);
-        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
+        const { teamId } = await getBoardMeta(antimatter, boardId, token);
         await seedWelcomePageViewed(antimatter, adminProfile.id, token);
 
-        const { ctx, page } = await loginAndOpenBoard(browser, adminUser, adminPass, teamId, boardId, viewId);
+        const { ctx, page } = await loginAndOpenBoardList(browser, adminUser, adminPass, teamId, 'Collapse Test Board');
 
         // Confirm the category starts expanded.
         const catHeader = page.locator('.octo-sidebar-item.category').filter({ has: page.locator('.category-title', { hasText: exact('Boards') }) });
@@ -321,11 +309,11 @@ test.describe('Sidebar Categories', () => {
         const token = (adminClient as any).token as string;
         const adminProfile = await adminClient.getMe();
         const boardId = await createBoardViaApi(antimatter, 'Move Board Test', token);
-        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
+        const { teamId } = await getBoardMeta(antimatter, boardId, token);
         await createCategoryViaApi('Target Category', adminProfile.id, token);
         await seedWelcomePageViewed(antimatter, adminProfile.id, token);
 
-        const { ctx, page } = await loginAndOpenBoard(browser, adminUser, adminPass, teamId, boardId, viewId);
+        const { ctx, page } = await loginAndOpenBoardList(browser, adminUser, adminPass, teamId, 'Move Board Test');
 
         // The board starts in the default "Boards" category.
         const boardItem = page.locator('.SidebarBoardItem.subitem').filter({ hasText: /^Move Board Test$/ });
@@ -368,19 +356,19 @@ test.describe('Sidebar Categories', () => {
     // Hide board
     // ─────────────────────────────────────────────────────────────────────────
 
-    test('user can hide a board from the sidebar via the board options menu', async ({ browser }) => {
+    test('user can hide a board from the board list via the board options menu', async ({ browser }) => {
         const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
         const adminProfile = await adminClient.getMe();
 
-        // Create two boards so hiding the active one switches to the other (not a blank state).
+        // Create two boards: hiding one leaves the other listed.
         const boardId = await createBoardViaApi(antimatter, 'Board To Hide', token);
-        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
+        const { teamId } = await getBoardMeta(antimatter, boardId, token);
         const boardId2 = await createBoardViaApi(antimatter, 'Anchor Board', token);
         await getBoardMeta(antimatter, boardId2, token);
         await seedWelcomePageViewed(antimatter, adminProfile.id, token);
 
-        const { ctx, page } = await loginAndOpenBoard(browser, adminUser, adminPass, teamId, boardId, viewId);
+        const { ctx, page } = await loginAndOpenBoardList(browser, adminUser, adminPass, teamId, 'Board To Hide');
 
         // Both boards are visible in the sidebar.
         await expect(
@@ -418,14 +406,14 @@ test.describe('Sidebar Categories', () => {
         // Create an open board and give regularuser Viewer access to it so they
         // can see the boards sidebar.
         const boardId = await createBoardViaApi(antimatter, 'Viewer Category Board', adminToken);
-        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, adminToken);
+        const { teamId } = await getBoardMeta(antimatter, boardId, adminToken);
         const regularClient = await antimatter.getClient(regularUser, regularPass);
         const regularProfile = await regularClient.getMe();
         const regularToken = (regularClient as any).token as string;
         await addBoardMember(antimatter, boardId, regularProfile.id, 'viewer', adminToken);
         await seedWelcomePageViewed(antimatter, regularProfile.id, regularToken);
 
-        const { ctx, page } = await loginAndOpenBoard(browser, regularUser, regularPass, teamId, boardId, viewId);
+        const { ctx, page } = await loginAndOpenBoardList(browser, regularUser, regularPass, teamId, 'Viewer Category Board');
 
         // ── Create ──────────────────────────────────────────────────────────
         // Categories are personal / user-scoped — board role has no effect on
@@ -464,7 +452,7 @@ test.describe('Sidebar Categories', () => {
         const adminToken = (adminClient as any).token as string;
 
         const boardId = await createBoardViaApi(antimatter, 'Viewer Delete Category Board', adminToken);
-        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, adminToken);
+        const { teamId } = await getBoardMeta(antimatter, boardId, adminToken);
         const regularClient = await antimatter.getClient(regularUser, regularPass);
         const regularProfile = await regularClient.getMe();
         const regularToken = (regularClient as any).token as string;
@@ -473,7 +461,7 @@ test.describe('Sidebar Categories', () => {
         await createCategoryViaApi('Viewer Temp Category', regularProfile.id, regularToken);
         await seedWelcomePageViewed(antimatter, regularProfile.id, regularToken);
 
-        const { ctx, page } = await loginAndOpenBoard(browser, regularUser, regularPass, teamId, boardId, viewId);
+        const { ctx, page } = await loginAndOpenBoardList(browser, regularUser, regularPass, teamId, 'Viewer Delete Category Board');
 
         await expect(
             page.locator('.octo-sidebar-item.category').filter({ has: page.locator('.category-title', { hasText: exact('Viewer Temp Category') }) }),

@@ -28,34 +28,31 @@ test.afterAll(async () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Log in and navigate to boards. Creates a blank board with the given title if
- * the user has none yet.
+ * Log in and open the board `boardTitle` from the community's boards (the
+ * Kanban panel's All boards). Creates it via the API, and follows its link, if
+ * the user has none of that name yet.
  */
 async function setupBoard(page: Page, username: string, password: string, boardTitle: string): Promise<void> {
     const amPage = new AntimatterPage(page);
     await amPage.login(antimatter.url(), username, password);
     await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-    await amPage.navigateToBoardsFromUrl(antimatter.url());
+    await amPage.openBoardList();
 
     const boardComponent = page.locator('.BoardComponent');
-    const sidebarList = page.locator('.octo-sidebar-list');
-    const boardItem = sidebarList.locator('.octo-sidebar-item').filter({ hasText: boardTitle });
+    const boardItem = page.locator('.octo-sidebar-list .SidebarBoardItem.subitem').filter({ hasText: boardTitle });
 
-    // If the board already exists in the sidebar, click it directly.
-    if (await boardItem.isVisible({ timeout: 3000 }).catch(() => false)) {
-        await boardItem.click();
+    // If the board is already listed, open it from the list.
+    if (await boardItem.first().waitFor({ state: 'visible', timeout: 3000 }).then(() => true).catch(() => false)) {
+        await amPage.openBoardFromList(boardTitle);
     } else {
-        // Create the board via API and navigate to it directly.
+        // Create the board via API and follow its link.
         // UI-based creation (BoardTemplateSelector / Add Board Dropdown) is unreliable
         // when the user already has boards, so we avoid it entirely.
         const userClient = await antimatter.getClient(username, password);
         const userToken = (userClient as any).token as string;
         const boardId = await createBoardViaApi(antimatter, boardTitle, userToken);
         const { teamId, viewId } = await getBoardMeta(antimatter, boardId, userToken);
-        await page.goto(
-            `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}`,
-            { waitUntil: 'domcontentloaded', timeout: 30000 },
-        );
+        await amPage.openKanbanLink(antimatter.url(), `/team/${teamId}/${boardId}/${viewId}`);
     }
 
     await expect(boardComponent).toBeVisible({ timeout: 15000 });
@@ -211,7 +208,7 @@ test.describe('Board Member Roles', () => {
     // Private board: not visible to non-members
     // ─────────────────────────────────────────────────────────────────────────
 
-    test('private board is not visible to non-members in the sidebar', async ({ browser }) => {
+    test('private board is not visible to non-members in the board list', async ({ browser }) => {
         const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
 
@@ -219,21 +216,21 @@ test.describe('Board Member Roles', () => {
         const boardId = await createBoardViaApi(antimatter, 'Hidden Private Board', token, 'P');
         expect(boardId).toBeTruthy();
 
-        // Pre-seed welcomePageViewed so navigateToBoardsFromUrl never hits the welcome redirect.
+        // Pre-seed welcomePageViewed so opening the board list never hits the welcome redirect.
         const secondClient = await antimatter.getClient(secondUser, secondPass);
         const secondProfile = await secondClient.getMe();
         const secondToken = (secondClient as any).token as string;
         await seedWelcomePageViewed(antimatter, secondProfile.id, secondToken);
 
-        // Log in as seconduser and verify the board does NOT appear in the sidebar.
+        // Log in as seconduser and verify the board does NOT appear in the community's boards.
         const ctx = await browser.newContext();
         const secondPage = await ctx.newPage();
         const amPage = new AntimatterPage(secondPage);
         await amPage.login(antimatter.url(), secondUser, secondPass);
         await secondPage.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await amPage.navigateToBoardsFromUrl(antimatter.url());
+        await amPage.openBoardList();
 
-        // Fail fast if the Boards sidebar never becomes visible.
+        // Fail fast if the board list never becomes visible.
         await expect(secondPage.locator('.Sidebar.octo-sidebar')).toBeVisible({ timeout: 15000 });
 
         await expect(secondPage.locator('.octo-sidebar-list')).not.toContainText('Hidden Private Board', { timeout: 5000 });
@@ -281,9 +278,8 @@ test.describe('Board Member Roles', () => {
         await amPage.login(antimatter.url(), secondUser, secondPass);
         await secondPage.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
-        // Navigate directly to the full board URL, bypassing HomeToCurrentTeam.
-        const boardUrl = `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}`;
-        await secondPage.goto(boardUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
+        // Follow the board's link: the panel opens on it.
+        await amPage.openKanbanLink(antimatter.url(), `/team/${teamId}/${boardId}/${viewId}`);
 
         await expect(secondPage.locator('.BoardComponent')).toBeVisible({ timeout: 20000 });
 
@@ -328,9 +324,8 @@ test.describe('Board Member Roles', () => {
         await amPage.login(antimatter.url(), secondUser, secondPass);
         await secondPage.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
-        // Navigate directly to the full board URL, bypassing HomeToCurrentTeam.
-        const boardUrl = `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}`;
-        await secondPage.goto(boardUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
+        // Follow the board's link: the panel opens on it.
+        await amPage.openKanbanLink(antimatter.url(), `/team/${teamId}/${boardId}/${viewId}`);
 
         await expect(secondPage.locator('.BoardComponent')).toBeVisible({ timeout: 20000 });
 

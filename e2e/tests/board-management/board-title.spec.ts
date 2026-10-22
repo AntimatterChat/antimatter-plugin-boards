@@ -26,25 +26,22 @@ test.describe('Board Management', () => {
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), username, password);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await amPage.navigateToBoardsFromUrl(antimatter.url());
+        await amPage.openBoardList();
 
         const boardComponent = page.locator('.BoardComponent');
-        const sidebarItem = page.locator('.octo-sidebar-list .octo-sidebar-item').filter({ hasText: boardTitle });
+        const sidebarItem = page.locator('.octo-sidebar-list .SidebarBoardItem.subitem').filter({ hasText: boardTitle });
 
-        // If the board already exists in the sidebar, click it directly.
-        if (await sidebarItem.isVisible({ timeout: 3000 }).catch(() => false)) {
-            await sidebarItem.click();
+        // If the board is already in the community's boards, open it from there.
+        if (await sidebarItem.first().waitFor({ state: 'visible', timeout: 3000 }).then(() => true).catch(() => false)) {
+            await amPage.openBoardFromList(boardTitle);
         } else {
-            // Create via API and navigate directly — the template selector only
-            // appears for users with no boards, so UI creation is unreliable here.
+            // Create via API and follow the board's link — the template picker
+            // creates untitled boards, which this helper doesn't need.
             const userClient = await antimatter.getClient(username, password);
             const userToken = (userClient as any).token as string;
             const boardId = await createBoardViaApi(antimatter, boardTitle, userToken);
             const { teamId, viewId } = await getBoardMeta(antimatter, boardId, userToken);
-            await page.goto(
-                `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}`,
-                { waitUntil: 'domcontentloaded', timeout: 30000 },
-            );
+            await amPage.openKanbanLink(antimatter.url(), `/team/${teamId}/${boardId}/${viewId}`);
         }
 
         await expect(boardComponent).toBeVisible({ timeout: 15000 });
@@ -54,9 +51,8 @@ test.describe('Board Management', () => {
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), username, password);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await amPage.navigateToBoardsFromUrl(antimatter.url());
+        await amPage.openTemplates();
 
-        await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 15000 });
         await page.locator('.templates-sidebar__footer button').click();
         await expect(page.locator('.BoardComponent')).toBeVisible({ timeout: 15000 });
 
@@ -66,6 +62,7 @@ test.describe('Board Management', () => {
 
     test('can rename a board', async ({ page }) => {
         await setupBoard(page, username, password, 'Test Board');
+        const amPage = new AntimatterPage(page);
 
         // Click the board title to make it editable
         const titleLocator = page.locator('.ViewTitle .Editable');
@@ -75,12 +72,15 @@ test.describe('Board Management', () => {
         // Commit the rename by pressing Enter
         await titleLocator.press('Enter');
 
-        // The sidebar should now reflect the new board name
+        // The panel's title, then the community's boards, show the new name
+        await expect(amPage.kanbanPanelTitle()).toContainText('My Renamed Board', { timeout: 10000 });
+        await amPage.openBoardList();
         await expect(page.locator('.octo-sidebar-list')).toContainText('My Renamed Board', { timeout: 10000 });
     });
 
     test('renamed board title persists after navigation', async ({ page }) => {
         await setupBoard(page, username, password, 'Test Board');
+        const amPage = new AntimatterPage(page);
 
         // Rename the board
         const titleLocator = page.locator('.ViewTitle .Editable');
@@ -88,41 +88,34 @@ test.describe('Board Management', () => {
         await titleLocator.fill('Persistent Board');
         await titleLocator.press('Enter');
 
-        await expect(page.locator('.octo-sidebar-list')).toContainText('Persistent Board', { timeout: 10000 });
+        await expect(amPage.kanbanPanelTitle()).toContainText('Persistent Board', { timeout: 10000 });
 
-        // Navigate away by going to the main Antimatter channel, then back
+        // Navigate away by reloading the main Antimatter channel, then open Kanban again
         await page.goto(antimatter.url());
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await new AntimatterPage(page).navigateToBoardsFromUrl(antimatter.url());
+        await new AntimatterPage(page).openBoardList();
 
-        // The renamed board should still appear in the sidebar
+        // The renamed board should still be listed
         await expect(page.locator('.octo-sidebar-list')).toContainText('Persistent Board', { timeout: 15000 });
     });
 
-    test('multiple boards appear in sidebar', async ({ page }) => {
+    test('multiple boards appear in the board list', async ({ page }) => {
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), 'admin', 'admin');
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await amPage.navigateToBoardsFromUrl(antimatter.url());
 
         // Create first board and name it
-        await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 15000 });
-        await page.locator('.templates-sidebar__footer button').click();
-        await expect(page.locator('.BoardComponent')).toBeVisible({ timeout: 15000 });
-
-        const titleInput = page.locator('.ViewTitle .Editable');
-        await titleInput.click();
-        await titleInput.fill('First Board');
-        await titleInput.press('Enter');
-        await expect(page.locator('.octo-sidebar-list')).toContainText('First Board', { timeout: 10000 });
+        await amPage.openOrCreateBoard('First Board');
+        await amPage.openBoardList();
+        const sidebarList = page.locator('.octo-sidebar-list');
+        await expect(sidebarList).toContainText('First Board', { timeout: 10000 });
 
         // Create second board via API (the Add Board Dropdown is unreliable due to React event timing)
         const adminClient = await antimatter.getAdminClient();
         const token = (adminClient as any).token as string;
         await createBoardViaApi(antimatter, 'Second Board', token);
 
-        // WebSocket push updates the sidebar automatically; both boards should be listed
-        const sidebarList = page.locator('.octo-sidebar-list');
+        // WebSocket push updates the open list automatically; both boards should be listed
         await expect(sidebarList).toContainText('First Board', { timeout: 15000 });
         await expect(sidebarList).toContainText('Second Board', { timeout: 15000 });
     });

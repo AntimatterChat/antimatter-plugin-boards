@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 export class AntimatterPage {
     readonly page: Page;
@@ -67,26 +67,154 @@ export class AntimatterPage {
         return amPage;
     }
 
-    async navigateToBoardsFromUrl(baseUrl: string) {
-        await this.page.goto(`${baseUrl}/kanban`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    // ─────────────────────────────────────────────────────────────────────
+    // Kanban, in the side panel
+    //
+    // Kanban has no full page any more (since 2026-10-17): its views (the
+    // channel's boards, the community's boards by category, the templates, a
+    // board and its cards) are views of its side panel, which the app's icon
+    // opens. Its old links (/kanban/team/<team>/<board>/<view>/<card>) open the
+    // panel on the view they point to.
+    // ─────────────────────────────────────────────────────────────────────
 
-        // On first visit, boards shows a welcome page. Dismiss it if present.
-        const skipLink = this.page.locator('.WelcomePage .skip');
-        const boardsReady = this.page.locator('.Sidebar.octo-sidebar, .BoardTemplateSelector, .Workspace').first();
+    /**
+     * The Kanban panel (the app's root in the side panel). Under Fusion, the
+     * dialogs and menus are drawn in a layer of their own (.KanbanLayer, also
+     * a .KanbanPanel), outside the panel's root.
+     */
+    kanbanPanel(): Locator {
+        return this.page.locator('.KanbanPanel[data-kanban-panel]');
+    }
+
+    /**
+     * The Kanban app's icon: in the app bar (#app-bar-icon-focalboard: the
+     * classic UI and the upstream web app, whose button is named after the
+     * icon's alt text), or Fusion's app rail button (named Kanban).
+     */
+    kanbanIcon(): Locator {
+        return this.page.locator('#app-bar-icon-focalboard')
+            .or(this.page.getByRole('button', { name: 'Kanban', exact: true }))
+            .first();
+    }
+
+    /** The panel's toolbar row: the view's title, back button and actions. */
+    kanbanPanelTitle(): Locator {
+        return this.kanbanPanel().getByTestId('kanban-panel-title');
+    }
+
+    /**
+     * Opens the Kanban panel from the app's icon, as a person does, on its
+     * first view: the boards of the current channel. A panel already open is
+     * taken back to that view.
+     */
+    async openKanban() {
+        const home = this.kanbanPanel().locator('.KanbanPanelHome');
+        if (!(await this.kanbanPanel().isVisible().catch(() => false))) {
+            await this.kanbanIcon().click({ timeout: 30000 });
+        }
+        await this.kanbanPanel().waitFor({ state: 'visible', timeout: 30000 });
+
+        // The panel's back button goes back through its views, to its first one.
+        for (let i = 0; i < 10 && !(await home.isVisible().catch(() => false)); i++) {
+            const back = this.kanbanPanel().locator('.KanbanPanelTitle__back');
+            if (!(await back.isVisible().catch(() => false))) {
+                break;
+            }
+            await back.click({ timeout: 10000 });
+        }
+        await home.waitFor({ state: 'visible', timeout: 30000 });
+    }
+
+    /**
+     * Opens the community's boards, by category (what the full page's left
+     * sidebar was): the panel's "All boards".
+     */
+    async openBoardList() {
+        await this.openKanban();
+        await this.kanbanPanel().locator('.KanbanPanel__all-boards').click();
+        await this.skipWelcome(this.kanbanPanel().locator('.Sidebar.octo-sidebar'));
+    }
+
+    /** Opens the template picker: the panel's "New board". */
+    async openTemplates() {
+        await this.openKanban();
+        await this.kanbanPanel().locator('.KanbanPanel__new-board').click();
+        await this.skipWelcome(this.kanbanPanel().locator('.BoardTemplateSelector'));
+    }
+
+    /**
+     * Opens a board of the list (All boards) by its title, and waits for it.
+     */
+    async openBoardFromList(title: string) {
+        const item = this.kanbanPanel().locator('.octo-sidebar-list .SidebarBoardItem.subitem').filter({ hasText: title }).first();
+        await item.click();
+        await this.kanbanPanel().locator('.BoardComponent').waitFor({ state: 'visible', timeout: 30000 });
+    }
+
+    /**
+     * Opens the board `title` from the community's boards; when there is
+     * none, creates an empty board from the template picker and names it
+     * `title`. The board shows in the panel when it returns.
+     */
+    async openOrCreateBoard(title: string) {
+        await this.openBoardList();
+        const item = this.kanbanPanel().locator('.octo-sidebar-list .SidebarBoardItem.subitem').filter({ hasText: title }).first();
+        const listed = await item.waitFor({ state: 'visible', timeout: 5000 }).then(() => true).catch(() => false);
+        if (listed) {
+            await this.openBoardFromList(title);
+            return;
+        }
+
+        await this.openTemplates();
+        await this.page.locator('.templates-sidebar__footer button').click();
+        const boardComponent = this.kanbanPanel().locator('.BoardComponent');
+        await expect(boardComponent).toBeVisible({ timeout: 15000 });
+
+        // A new board is untitled: name it.
+        await expect(this.page.locator('.ViewTitle .Editable.title')).toHaveAttribute('placeholder', /[Uu]ntitled/, { timeout: 10000 });
+        const titleInput = this.page.locator('.ViewTitle .Editable');
+        await titleInput.click();
+        await titleInput.fill(title);
+        await titleInput.press('Enter');
+
+        // The panel's title names the board it shows.
+        await expect(this.kanbanPanelTitle()).toContainText(title, { timeout: 10000 });
+        await expect(boardComponent).toBeVisible({ timeout: 15000 });
+    }
+
+    /**
+     * Follows an old full-page link to Kanban, as from a message, an email or
+     * a notification: `path` is the full page's path under /kanban
+     * (/team/<team>/<board>/<view>/<card>...). The web app sends /kanban/<path>
+     * to the app's route in a community, /<community>/focalboard/<path>, which
+     * opens a channel with the panel on that view; the helper goes to that
+     * route directly, which every web app the app runs in has (Antimatter's
+     * Fusion and classic UIs, and the upstream web app the CI runs).
+     */
+    async openKanbanLink(baseUrl: string, path: string, teamName = 'test') {
+        await this.page.goto(`${baseUrl}/${teamName}/focalboard${path}`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+        await this.page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 60000 });
+        await this.kanbanPanel().waitFor({ state: 'visible', timeout: 30000 });
+    }
+
+    /**
+     * Waits for `ready`, skipping Kanban's welcome page (shown on the first
+     * visit) and its "Welcome to Kanban" tour if they show first.
+     */
+    async skipWelcome(ready: Locator) {
+        const skipLink = this.kanbanPanel().locator('.WelcomePage .skip');
         const first = await Promise.race([
             skipLink.waitFor({ state: 'visible', timeout: 30000 }).then(() => 'welcome'),
-            boardsReady.waitFor({ state: 'visible', timeout: 30000 }).then(() => 'boards'),
+            ready.waitFor({ state: 'visible', timeout: 30000 }).then(() => 'ready'),
         ]).catch(() => 'timeout');
 
         if (first === 'welcome') {
             await skipLink.click();
-            await boardsReady.waitFor({ state: 'visible', timeout: 30000 });
+            await ready.waitFor({ state: 'visible', timeout: 30000 });
         } else if (first === 'timeout') {
-            throw new Error('Boards did not load: neither the welcome page nor the boards UI appeared within 30s');
+            throw new Error('Kanban did not load: neither its welcome page nor the view asked for appeared in the panel within 30s');
         }
 
-        // The Boards "Welcome To Boards" tour overlay renders inside .Workspace, so
-        // boardsReady may resolve while the overlay is still visible. Dismiss it if present.
         const tourSkip = this.page.locator('text=No thanks, I\'ll figure it out myself');
         if (await tourSkip.isVisible({ timeout: 2000 }).catch(() => false)) {
             await tourSkip.click();

@@ -26,15 +26,10 @@ test.afterAll(async () => {
 // API Helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Open the Boards RHS panel via the App Bar button. */
+/** Open the Kanban side panel from the app's icon: it shows the channel's boards. */
 async function openBoardsRHS(page: import('@playwright/test').Page): Promise<void> {
-    // In Antimatter 9+, plugin RHS buttons live in the App Bar (far-right icon strip),
-    // not the channel header. The button's accessible name is "focalboard" (img alt text).
-    await page.getByRole('button', { name: 'focalboard' }).click();
-    // Wait for the RHS panel to render
-    await expect(page.locator('.focalboard-body').filter({
-        has: page.locator('.RHSChannelBoards'),
-    })).toBeVisible({ timeout: 15000 });
+    await new AntimatterPage(page).openKanban();
+    await expect(page.locator('.KanbanPanel .RHSChannelBoards')).toBeVisible({ timeout: 15000 });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

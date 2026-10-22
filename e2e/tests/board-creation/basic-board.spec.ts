@@ -17,38 +17,38 @@ test.afterAll(async () => {
 });
 
 test.describe('Board Creation', () => {
-    test('boards product is accessible after login', async ({ page }) => {
+    test('Kanban opens in the side panel after login', async ({ page }) => {
         const amPage = await AntimatterPage.loginAndWait(page, antimatter.url(), Users.regularUser.username, Users.regularUser.password);
 
-        await amPage.navigateToBoardsFromUrl(antimatter.url());
+        // The app's icon opens the panel on the channel's boards: none yet.
+        await amPage.openKanban();
+        await expect(amPage.kanbanPanel().locator('.RHSChannelBoards.empty')).toBeVisible({ timeout: 15000 });
 
-        // The template selector is the empty state when no boards exist
-        await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 15000 });
+        // All boards lists the community's boards, by category.
+        await amPage.openBoardList();
+        await expect(amPage.kanbanPanel().locator('.Sidebar.octo-sidebar')).toBeVisible({ timeout: 15000 });
     });
 
     test('can create an empty board', async ({ page }) => {
         const amPage = await AntimatterPage.loginAndWait(page, antimatter.url(), Users.regularUser.username, Users.regularUser.password);
 
-        await amPage.navigateToBoardsFromUrl(antimatter.url());
-
-        // When no boards exist the template selector is already shown as the empty state.
-        // The "Create empty board" button lives in the sidebar footer of the template selector.
-        await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 15000 });
+        // "New board" opens the template picker; "Create empty board" is in its sidebar's footer.
+        await amPage.openTemplates();
         await page.locator('.templates-sidebar__footer button').click();
 
         // After creation the board editor should be visible
         await expect(page.locator('.BoardComponent')).toBeVisible({ timeout: 15000 });
     });
 
-    test('new board appears in the sidebar', async ({ page }) => {
+    test('new board appears in the board list', async ({ page }) => {
         const amPage = await AntimatterPage.loginAndWait(page, antimatter.url(), Users.admin.username, Users.admin.password);
 
-        await amPage.navigateToBoardsFromUrl(antimatter.url());
-
-        await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 15000 });
+        await amPage.openTemplates();
         await page.locator('.templates-sidebar__footer button').click();
+        await expect(page.locator('.BoardComponent')).toBeVisible({ timeout: 15000 });
 
-        // After creation the sidebar should list the new board
-        await expect(page.locator('.octo-sidebar-list .octo-sidebar-item').first()).toBeVisible({ timeout: 15000 });
+        // The community's boards list the new board
+        await amPage.openBoardList();
+        await expect(page.locator('.octo-sidebar-list .SidebarBoardItem.subitem').first()).toBeVisible({ timeout: 15000 });
     });
 });

@@ -29,36 +29,17 @@ test.describe('Board View Features', () => {
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), username, password);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await amPage.navigateToBoardsFromUrl(antimatter.url());
 
-        const boardComponent = page.locator('.BoardComponent');
-        const boardAlreadyLoaded = await boardComponent
-            .waitFor({ state: 'visible', timeout: 5000 })
-            .then(() => true)
-            .catch(() => false);
-
-        if (!boardAlreadyLoaded) {
-            await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 15000 });
-            await page.locator('.templates-sidebar__footer button').click();
-            await expect(boardComponent).toBeVisible({ timeout: 15000 });
-
-            await expect(page.locator('.ViewTitle .Editable.title')).toHaveAttribute('placeholder', /[Uu]ntitled/, { timeout: 10000 });
-            const titleInput = page.locator('.ViewTitle .Editable');
-            await titleInput.click();
-            await titleInput.fill('Test Board');
-            await titleInput.press('Enter');
-
-            await expect(page.locator('.octo-sidebar-list')).toContainText('Test Board', { timeout: 10000 });
-        }
-
-        await expect(boardComponent).toBeVisible({ timeout: 15000 });
+        // The user's "Test Board", from the community's boards; created (and named) from the
+        // template picker the first time.
+        await amPage.openOrCreateBoard('Test Board');
     }
 
     /**
      * Create a new card and give it a name.
      */
     async function createNamedCard(page: Page, cardName: string): Promise<void> {
-        await page.getByRole('button', { name: 'New' }).click();
+        await page.locator('.BoardComponent').getByRole('button', { name: 'New' }).click();
 
         const dialog = page.locator('.Dialog.cardDialog');
         await expect(dialog).toBeVisible({ timeout: 10000 });

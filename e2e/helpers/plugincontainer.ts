@@ -26,35 +26,27 @@ const RunContainer = async (): Promise<AntimatterContainer> => {
   await antimatter.createUser("seconduser@sample.com", "seconduser", "seconduser");
   await antimatter.addUserToTeam("seconduser", "test");
 
-  const userClient = await antimatter.getClient("regularuser", "regularuser")
-  const user = await userClient.getMe()
-  await userClient.savePreferences(user.id, [
-    {user_id: user.id, category: 'tutorial_step', name: user.id, value: '999'},
-    {user_id: user.id, category: 'onboarding_task_list', name: 'onboarding_task_list_show', value: 'false'},
-    {user_id: user.id, category: 'onboarding_task_list', name: 'onboarding_task_list_open', value: 'false'},
-    {
-      user_id: user.id,
-      category: 'drafts',
-      name: 'drafts_tour_tip_showed',
-      value: JSON.stringify({drafts_tour_tip_showed: true}),
-    },
-    {user_id: user.id, category: 'crt_thread_pane_step', name: user.id, value: '999'},
-  ]);
+  // Skip the web app's tours and onboarding for every user: their overlays sit over the app bar, where the
+  // tests open Kanban's side panel.
+  const users: Array<[string, string]> = [["regularuser", "regularuser"], ["seconduser", "seconduser"], [antimatter.username, antimatter.password]];
+  for (const [username, password] of users) {
+    const client = await antimatter.getClient(username, password)
+    const user = await client.getMe()
+    await client.savePreferences(user.id, [
+      {user_id: user.id, category: 'tutorial_step', name: user.id, value: '999'},
+      {user_id: user.id, category: 'onboarding_task_list', name: 'onboarding_task_list_show', value: 'false'},
+      {user_id: user.id, category: 'onboarding_task_list', name: 'onboarding_task_list_open', value: 'false'},
+      {
+        user_id: user.id,
+        category: 'drafts',
+        name: 'drafts_tour_tip_showed',
+        value: JSON.stringify({drafts_tour_tip_showed: true}),
+      },
+      {user_id: user.id, category: 'crt_thread_pane_step', name: user.id, value: '999'},
+    ]);
+  }
 
   const adminClient = await antimatter.getAdminClient()
-  const admin = await adminClient.getMe()
-  await adminClient.savePreferences(admin.id, [
-    {user_id: admin.id, category: 'tutorial_step', name: admin.id, value: '999'},
-    {user_id: admin.id, category: 'onboarding_task_list', name: 'onboarding_task_list_show', value: 'false'},
-    {user_id: admin.id, category: 'onboarding_task_list', name: 'onboarding_task_list_open', value: 'false'},
-    {
-      user_id: admin.id,
-      category: 'drafts',
-      name: 'drafts_tour_tip_showed',
-      value: JSON.stringify({drafts_tour_tip_showed: true}),
-    },
-    {user_id: admin.id, category: 'crt_thread_pane_step', name: admin.id, value: '999'},
-  ]);
   await adminClient.completeSetup({
     organization: "test",
     install_plugins: [],

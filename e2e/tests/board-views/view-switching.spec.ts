@@ -29,32 +29,10 @@ test.describe('Board Views', () => {
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), username, password);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await amPage.navigateToBoardsFromUrl(antimatter.url());
 
-        // Wait for the page to settle into one of two stable states, then decide.
-        const boardComponent = page.locator('.BoardComponent');
-        const boardAlreadyLoaded = await boardComponent
-            .waitFor({ state: 'visible', timeout: 5000 })
-            .then(() => true)
-            .catch(() => false);
-
-        if (!boardAlreadyLoaded) {
-            await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 15000 });
-            await page.locator('.templates-sidebar__footer button').click();
-            await expect(boardComponent).toBeVisible({ timeout: 15000 });
-
-            // New board: verify untitled placeholder shows on the right, then name it.
-            await expect(page.locator('.ViewTitle .Editable.title')).toHaveAttribute('placeholder', /[Uu]ntitled/, { timeout: 10000 });
-            const titleInput = page.locator('.ViewTitle .Editable');
-            await titleInput.click();
-            await titleInput.fill('Test Board');
-            await titleInput.press('Enter');
-
-            // Verify the name now appears in the sidebar.
-            await expect(page.locator('.octo-sidebar-list')).toContainText('Test Board', { timeout: 10000 });
-        }
-
-        await expect(boardComponent).toBeVisible({ timeout: 15000 });
+        // The user's "Test Board", from the community's boards; created (and named) from the
+        // template picker the first time.
+        await amPage.openOrCreateBoard('Test Board');
     }
 
     /**
@@ -103,9 +81,10 @@ test.describe('Board Views', () => {
         await addView(page, 'Table');
         await expect(page.locator('.Table')).toBeVisible({ timeout: 10000 });
 
-        // Click the original "Board view" tab in the sidebar.
-        // Both classes are on the same element, so use a compound selector (no space).
-        await page.locator('.SidebarBoardItem.sidebar-view-item').filter({ hasText: 'Board view' }).click();
+        // Pick the original "Board view" in the View menu (the board's views; the full page
+        // also listed them under the board in its sidebar, which the panel shows apart).
+        await page.locator('.ViewHeader').getByRole('button', { name: 'View menu' }).click();
+        await page.locator('.Menu.noselect').getByRole('button', { name: 'Board view', exact: true }).click();
         await expect(page.locator('.Kanban')).toBeVisible({ timeout: 10000 });
     });
 

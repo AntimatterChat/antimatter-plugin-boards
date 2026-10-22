@@ -98,7 +98,7 @@ async function createCommentViaApi(boardId: string, cardId: string, text: string
 }
 
 /**
- * Log in as `username`, navigate directly to the card URL, and wait for the
+ * Log in as `username`, follow the card's link, and wait for the
  * card dialog to appear. Returns after the `.Dialog.cardDialog` is visible.
  */
 async function openCardAsUser(
@@ -123,9 +123,8 @@ async function openCardAsUser(
     await amPage.login(antimatter.url(), username, password);
     await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
 
-    // Navigate directly to the card URL — the router renders the card dialog on top of the board.
-    const cardUrl = `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}/${cardId}`;
-    await page.goto(cardUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    // Follow the card's link — the panel opens on the board, with the card's dialog over it.
+    await amPage.openKanbanLink(antimatter.url(), `/team/${teamId}/${boardId}/${viewId}/${cardId}`);
 
     await expect(page.locator('.Dialog.cardDialog')).toBeVisible({ timeout: 20000 });
 

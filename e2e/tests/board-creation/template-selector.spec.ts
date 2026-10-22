@@ -66,51 +66,29 @@ async function setupAdmin(): Promise<{ token: string; teamId: string }> {
 }
 
 /**
- * Navigate to /kanban/team/{teamId} (no boardId in the URL) so the template
- * selector renders as the center content.
- *
- * Without the sessionStorage guard, teamToBoardAndViewRedirect immediately
- * redirects to UserSettings.lastBoardId[teamId] (localStorage) or the first
- * category board whenever match.params.boardId is absent — so the template
- * selector never mounts in sessions where the user has already visited boards.
- *
- * Setting sessionStorage key 'skip_board_redirect' = 'true' makes the component
- * skip that redirect (Constants.sessionStorageSkipBoardRedirectKey).  The flag is
- * automatically removed by the component's useEffect the moment a boardId appears
- * in the URL (e.g., after clicking "Use this template"), so it only applies to
- * this single navigation.
+ * Open the template picker the way a person does: the Kanban panel's
+ * "New board" (the panel's templates view, which the full page showed at
+ * /kanban/team/{teamId} for a community without boards).
  */
-async function openTemplateSelectorViaTeamUrl(page: Page, teamId: string): Promise<void> {
-    // page.evaluate() runs in the current tab's sessionStorage (same origin as
-    // the boards page), so the flag is available when the boards app initialises.
-    await page.evaluate(() => {
-        sessionStorage.setItem('skip_board_redirect', 'true');
-    });
-
-    await page.goto(
-        `${antimatter.url()}/kanban/team/${teamId}`,
-        { waitUntil: 'domcontentloaded', timeout: 60000 },
-    );
+async function openTemplateSelector(page: Page): Promise<void> {
+    await new AntimatterPage(page).openTemplates();
     await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 15000 });
 }
 
 /**
- * Log in as `username`, navigate to a specific board URL so the sidebar is
- * fully loaded, and return the page/context.
+ * Log in as `username` in a new context and open the community's boards
+ * (the panel's All boards, which the full page showed as its sidebar).
  */
-async function loginAndOpenBoard(
+async function loginAndOpenBoardList(
     browser: Browser,
     username: string,
     password: string,
     teamId: string,
-    boardId: string,
-    viewId: string,
 ): Promise<{ ctx: import('@playwright/test').BrowserContext; page: Page }> {
     const ctx = await browser.newContext();
     const page = await ctx.newPage();
 
-    // Set lastTeamId before page scripts run so HomeToCurrentTeam always
-    // resolves a team and never falls through to error?id=unknown.
+    // Set lastTeamId before page scripts run so the web app always resolves a team.
     await page.addInitScript((tid) => {
         localStorage.setItem('lastTeamId', tid);
     }, teamId);
@@ -118,12 +96,7 @@ async function loginAndOpenBoard(
     const amPage = new AntimatterPage(page);
     await amPage.login(antimatter.url(), username, password);
     await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-
-    await page.goto(
-        `${antimatter.url()}/kanban/team/${teamId}/${boardId}/${viewId}`,
-        { waitUntil: 'domcontentloaded', timeout: 60000 },
-    );
-    await expect(page.locator('.BoardComponent')).toBeVisible({ timeout: 20000 });
+    await amPage.openBoardList();
 
     return { ctx, page };
 }
@@ -140,12 +113,12 @@ test.describe('Template Selector', () => {
     // ─────────────────────────────────────────────────────────────────────────
 
     test('template list is populated with global templates', async ({ page }) => {
-        const { teamId } = await setupAdmin();
+        await setupAdmin();
 
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await openTemplateSelectorViaTeamUrl(page, teamId);
+        await openTemplateSelector(page);
 
         // Global templates are fetched from /api/v2/global/templates and rendered
         // as .BoardTemplateSelectorItem rows in the .templates-list sidebar.
@@ -155,12 +128,12 @@ test.describe('Template Selector', () => {
     });
 
     test('first template is selected by default', async ({ page }) => {
-        const { teamId } = await setupAdmin();
+        await setupAdmin();
 
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await openTemplateSelectorViaTeamUrl(page, teamId);
+        await openTemplateSelector(page);
 
         // activeTemplate state is initialised to allTemplates[0], which renders
         // with the `active` CSS class on the corresponding .BoardTemplateSelectorItem.
@@ -168,12 +141,12 @@ test.describe('Template Selector', () => {
     });
 
     test('clicking a different template makes it active', async ({ page }) => {
-        const { teamId } = await setupAdmin();
+        await setupAdmin();
 
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await openTemplateSelectorViaTeamUrl(page, teamId);
+        await openTemplateSelector(page);
 
         const items = page.locator('.BoardTemplateSelectorItem');
         await expect(items.first()).toBeVisible({ timeout: 10000 });
@@ -199,12 +172,12 @@ test.describe('Template Selector', () => {
     // ─────────────────────────────────────────────────────────────────────────
 
     test('"Use this template" creates a board and opens it in the editor', async ({ page }) => {
-        const { teamId } = await setupAdmin();
+        await setupAdmin();
 
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await openTemplateSelectorViaTeamUrl(page, teamId);
+        await openTemplateSelector(page);
 
         // First template is active by default — click "Use this template" immediately.
         await expect(page.locator('.BoardTemplateSelectorItem').first()).toBeVisible({ timeout: 10000 });
@@ -214,9 +187,10 @@ test.describe('Template Selector', () => {
         // navigates to the new board — the board editor must appear.
         await expect(page.locator('.BoardComponent')).toBeVisible({ timeout: 20000 });
 
-        // The new board also appears in the sidebar.
+        // The new board also appears in the community's boards.
+        await amPage.openBoardList();
         await expect(
-            page.locator('.octo-sidebar-list .octo-sidebar-item').first(),
+            page.locator('.octo-sidebar-list .SidebarBoardItem.subitem').first(),
         ).toBeVisible({ timeout: 10000 });
     });
 
@@ -224,14 +198,13 @@ test.describe('Template Selector', () => {
     // Opening the template selector from the sidebar (boards already exist)
     // ─────────────────────────────────────────────────────────────────────────
 
-    test('template selector opens via the sidebar add-board button', async ({ browser }) => {
-        const { token } = await setupAdmin();
-        const boardId = await createBoardViaApi(antimatter, 'Sidebar Trigger Board', token);
-        const { teamId, viewId } = await getBoardMeta(antimatter, boardId, token);
+    test('template selector opens via the board list add-board button', async ({ browser }) => {
+        const { token, teamId } = await setupAdmin();
+        await createBoardViaApi(antimatter, 'Sidebar Trigger Board', token);
 
-        const { ctx, page } = await loginAndOpenBoard(browser, adminUser, adminPass, teamId, boardId, viewId);
+        const { ctx, page } = await loginAndOpenBoardList(browser, adminUser, adminPass, teamId);
 
-        // The sidebar is rendered when a board is open.
+        // The community's boards (the full page's sidebar) are listed.
         // Click the '+' IconButton (.add-board-icon) in the BoardsSwitcher to open
         // the "Add board" dropdown.
         await page.locator('.add-board-icon').click();
@@ -241,12 +214,13 @@ test.describe('Template Selector', () => {
         await expect(menu).toBeVisible({ timeout: 5000 });
         await menu.getByRole('button', { name: 'Create new board' }).click();
 
-        // The BoardTemplateSelector modal overlays the board editor.
+        // The BoardTemplateSelector replaces the list in the panel.
         await expect(page.locator('.BoardTemplateSelector')).toBeVisible({ timeout: 10000 });
 
-        // Dismiss with the X IconButton in the .toolbar.
-        await page.locator('.BoardTemplateSelector .toolbar .IconButton').click();
+        // Dismiss with the panel's Back button: the list shows again.
+        await page.locator('.KanbanPanel .KanbanPanelTitle__back').click();
         await expect(page.locator('.BoardTemplateSelector')).not.toBeVisible({ timeout: 5000 });
+        await expect(page.locator('.KanbanPanel .Sidebar.octo-sidebar')).toBeVisible({ timeout: 5000 });
 
         await ctx.close();
     });
@@ -256,7 +230,7 @@ test.describe('Template Selector', () => {
     // ─────────────────────────────────────────────────────────────────────────
 
     test('custom template created via API appears in the template list', async ({ browser }) => {
-        const { token, teamId } = await setupAdmin();
+        const { token } = await setupAdmin();
         await createTemplateViaApi('E2E Custom Template', token);
 
         const ctx = await browser.newContext();
@@ -264,7 +238,7 @@ test.describe('Template Selector', () => {
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await openTemplateSelectorViaTeamUrl(page, teamId);
+        await openTemplateSelector(page);
 
         // Custom templates (isTemplate: true, owned by the team) appear below the
         // global templates in the .templates-list sidebar.
@@ -276,7 +250,7 @@ test.describe('Template Selector', () => {
     });
 
     test('custom template can be used to create a board', async ({ browser }) => {
-        const { token, teamId } = await setupAdmin();
+        const { token } = await setupAdmin();
         await createTemplateViaApi('E2E Usable Template', token);
 
         const ctx = await browser.newContext();
@@ -284,7 +258,7 @@ test.describe('Template Selector', () => {
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await openTemplateSelectorViaTeamUrl(page, teamId);
+        await openTemplateSelector(page);
 
         // Select the custom template.
         const templateItem = page.locator('.BoardTemplateSelectorItem').filter({ hasText: 'E2E Usable Template' });
@@ -300,7 +274,7 @@ test.describe('Template Selector', () => {
     });
 
     test('custom template can be deleted via the template selector', async ({ browser }) => {
-        const { token, teamId } = await setupAdmin();
+        const { token } = await setupAdmin();
         await createTemplateViaApi('E2E Deletable Template', token);
 
         const ctx = await browser.newContext();
@@ -308,7 +282,7 @@ test.describe('Template Selector', () => {
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await openTemplateSelectorViaTeamUrl(page, teamId);
+        await openTemplateSelector(page);
 
         const templateItem = page.locator('.BoardTemplateSelectorItem').filter({ hasText: 'E2E Deletable Template' });
         await expect(templateItem).toBeVisible({ timeout: 10000 });
@@ -339,12 +313,12 @@ test.describe('Template Selector', () => {
     // ─────────────────────────────────────────────────────────────────────────
 
     test('"Create new template" opens a blank template board for editing', async ({ page }) => {
-        const { teamId } = await setupAdmin();
+        await setupAdmin();
 
         const amPage = new AntimatterPage(page);
         await amPage.login(antimatter.url(), adminUser, adminPass);
         await page.getByTestId('channel_view').waitFor({ state: 'visible', timeout: 30000 });
-        await openTemplateSelectorViaTeamUrl(page, teamId);
+        await openTemplateSelector(page);
 
         // .new-template is the link-style Button at the top of the .templates-list
         // (calls mutator.addEmptyBoardTemplate() → creates a blank template and navigates to it).

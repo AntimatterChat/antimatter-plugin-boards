@@ -20,7 +20,7 @@ test.describe('Board Permissions', () => {
     test('regular user can only see their own boards', async ({ page }) => {
         const amPage = await AntimatterPage.loginAndWait(page, antimatter.url(), Users.regularUser.username, Users.regularUser.password);
 
-        await amPage.navigateToBoardsFromUrl(antimatter.url());
+        await amPage.openBoardList();
 
         // Boards should load without errors
         const boardsLoaded = page.locator('.Sidebar.octo-sidebar').or(page.getByText('Create a board'));
@@ -34,7 +34,7 @@ test.describe('Board Permissions', () => {
     test('second user has an independent board workspace', async ({ page }) => {
         const amPage = await AntimatterPage.loginAndWait(page, antimatter.url(), Users.secondUser.username, Users.secondUser.password);
 
-        await amPage.navigateToBoardsFromUrl(antimatter.url());
+        await amPage.openBoardList();
 
         // Boards should load for the second user as well
         const boardsLoaded = page.locator('.Sidebar.octo-sidebar').or(page.getByText('Create a board'));
