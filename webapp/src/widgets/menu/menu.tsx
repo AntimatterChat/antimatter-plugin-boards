@@ -14,6 +14,10 @@ import './menu.scss'
 import textInputOption from './textInputOption'
 import MenuUtil from './menuUtil'
 
+// The space kept between a menu and the bottom of the window, and the least height a long menu shrinks to.
+const WINDOW_MARGIN = 16
+const MIN_SCROLLING_HEIGHT = 120
+
 type Props = {
     children: React.ReactNode
     position?: 'top' | 'bottom' | 'left' | 'right' | 'auto'
@@ -31,16 +35,41 @@ export default class Menu extends React.PureComponent<Props> {
     static Label = LabelOption
 
     menuRef: React.RefObject<HTMLDivElement | null>
+    contentsRef: React.RefObject<HTMLDivElement | null>
 
     constructor(props: Props) {
         super(props)
 
         this.menuRef = React.createRef<HTMLDivElement>()
+        this.contentsRef = React.createRef<HTMLDivElement>()
     }
 
-    public state = {
+    public state: {hovering: React.ReactNode, contentsStyle?: CSSProperties} = {
         hovering: null,
-        menuStyle: {},
+    }
+
+    public componentDidMount(): void {
+        this.fitInWindow()
+        window.addEventListener('resize', this.fitInWindow)
+    }
+
+    public componentWillUnmount(): void {
+        window.removeEventListener('resize', this.fitInWindow)
+    }
+
+    // Antimatter: a menu longer than the space left below its top (a board with many properties, in the side panel
+    // or a short window) scrolls, rather than running past the bottom of the window, out of reach.
+    private fitInWindow = (): void => {
+        const contents = this.contentsRef.current
+        if (!contents) {
+            return
+        }
+        const top = contents.getBoundingClientRect().top
+        const available = Math.floor(window.innerHeight - WINDOW_MARGIN - top)
+        const contentsStyle = top >= 0 && contents.scrollHeight > available ? {maxHeight: Math.max(available, MIN_SCROLLING_HEIGHT), overflowY: 'auto' as const} : undefined
+        if (contentsStyle?.maxHeight !== this.state.contentsStyle?.maxHeight) {
+            this.setState({contentsStyle})
+        }
     }
 
     public render(): React.JSX.Element {
@@ -58,7 +87,11 @@ export default class Menu extends React.PureComponent<Props> {
                 style={style}
                 ref={this.menuRef}
             >
-                <div className='menu-contents'>
+                <div
+                    className='menu-contents'
+                    ref={this.contentsRef}
+                    style={this.state.contentsStyle}
+                >
                     <div className='menu-options'>
                         {React.Children.map(children, (child) => (
                             <div
